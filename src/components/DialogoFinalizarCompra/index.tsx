@@ -1,0 +1,316 @@
+import 'date-fns';
+import React, {
+  useImperativeHandle,
+  forwardRef,
+  useState,
+  RefForwardingComponent,
+} from 'react';
+
+import DateFnsUtils from '@date-io/date-fns';
+import { Box } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Slide from '@material-ui/core/Slide';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Toolbar from '@material-ui/core/Toolbar';
+import { TransitionProps } from '@material-ui/core/transitions';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+
+import LabelSubTotal from '../LabelSubtotal';
+import SidebarTiposPagamentos from '../SidebarTiposPagamentos';
+import Table, { Row } from '../Table';
+import TablePacelas, { Row as Row2 } from '../TableTiposPagamento';
+
+const tiposPagamentosList: Array<Row2> = [
+  {
+    valor: 10,
+    tipoPgamento: 10,
+    dataPagamento: new Date(),
+    uidd: 'produto1',
+  },
+];
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    appBar: {
+      position: 'relative',
+      opacity: '0.75',
+    },
+    title: {
+      marginLeft: theme.spacing(2),
+      flex: 1,
+    },
+  }),
+);
+
+const top100Films = [
+  { title: 'The Shawshank Redemption', year: 1994 },
+  { title: 'The Godfather', year: 1972 },
+  { title: 'The Godfather: Part II', year: 1974 },
+  { title: 'The Dark Knight', year: 2008 },
+  { title: '12 Angry Men', year: 1957 },
+  { title: "Schindler's List", year: 1993 },
+  { title: 'Pulp Fiction', year: 1994 },
+  { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
+  { title: 'The Good, the Bad and the Ugly', year: 1966 },
+  { title: 'Fight Club', year: 1999 },
+  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
+  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
+  { title: 'Forrest Gump', year: 1994 },
+  { title: 'Inception', year: 2010 },
+  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
+  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
+  { title: 'Goodfellas', year: 1990 },
+  { title: 'The Matrix', year: 1999 },
+  { title: 'Seven Samurai', year: 1954 },
+  { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
+  { title: 'City of God', year: 2002 },
+  { title: 'Se7en', year: 1995 },
+  { title: 'The Silence of the Lambs', year: 1991 },
+  { title: "It's a Wonderful Life", year: 1946 },
+  { title: 'Life Is Beautiful', year: 1997 },
+  { title: 'The Usual Suspects', year: 1995 },
+  { title: 'Léon: The Professional', year: 1994 },
+  { title: 'Spirited Away', year: 2001 },
+  { title: 'Saving Private Ryan', year: 1998 },
+  { title: 'Once Upon a Time in the West', year: 1968 },
+  { title: 'American History X', year: 1998 },
+  { title: 'Interstellar', year: 2014 },
+  { title: 'Casablanca', year: 1942 },
+  { title: 'City Lights', year: 1931 },
+  { title: 'Psycho', year: 1960 },
+  { title: 'The Green Mile', year: 1999 },
+  { title: 'The Intouchables', year: 2011 },
+  { title: 'Modern Times', year: 1936 },
+  { title: 'Raiders of the Lost Ark', year: 1981 },
+  { title: 'Rear Window', year: 1954 },
+  { title: 'The Pianist', year: 2002 },
+  { title: 'The Departed', year: 2006 },
+  { title: 'Terminator 2: Judgment Day', year: 1991 },
+  { title: 'Back to the Future', year: 1985 },
+  { title: 'Whiplash', year: 2014 },
+  { title: 'Gladiator', year: 2000 },
+  { title: 'Memento', year: 2000 },
+  { title: 'The Prestige', year: 2006 },
+  { title: 'The Lion King', year: 1994 },
+  { title: 'Apocalypse Now', year: 1979 },
+  { title: 'Alien', year: 1979 },
+  { title: 'Sunset Boulevard', year: 1950 },
+  {
+    title:
+      'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
+    year: 1964,
+  },
+  { title: 'The Great Dictator', year: 1940 },
+  { title: 'Cinema Paradiso', year: 1988 },
+  { title: 'The Lives of Others', year: 2006 },
+  { title: 'Grave of the Fireflies', year: 1988 },
+  { title: 'Paths of Glory', year: 1957 },
+  { title: 'Django Unchained', year: 2012 },
+  { title: 'The Shining', year: 1980 },
+  { title: 'WALL·E', year: 2008 },
+  { title: 'American Beauty', year: 1999 },
+  { title: 'The Dark Knight Rises', year: 2012 },
+  { title: 'Princess Mononoke', year: 1997 },
+  { title: 'Aliens', year: 1986 },
+  { title: 'Oldboy', year: 2003 },
+  { title: 'Once Upon a Time in America', year: 1984 },
+  { title: 'Witness for the Prosecution', year: 1957 },
+  { title: 'Das Boot', year: 1981 },
+  { title: 'Citizen Kane', year: 1941 },
+  { title: 'North by Northwest', year: 1959 },
+  { title: 'Vertigo', year: 1958 },
+  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
+  { title: 'Reservoir Dogs', year: 1992 },
+  { title: 'Braveheart', year: 1995 },
+  { title: 'M', year: 1931 },
+  { title: 'Requiem for a Dream', year: 2000 },
+  { title: 'Amélie', year: 2001 },
+  { title: 'A Clockwork Orange', year: 1971 },
+  { title: 'Like Stars on Earth', year: 2007 },
+  { title: 'Taxi Driver', year: 1976 },
+  { title: 'Lawrence of Arabia', year: 1962 },
+  { title: 'Double Indemnity', year: 1944 },
+  { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
+  { title: 'Amadeus', year: 1984 },
+  { title: 'To Kill a Mockingbird', year: 1962 },
+  { title: 'Toy Story 3', year: 2010 },
+  { title: 'Logan', year: 2017 },
+  { title: 'Full Metal Jacket', year: 1987 },
+  { title: 'Dangal', year: 2016 },
+  { title: 'The Sting', year: 1973 },
+  { title: '2001: A Space Odyssey', year: 1968 },
+  { title: "Singin' in the Rain", year: 1952 },
+  { title: 'Toy Story', year: 1995 },
+  { title: 'Bicycle Thieves', year: 1948 },
+  { title: 'The Kid', year: 1921 },
+  { title: 'Inglourious Basterds', year: 2009 },
+  { title: 'Snatch', year: 2000 },
+  { title: '3 Idiots', year: 2009 },
+  { title: 'Monty Python and the Holy Grail', year: 1975 },
+];
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children?: React.ReactElement },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+export type DialogoFinalizarCompraProps = {
+  handleConfirma: () => void;
+  lista: Row[];
+  subTotal: number;
+};
+
+export type DialogoFinalizarCompraHandle = {
+  handleOpen: () => void;
+};
+
+const DialogoFinalizarCompra: RefForwardingComponent<
+  DialogoFinalizarCompraHandle,
+  DialogoFinalizarCompraProps
+> = (props, ref) => {
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [dataVenda, setDataVenda] = useState<Date | null>(new Date());
+
+  useImperativeHandle(ref, () => ({
+    handleOpen() {
+      setOpen(true);
+    },
+  }));
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSalvar = () => {
+    setOpen(false);
+    props.handleConfirma();
+  };
+
+  function handleNewItem(
+    valor: number,
+    tipoPagamento: any,
+    dataPagamento: Date | null,
+  ) {}
+
+  return (
+    <div>
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
+        <Box
+          height="100vh"
+          display="flex"
+          flexDirection="column"
+          css={{
+            background:
+              'url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg)',
+            backgroundSize: 'cover',
+          }}
+        >
+          <AppBar className={classes.appBar} color="secondary">
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="h6" className={classes.title}>
+                Cancelar
+              </Typography>
+              <Button autoFocus color="inherit" onClick={handleSalvar}>
+                Salvar
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <Box padding="20px 0px 0px 20px" display="flex">
+            <Autocomplete
+              id="combo-box-demo"
+              options={top100Films}
+              getOptionLabel={(option) => option.title}
+              style={{ width: 300, opacity: '0.75', backgroundColor: 'white' }}
+              renderInput={(params) => (
+                <TextField {...params} label="Cliente" variant="outlined" />
+              )}
+            />
+
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                label="Data da Venda"
+                value={dataVenda}
+                onChange={(e) => setDataVenda(e)}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            flexDirection="column"
+            padding="20px"
+            flex={1}
+          >
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              padding="0px 0px"
+              height="100%"
+            >
+              <Box flex={7}>
+                {/* <Table
+                  lista={props.lista}
+                  onSelect={() => console.log('kkkk')}
+                /> */}
+                <TablePacelas
+                  rows={tiposPagamentosList}
+                  removeItens={(e: string[]) => console.log(e)}
+                />
+              </Box>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                flexDirection="column"
+                marginLeft="20px"
+                flex={3}
+              >
+                <SidebarTiposPagamentos handleNewItem={handleNewItem} />
+                <LabelSubTotal valor={props.subTotal} isOpaco />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Dialog>
+    </div>
+  );
+};
+
+export default forwardRef(DialogoFinalizarCompra);

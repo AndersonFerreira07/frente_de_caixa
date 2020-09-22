@@ -1,0 +1,110 @@
+{
+	"Component Material Ui": {
+		"prefix": [
+			"cmui",
+			"CMUI"
+		],
+		"body": [
+			"import React, { FC } from 'react'",
+			"//import {",
+			"//makeStyles",
+			"//} from '@material-ui/core'",
+			"",
+			"//const useStyles = makeStyles(theme => ({",
+			"",
+			"//}))",
+			"",
+			"export type ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}Props = {",
+			"",
+			"}",
+			"",
+			"const ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}: FC<${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}Props> = () => {",
+			"",
+			"//const classes = useStyles();",
+			"",
+			"return (",
+			"<>",
+			"$0",
+			"</>",
+			");",
+			"",
+			"}",
+			"",
+			"export default ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/};"
+		],
+		"description": "Component Typescript Material UI"
+	},
+	"Component Typescript": {
+		"prefix": [
+			"ct",
+			"CT"
+		],
+		"body": [
+			"import React, { FC } from 'react'",
+			"",
+			"export type ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}Props = {",
+			"",
+			"}",
+			"",
+			"const ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}: FC<${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}Props> = () => {",
+			"",
+			"return (",
+			"<>",
+			"$0",
+			"</>",
+			");",
+			"",
+			"}",
+			"",
+			"export default ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/};"
+		],
+		"description": "Basic Typescript Component"
+	},
+	"Storie typescript": {
+		"prefix": [
+			"st",
+			"ST"
+		],
+		"body": [
+			"import React from 'react';",
+      "",
+      "import { Story, Meta } from '@storybook/react';",
+      "",
+			"import ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}, {${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}Props} from '.';",
+			"",
+			"export default {",
+			"title: '${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}',",
+			"component: ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/},",
+      "argTypes: {",
+      "//propValue: { control: 'color' },",
+      "//handle: { action: 'clicked' }",
+      "},",
+      "arg: {},",
+			"} as Meta;",
+			"",
+      "const Template: Story<${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}Props> = (args) => <${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/} {...args} />;",
+      "",
+      "export const ${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}Default = Template.bind({});",
+      "",
+      "${TM_DIRECTORY/^.+\\/(.*)$/${1:/capitalize}/}Default.args = {}",
+		],
+		"description": "Storie typescript components"
+	},
+	"": {
+		"prefix": [
+			"ccmui",
+			"CCMUI"
+		],
+		"body": [
+			"import React from 'react';",
+			"import { withStyles, $1 } from '@material-ui/core';",
+			"",
+			"const Styled$1 = withStyles({",
+			"root: {",
+			"$0",
+			"},",
+			"})($1);"
+		],
+		"description": "Custom Component Material UI"
+	},
+}
