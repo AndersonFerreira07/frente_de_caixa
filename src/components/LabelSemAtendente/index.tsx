@@ -35,12 +35,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export type FooterProps = {
-  tela: number;
-  disabledPartes: boolean;
-};
+export type FooterProps = {};
 
-const Footer: FC<FooterProps> = ({ tela, disabledPartes }) => {
+const Footer: FC<FooterProps> = () => {
   const classes = useStyles();
 
   return (
@@ -53,17 +50,8 @@ const Footer: FC<FooterProps> = ({ tela, disabledPartes }) => {
         flexWrap="wrap"
         // css={{ opacity: '0.5' }}
       >
-        {tela === 1 && <div>F2 - Nova Venda</div>}
-        {tela === 0 && <div>F4 - Fechar Venda</div>}
-        {/* <div>F7 - Excluir Item</div> */}
-        {tela === 0 && <div>F8 - Cancelar Venda</div>}
-        {tela === 0 && (
-          <div
-            className={disabledPartes ? classes.hidePartes : classes.showPartes}
-          >
-            F9 - Quantidades em partes
-          </div>
-        )}
+        Náo é possível utilizar este módulo, pois nenhum atendente está logado
+        no módulo gerencial!
       </Box>
     </Paper>
   );

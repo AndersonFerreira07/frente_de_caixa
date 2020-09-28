@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -39,6 +40,7 @@ export type SearchProps = {
   onChange: (value: string) => void;
   fullwidth: boolean;
   disabled: boolean;
+  searchHandle: () => void;
 };
 
 const Search: FC<SearchProps> = ({
@@ -47,11 +49,22 @@ const Search: FC<SearchProps> = ({
   onChange,
   fullwidth,
   disabled = false,
+  searchHandle,
 }) => {
   const classes = useStyles();
 
+  function keyPress(e) {
+    if (e.keyCode === 13) {
+      searchHandle();
+    }
+  }
+
   return (
-    <Paper component="form" className={classes.root}>
+    <Paper
+      component="form"
+      className={classes.root}
+      onSubmit={(e) => e.preventDefault()}
+    >
       {/* <IconButton className={classes.iconButton} aria-label="menu">
         <MenuIcon />
       </IconButton> */}
@@ -63,11 +76,14 @@ const Search: FC<SearchProps> = ({
         inputProps={{ 'aria-label': 'Código de barras' }}
         fullWidth={fullwidth}
         disabled={disabled}
+        onKeyDown={keyPress}
       />
       <IconButton
         // type="submit"
         className={classes.iconButton}
         aria-label="search"
+        disabled={disabled}
+        onClick={() => searchHandle()}
       >
         <SearchIcon />
       </IconButton>

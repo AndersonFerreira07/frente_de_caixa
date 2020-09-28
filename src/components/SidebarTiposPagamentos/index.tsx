@@ -1,16 +1,31 @@
-import 'date-fns';
+/*  */ import 'date-fns';
 import React, { useState, FC } from 'react';
 
-import DateFnsUtils from '@date-io/date-fns';
+/*  */ import DateFnsUtils from '@date-io/date-fns';
 import { Box, Button, Paper } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {
+/* import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-} from '@material-ui/pickers';
+} from '@material-ui/pickers'; */
 
+import AutoCompleteTiposPagamento from '../AutoCompleteTiposPagamento';
 import PrecoInput from '../PrecoInput';
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    /* marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200, */
+    marginTop: '10px',
+  },
+}));
 
 export type SidebarInputsProps = {
   handleNewItem: (
@@ -131,6 +146,15 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
   const [valor, setValor] = useState(0);
   const [tipoPagamento, setTipoPagamento] = useState<any>(null);
   const [dataPagamento, setDataPagamento] = useState<Date | null>(new Date());
+  const classes = useStyles();
+
+  function getModoAvista() {
+    if (tipoPagamento) {
+      if (tipoPagamento.modo === 0) return true;
+      return false;
+    }
+    return false;
+  }
 
   return (
     <Paper elevation={3}>
@@ -139,9 +163,8 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
         flexDirection="column"
         justifyContent="space-between"
         padding="15px"
-        css={{ opacity: '0.75' }}
       >
-        <Autocomplete
+        {/* <Autocomplete
           id="combo-box-demo"
           options={top100Films}
           getOptionLabel={(option) => option.title}
@@ -153,8 +176,12 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
               variant="outlined"
             />
           )}
+        /> */}
+        <AutoCompleteTiposPagamento
+          value={tipoPagamento}
+          onChange={(value) => setTipoPagamento(value)}
         />
-        <MuiPickersUtilsProvider utils={DateFnsUtils} css={{ width: '100%' }}>
+        {/* <MuiPickersUtilsProvider utils={DateFnsUtils} css={{ width: '100%' }}>
           <KeyboardDatePicker
             disableToolbar
             variant="inline"
@@ -169,14 +196,46 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
             }}
             fullWidth
           />
-        </MuiPickersUtilsProvider>
-        <PrecoInput
-          label="Valor da Parcela"
-          value={valor}
-          onChange={(value: number) => setValor(value)}
-          fullwidth={false}
-          disabled={false}
+        </MuiPickersUtilsProvider> */}
+
+        <TextField
+          id="date"
+          label="Date de pagamento"
+          type="date"
+          defaultValue="2017-05-24"
+          color="secondary"
+          className={classes.textField}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="outlined"
+          disabled={getModoAvista()}
         />
+        <Box width="100%" display="flex">
+          <PrecoInput
+            label="Valor da Parcela"
+            value={valor}
+            onChange={(value: number) => setValor(value)}
+            fullwidth
+            disabled={false}
+          />
+        </Box>
+        <Box width="100%" marginBottom="10px">
+          <Button
+            variant="contained"
+            color="secondary"
+            fullWidth
+            /* onClick={() => {
+            handleNewItem(valor, tipoPagamento, dataPagamento);
+            setValor(0);
+            setDataPagamento(new Date());
+            setTipoPagamento(null);
+          }} */
+            /* css={{ marginBottom: '10px' }} */
+          >
+            Preencher com resto
+          </Button>
+        </Box>
         <Button
           variant="contained"
           color="secondary"

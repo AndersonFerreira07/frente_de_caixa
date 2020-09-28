@@ -1,12 +1,13 @@
-import 'date-fns';
+/* import 'date-fns'; */
 import React, {
   useImperativeHandle,
   forwardRef,
   useState,
   RefForwardingComponent,
+  useRef,
 } from 'react';
 
-import DateFnsUtils from '@date-io/date-fns';
+/* import DateFnsUtils from '@date-io/date-fns'; */
 import { Box } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -24,15 +25,120 @@ import { TransitionProps } from '@material-ui/core/transitions';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {
+/* import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-} from '@material-ui/pickers';
+} from '@material-ui/pickers'; */
 
+import AutoCompleteClientes from '../AutoCompleteClientes';
+import DialogoNota from '../DialogoNota';
 import LabelSubTotal from '../LabelSubtotal';
 import SidebarTiposPagamentos from '../SidebarTiposPagamentos';
 import Table, { Row } from '../Table';
 import TablePacelas, { Row as Row2 } from '../TableTiposPagamento';
+
+const testeConfig = {
+  id: 1,
+  created_at: '2020-09-09 11:34:25',
+  updated_at: '2020-09-26 09:39:03',
+  contadorvendas: 5,
+  contadorbarcode: 1043,
+  contadorlotes: 1,
+  meta: 30,
+  empresario: 'Anderson',
+  nomeEmpresa: 'Mega Jander',
+  banco: 'Banco do Brasil',
+  cpf: '10831989475',
+  cep: '55450000',
+  telefone: '81994392133',
+  enderecoEmpresa: 'rua boa vista, 31',
+  contaCorrente: '13114-987',
+  agencia: '0.159-7',
+  somaAcumuladaAno: 0,
+  created_at_last_venda: '2020-09-26 00:00:00',
+  arredondamento: 0,
+  diasVencimento: 7,
+  diasPagamento: 7,
+  tipo_pagamento_id: 1,
+  caixa_id: 7,
+  conta_id: 1,
+};
+
+const testeDadosCompra = [
+  {
+    observacao: 'dsfsfs',
+    numero: 5,
+    status: 2,
+    data: '2020-09-26 00:00:00',
+    valor: 190.58,
+    valorNota: 190.58,
+    itens: [
+      {
+        unidades: 13,
+        peso: 0,
+        observacao: '4 caixas',
+        precoVenda: 14.66,
+        lote: {
+          numero: 1,
+          nota: true,
+          validade: '2021-02-22 00:00:00',
+          ativo: true,
+          produto: {
+            nome: 'Linguiça Calabreza',
+            ativo: true,
+            codigo: '1234',
+            unidade: {
+              nome: 'pacote',
+              modo: 2,
+            },
+          },
+        },
+      },
+    ],
+    cliente: {
+      nome: 'Edvaldo',
+      empresa: null,
+      cpf: null,
+      rg: null,
+      cnpj: null,
+      razaosocial: null,
+      aniversario: null,
+      logradouro: null,
+      numero: null,
+      complemento: null,
+      bairro: null,
+      cep: null,
+      cidade: null,
+      uf: 'PE',
+      email: null,
+      telefone: null,
+      diaaniversario: null,
+      mesaniversario: null,
+      anoaniversario: null,
+      dataAniversario: null,
+    },
+    parcelas: [
+      {
+        valor: 190.58,
+        valorNota: 190.58,
+        status: true,
+        datapagamento: '2020-09-26T03:00:00.000Z',
+        datapagamentoreal: '2020-09-26T03:00:00.000Z',
+        tipo_pagamento_id: 1,
+        valorReal: 190.58,
+        lucro: 26,
+        tipoPagamento: {
+          nome: 'a vista',
+          modo: 0,
+          multa: 0,
+          juros: 0,
+          taxa: 0,
+          conta_id: 1,
+        },
+      },
+    ],
+  },
+];
 
 const tiposPagamentosList: Array<Row2> = [
   {
@@ -47,11 +153,17 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
       position: 'relative',
-      opacity: '0.75',
+      /* opacity: '0.75', */
     },
     title: {
       marginLeft: theme.spacing(2),
       flex: 1,
+    },
+    textField: {
+      /* marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200, */
+      // marginTop: '10px',
     },
   }),
 );
@@ -187,6 +299,9 @@ const DialogoFinalizarCompra: RefForwardingComponent<
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [dataVenda, setDataVenda] = useState<Date | null>(new Date());
+  type CountdownHandle = React.ElementRef<typeof DialogoNota>;
+  const refDialogoNota = useRef<CountdownHandle>(null);
+  const [itens, setItens] = useState<Array<Row2>>([]);
 
   useImperativeHandle(ref, () => ({
     handleOpen() {
@@ -203,11 +318,41 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     props.handleConfirma();
   };
 
+  const handleOpenDialogoNota = () => {
+    if (refDialogoNota.current)
+      refDialogoNota.current.handleOpen(
+        testeDadosCompra[0],
+        testeConfig,
+        false,
+      );
+  };
+
   function handleNewItem(
     valor: number,
     tipoPagamento: any,
     dataPagamento: Date | null,
-  ) {}
+  ) {
+    setItens([
+      ...itens,
+      {
+        dataPagamento,
+        tipoPgamento: tipoPagamento,
+        valor,
+        uidd: '1234',
+      },
+    ]);
+  }
+
+  function removeItens(indices: string[]) {
+    // console.log(indices)
+    let arrayNew = itens.slice();
+    for (let i = 0; i < indices.length; i += 1) {
+      arrayNew = arrayNew.filter(function (obj) {
+        return obj.uidd !== indices[i];
+      });
+      setItens(arrayNew);
+    }
+  }
 
   return (
     <div>
@@ -221,11 +366,11 @@ const DialogoFinalizarCompra: RefForwardingComponent<
           height="100vh"
           display="flex"
           flexDirection="column"
-          css={{
+          /* css={{
             background:
               'url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg)',
             backgroundSize: 'cover',
-          }}
+          }} */
         >
           <AppBar className={classes.appBar} color="secondary">
             <Toolbar>
@@ -240,37 +385,55 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               <Typography variant="h6" className={classes.title}>
                 Cancelar
               </Typography>
-              <Button autoFocus color="inherit" onClick={handleSalvar}>
+              <Button autoFocus color="inherit" onClick={handleOpenDialogoNota}>
                 Salvar
               </Button>
             </Toolbar>
           </AppBar>
           <Box padding="20px 0px 0px 20px" display="flex">
-            <Autocomplete
+            {/* <Autocomplete
               id="combo-box-demo"
               options={top100Films}
               getOptionLabel={(option) => option.title}
-              style={{ width: 300, opacity: '0.75', backgroundColor: 'white' }}
+              style={{ width: 300 }}
               renderInput={(params) => (
                 <TextField {...params} label="Cliente" variant="outlined" />
               )}
-            />
+            /> */}
 
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                disableToolbar
-                variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
-                id="date-picker-inline"
-                label="Data da Venda"
-                value={dataVenda}
-                onChange={(e) => setDataVenda(e)}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
+            <AutoCompleteClientes />
+
+            <Box marginLeft="20px">
+              {/* <MuiPickersUtilsProvider
+                utils={DateFnsUtils}
+              >
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Data da Venda"
+                  value={dataVenda}
+                  onChange={(e) => setDataVenda(e)}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </MuiPickersUtilsProvider> */}
+              <TextField
+                id="date"
+                label="Date de pagamento"
+                type="date"
+                color="secondary"
+                defaultValue="2017-05-24"
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
                 }}
+                variant="outlined"
               />
-            </MuiPickersUtilsProvider>
+            </Box>
           </Box>
           <Box
             display="flex"
@@ -290,10 +453,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
                   lista={props.lista}
                   onSelect={() => console.log('kkkk')}
                 /> */}
-                <TablePacelas
-                  rows={tiposPagamentosList}
-                  removeItens={(e: string[]) => console.log(e)}
-                />
+                <TablePacelas rows={itens} removeItens={removeItens} />
               </Box>
               <Box
                 display="flex"
@@ -308,6 +468,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
             </Box>
           </Box>
         </Box>
+        <DialogoNota ref={refDialogoNota} />
       </Dialog>
     </div>
   );

@@ -27,6 +27,7 @@ import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import clsx from 'clsx';
+import moment from 'moment';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -48,8 +49,8 @@ const StyledTableRow = withStyles((theme) => ({
 
 export type Row = {
   valor: number;
-  tipoPgamento: number;
-  dataPagamento: Date;
+  tipoPgamento: any;
+  dataPagamento: Date | null;
   uidd: string;
 };
 
@@ -112,7 +113,7 @@ interface HeadCell {
 const headCells: HeadCell[] = [
   {
     id: 'tipoPgamento',
-    numeric: true,
+    numeric: false,
     disablePadding: true,
     label: 'Meio de Pagamento',
   },
@@ -284,7 +285,7 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       height: '100%',
       width: '100%',
-      opacity: '0.75',
+      /* opacity: '0.75', */
       maxHeight: '69vh',
     },
     container2: {
@@ -358,8 +359,8 @@ const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
       listFormated.push({
         uidd: list[i].uidd,
         valor: list[i].valor,
-        tipoPgamento: list[i].tipoPgamento,
-        dataPagamento: list[i].dataPagamento.toString(),
+        tipoPgamento: list[i].tipoPgamento.nome,
+        dataPagamento: moment(list[i].dataPagamento).format('DD/MM/YYYY'),
       });
     }
     return listFormated;

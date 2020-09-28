@@ -53,7 +53,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 export type Row = {
-  produto: string;
+  produto: any;
   unidades: number;
   peso: number;
   unitario: number;
@@ -63,7 +63,7 @@ export type Row = {
 type RowFormated = {
   produto: string;
   unidades: number;
-  peso: number;
+  peso: string;
   unitario: string;
   total: string;
 };
@@ -329,9 +329,10 @@ const useStyles = makeStyles((theme: Theme) =>
 export type Table2Props = {
   rows: Row[];
   removeItens: (indices: string[]) => void;
+  produto: any;
 };
 
-const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
+const Table2: FC<Table2Props> = ({ rows, removeItens, produto }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Row>('produto');
@@ -348,7 +349,7 @@ const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.produto);
+      const newSelecteds = rows.map((n) => n.produto.nome);
       setSelected(newSelecteds);
       return;
     }
@@ -382,13 +383,21 @@ const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
     });
   }
 
+  function disablePeso(produto) {
+    if (produto) {
+      if (produto.unidade.modo === 2) return false;
+      return true;
+    }
+    return false;
+  }
+
   function formataDados(list: Row[]) {
     const listFormated: Array<RowFormated> = [];
     for (let i = 0; i < list.length; i += 1) {
       listFormated.push({
-        produto: list[i].produto,
+        produto: list[i].produto.nome,
         unidades: list[i].unidades,
-        peso: list[i].peso,
+        peso: disablePeso(list[i].produto) ? String(list[i].peso) : '-',
         unitario: formatMoeda(list[i].unitario),
         total: formatMoeda(list[i].total),
       });

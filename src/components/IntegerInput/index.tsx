@@ -30,6 +30,9 @@ export type IntegerInputProps = {
   value: number;
   onChange: (value: number) => void;
   fullwidth: boolean;
+  disabled?: boolean;
+  error: boolean;
+  helperText: string;
 };
 
 const IntegerInput: FC<IntegerInputProps> = ({
@@ -37,6 +40,9 @@ const IntegerInput: FC<IntegerInputProps> = ({
   value,
   onChange,
   fullwidth,
+  disabled = false,
+  error,
+  helperText,
 }) => {
   return (
     <TextField
@@ -46,10 +52,13 @@ const IntegerInput: FC<IntegerInputProps> = ({
       variant="outlined"
       fullWidth={fullwidth}
       color="secondary"
+      disabled={disabled}
       onChange={(e) => onChange(parseInt(e.target.value, 10))}
       InputProps={{
         inputComponent: NumberFormatCustom,
       }}
+      error={error}
+      helperText={helperText}
     />
   );
 };

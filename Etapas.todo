@@ -3,24 +3,43 @@ UI:
   ✔ ROLAGEM NA TABELA @done(20-09-13 12:09)
   ☐ SELECT PREÇOS
   ☐ CAMPO OBS. NOS ITENS
-  ☐ DESABILITAR BOTOES NA HORA CERTA
-  ☐ BACKGROUND PARA QUANDO NÃO TIVER VENDA
-  ☐ SELECIONAR ITEM DA TABELA
+  ✔ DESABILITAR BOTOES NA HORA CERTA @done(20-09-23 19:26)
+  ✔ BACKGROUND PARA QUANDO NÃO TIVER VENDA @done(20-09-23 19:26)
+  ✔ SELECIONAR ITEM DA TABELA @done(20-09-23 19:26)
   ✔ CONSERTAR ERROS DO LAYOUT @done(20-09-13 12:09)
-  ☐ DIALOGO DE FECHAR VENDA
-  ☐ LABELS IMPORTANTES COMO UNIDADES DISPONIVEIS NO ESTOQUE
-  ☐ MOSTRAR ATENDENTE
+  ✔ DIALOGO DE FECHAR VENDA @done(20-09-23 19:26)
+  ✔ LABELS IMPORTANTES COMO UNIDADES DISPONIVEIS NO ESTOQUE @done(20-09-27 15:57)
+  ✔ MOSTRAR ATENDENTE @done(20-09-27 15:57)
 
 Funcionalidades:
-    ☐ NOVA VENDA
-    ☐ FECHAR VENDA
-    ☐ EXCLUIR ITEM
-    ☐ CANCELAR VENDA
-    ☐ ADICIONAR ITEM A LISTA
-    ✔ PREENCHER POR QUANTIDADES @done(20-09-13 12:09)
-    ☐ PESQUISAR CÓDIGO
-    ☐ IMPRIMIR NOTA
+    ✔ PESQUISAR CÓDIGO @done(20-09-27 10:18)
     ☐ SELECIONAR CLIENTE COM AUTOCOMPLETE
     ☐ DEFINIR MEIOS DE PAGAMENTO
-    ☐ DATA DE PAGAMENTO
-    ☐ PREENCHER COM RESTO
+    ✔ NOVA VENDA @done(20-09-26 14:59)
+    ✔ FECHAR VENDA @done(20-09-26 14:59)
+    ✔ EXCLUIR ITEM @done(20-09-26 14:59)
+    ✔ CANCELAR VENDA @done(20-09-26 14:59)
+    ☐ ADICIONAR ITEM A LISTA
+    ✔ PREENCHER POR QUANTIDADES @done(20-09-13 12:09)
+    ✔ IMPRIMIR NOTA @done(20-09-26 14:58)
+    ✔ DATA DE PAGAMENTO @done(20-09-26 14:58)
+
+    ✔ LabelEstoque @done(20-09-27 10:56)
+    ✔ Mesclar mesmo produto e mesmo preço @done(20-09-27 15:25)
+    ✔ guardar ids dos produtos @done(20-09-27 14:40)
+    ✔ validar pelo quantidade disponivel no estoque @done(20-09-27 15:56)
+    ✔ não mostrar nada se nao tiver o atendente logado @done(20-09-27 11:25)
+    ✔ colocar traço na tabela quando vender por unidade @done(20-09-27 14:24)
+    ✔ não exibir label por partes quando a opção por partes estiver inativa @done(20-09-27 10:37)
+
+    ☐ guardar objeto cliente
+    ✔ guardar ojetos tiposPagamentos @done(20-09-28 12:25)
+    ☐ preencer com resto
+    ✔ adiconar item talea tipos pagamento @done(20-09-28 12:25)
+    ✔ remover items tabela tipos pagamento @done(20-09-28 12:11)
+    ☐ visual mais bonito do dialogo finalizar venda
+    ☐ enviar dados para servidor
+    ☐ get dados para exibir na impressao
+    ✔ esconder data de pagamento para pagamento a vista no sideimput tipos pagamentos @done(20-09-28 12:25)
+    
+

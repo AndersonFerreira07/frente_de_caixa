@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useRef, useState, useEffect } from 'react';
 
 import { Box } from '@material-ui/core';
 
@@ -13,8 +13,16 @@ import SidebarInputs from '../../components/SidebarInputs';
 import Table2, { Row } from '../../components/Table2';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 
+import LabelAtendente from '../../components/LabelAtendente'
+
+import LabelEstoque from '../../components/LabelEstoque';
+
 import DialogoSomaPesos from '../../components/DialogoSomaPesos';
 import EmptyBackground from '../../components/EmptyBackground'
+
+import LabelSemAtendente from '../../components/LabelSemAtendente'
+
+import api from '../../services/api'
 
 export type FrenteProps = {};
 
@@ -47,6 +55,10 @@ const Frente: FC<FrenteProps> = () => {
 
   const [itens, setItens] = useState<Array<Row>>([]);
   const [tela, setTela] = useState(1);
+  const [search, setSearch] = useState('')
+  const [modoSearch, setModoSearch] = useState(true)
+  const [produto, setProduto] = useState<any>(null)
+  const [atendente, setAtendente] = useState('')
 
   type CountdownHandle = React.ElementRef<typeof DialogoConfirmacao>;
   const componentRef = useRef<CountdownHandle>(null);
@@ -60,9 +72,26 @@ const Frente: FC<FrenteProps> = () => {
   type CountdownHandle4 = React.ElementRef<typeof SidebarInputs>;
   const componentRef4 = useRef<CountdownHandle4>(null);
 
+  const nomeProduto = produto !== null ? produto.nome : 'Nenhum Produto';
+
   function handleSoma(unidades: number, peso: number) {
     if (componentRef4.current)
       componentRef4.current.setValues(unidades, peso)
+  }
+
+  function searchItemInArray(produto, itens) {
+    for(let i = 0; i < itens.length; i++) {
+      if(produto.id === itens[i].produto.id) return i
+    }
+    return -1
+  }
+
+  function getTotal(peso, unidades, precoUnitario, produto) {
+    if(produto.unidade.modo === 0) {
+      return peso * precoUnitario
+    } else {
+      return unidades * precoUnitario
+    }
   }
 
   function addNewItem(
@@ -70,13 +99,29 @@ const Frente: FC<FrenteProps> = () => {
     peso: number,
     precoUnitario: number,
   ) {
-    setItens([...itens, {
-      produto: `kkkkkk${quantidade}`,
-      peso,
-      total: peso * precoUnitario,
-      unidades: quantidade,
-      unitario: precoUnitario
-    }])
+    const position = searchItemInArray(produto, itens);
+    console.log('position')
+    console.log(position)
+    if(position < 0) {
+      setItens([...itens, {
+        produto: produto,
+        peso,
+        total: getTotal(peso, quantidade, precoUnitario, produto),
+        unidades: quantidade,
+        unitario: precoUnitario
+      }])
+    } else {  
+      const itens2 = itens.slice()
+      itens2[position] = {
+        peso: itens2[position].peso + peso,
+        unidades: itens2[position].unidades + quantidade,
+        produto: produto,
+        unitario: precoUnitario,
+        total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
+      }
+      setItens(itens2)
+    }
+    setProduto(null)
   }
 
   function getOpen() {
@@ -98,7 +143,7 @@ const Frente: FC<FrenteProps> = () => {
     let arrayNew = itens.slice()
     for (let i = 0; i < indices.length; i++) {
       arrayNew = arrayNew.filter(function( obj ) {
-        return obj.produto !== indices[i];
+        return obj.produto.nome !== indices[i];
     });
     setItens(arrayNew)
     }
@@ -117,7 +162,58 @@ const Frente: FC<FrenteProps> = () => {
     setItens([])
   }
 
+  async function searchHandle() {
+    const data = await api.get(`/produtos2/${search}`)
+    console.log(data.data)
+    if(data.data.length > 0) {
+      const index = searchItemInArray(data.data[0], itens);
+      if(index >= 0) {
+        data.data[0].unidadesDisponivel = data.data[0].unidadesDisponivel - itens[index].unidades
+      }
+      setProduto(data.data[0]);
+    } else {
+      setProduto(null);
+    }
+    setSearch('');
+    /* setItens([]) */
+    if (componentRef4.current)
+      componentRef4.current.reset();
+  }
+
+  async function getAtendente() {
+    const configs = await api.get('/config2')
+    if(configs.data.caixa_id !== -1) {
+      const caixa = await api.get(`/caixas/${configs.data.caixa_id}`)
+      const user = await api.get(`/adms/${caixa.data.user_id}`)
+      setAtendente(user.data.username)
+    } else {
+      setAtendente('')
+    }
+  }
+
+  function disablePeso() {
+    if (produto) {
+      if (produto.unidade.modo === 2 || produto.unidade.modo === 1)
+        return true;
+      return false;
+    }
+    return true;
+  }
+
+  function getUnidadesDisponiveis() {
+    if(produto) {
+      return produto.unidadesDisponivel
+    }
+    return 0
+  }
+
+  useEffect(() => {
+    getAtendente()
+  }, [])
+
   console.log('OPEN SOMA PESOS: ' + getOpen())
+  console.log('itens kkkk')
+  console.log(itens)
 
   return (
     <Box
@@ -130,22 +226,23 @@ const Frente: FC<FrenteProps> = () => {
       css={{ background: 'url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg)', backgroundSize: 'cover' }}
       // css={{ background: 'url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/221808/sky.jpg)', backgroundSize: 'cover' }}
     >
-      { tela === 0 ? <Box margin="10px">
+      { tela === 0 && atendente !== '' ? <Box margin="10px">
         <Box margin="0px 0px 10px">
-          <Label label="Queijo Mussarela" />
+          <Label label={nomeProduto} />
         </Box>
         <Search
           label="Código de barra"
-          value="ola"
-          onChange={() => console.log('ola')}
+          value={search}
+          onChange={(e) => setSearch(e)}
           fullwidth
           disabled={false}
+          searchHandle={searchHandle}
         />
       </Box> : <Box margin="10px"/>}
       <Box display="flex" justifyContent="space-between" padding="10px">
-        {tela === 0 ? <Box flex={1.5} display="flex"
+        {tela === 0 && atendente !== '' ? <Box flex={1.5} display="flex"
           flexDirection="column"
-          justifyContent="space-between">
+          >
           <Actions
             disabled={getDisabled()}
             onClick={(action) => {
@@ -176,34 +273,36 @@ const Frente: FC<FrenteProps> = () => {
               }
             }}
           />
+          {(produto !== null && atendente !== '') && <LabelEstoque produto={produto}/>}
+          <LabelAtendente atendente={atendente}/>
         </Box> : null}
-        {tela === 0 && <Box padding="0 10px" flex={4}>
-          <Table2 rows={itens} removeItens={removeItens}/>
+        {(tela === 0 && atendente !== '') && <Box padding="0 10px" flex={4}>
+          <Table2 rows={itens} removeItens={removeItens} produto={produto}/>
         </Box>}
-        {tela === 0 && <Box
+        {(tela === 0 && atendente !== '') && <Box 
           flex={2}
           display="flex"
           flexDirection="column"
           justifyContent="space-between"
         >
-          <SidebarInputs handleNewItem={addNewItem} ref={componentRef4}/>
+          <SidebarInputs handleNewItem={addNewItem} ref={componentRef4} disabled={produto === null} produto={produto}/>
           <LabelSubTotal valor={getSubTotal()} />
         </Box>}
         
-        {tela === 0 && <DialogoSomaPesos ref={componentRef3} handleSoma={handleSoma}/>}
+        {(tela === 0 && atendente !== '' && !disablePeso()) && <DialogoSomaPesos ref={componentRef3} handleSoma={handleSoma}/>}
         
-        {tela === 1 && <Box flex={6}>
+        {(tela === 1 && atendente !== '') && <Box flex={6}>
           <div style={{ height: '100% '}}>  
             <EmptyBackground/>
           </div>
         </Box>}
       </Box>
       <Box margin="10px">
-        <Footer tela={tela}/>
+        { atendente !== '' ? <Footer tela={tela} disabledPartes={disablePeso()}/> : <LabelSemAtendente/>}
       </Box>
       <DialogoConfirmacao ref={componentRef} handleConfirma={handleFinalizaVenda}/>
       <DialogoFinalizarCompra ref={componentRef2} handleConfirma={handleFinalizaVenda} lista={itens} subTotal={getSubTotal()}/>
-      <KeyboardEventHandler
+      { atendente !== '' && <KeyboardEventHandler
         handleKeys={['f2', 'f4', 'f7', 'f8', 'f9']}
         onKeyEvent={(key, e) => {
           switch (key) {
@@ -228,14 +327,15 @@ const Frente: FC<FrenteProps> = () => {
                 );
               break;
             case 'f9':
-              if (componentRef3.current)
-                componentRef3.current.handleOpen(0, 0, 100);
+              if (componentRef3.current && produto !== null)
+                  if(produto.unidade.modo === 0)
+                    componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
               break;
             default:
               break;
           }
         }} 
-    />
+    />}
       <div className="firefly"/>
       <div className="firefly"/>
       <div className="firefly"/>
