@@ -338,9 +338,17 @@ const DialogoFinalizarCompra: RefForwardingComponent<
         dataPagamento,
         tipoPgamento: tipoPagamento,
         valor,
-        uidd: '1234',
+        uidd: `${tipoPagamento.nome}${itens.length}`,
       },
     ]);
+  }
+
+  function renameItensUIDD(itens: Array<Row2>) {
+    const arrayNew = itens.slice();
+    for (let i = 0; i < itens.length; i += 1) {
+      arrayNew[i].uidd = `${arrayNew[i].tipoPgamento.nome}${i}`;
+    }
+    return arrayNew;
   }
 
   function removeItens(indices: string[]) {
@@ -350,8 +358,17 @@ const DialogoFinalizarCompra: RefForwardingComponent<
       arrayNew = arrayNew.filter(function (obj) {
         return obj.uidd !== indices[i];
       });
-      setItens(arrayNew);
     }
+    const arrayNew2 = renameItensUIDD(arrayNew);
+    setItens(arrayNew2);
+  }
+
+  function getValorRestante() {
+    let soma = 0;
+    for (let i = 0; i < itens.length; i += 1) {
+      soma += itens[i].valor;
+    }
+    return props.subTotal - soma;
   }
 
   return (
@@ -462,7 +479,11 @@ const DialogoFinalizarCompra: RefForwardingComponent<
                 marginLeft="20px"
                 flex={3}
               >
-                <SidebarTiposPagamentos handleNewItem={handleNewItem} />
+                <SidebarTiposPagamentos
+                  handleNewItem={handleNewItem}
+                  subTotal={props.subTotal}
+                  valorRestante={getValorRestante()}
+                />
                 <LabelSubTotal valor={props.subTotal} isOpaco />
               </Box>
             </Box>

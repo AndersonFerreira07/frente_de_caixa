@@ -34,6 +34,8 @@ export type PrecoInputProps = {
   onChange: (value: number) => void;
   fullwidth: boolean;
   disabled: boolean;
+  error?: boolean;
+  helperText?: string;
 };
 
 const PrecoInput: FC<PrecoInputProps> = ({
@@ -42,6 +44,8 @@ const PrecoInput: FC<PrecoInputProps> = ({
   onChange,
   fullwidth,
   disabled = false,
+  error = false,
+  helperText = '',
 }) => {
   return (
     <TextField
@@ -58,6 +62,8 @@ const PrecoInput: FC<PrecoInputProps> = ({
       InputProps={{
         inputComponent: NumberFormatCustom,
       }}
+      error={error}
+      helperText={helperText}
     />
   );
 };

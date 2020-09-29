@@ -1,5 +1,5 @@
 /*  */ import 'date-fns';
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useEffect, useRef } from 'react';
 
 /*  */ import DateFnsUtils from '@date-io/date-fns';
 import { Box, Button, Paper } from '@material-ui/core';
@@ -10,6 +10,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers'; */
+
+import moment from 'moment';
 
 import AutoCompleteTiposPagamento from '../AutoCompleteTiposPagamento';
 import PrecoInput from '../PrecoInput';
@@ -33,6 +35,8 @@ export type SidebarInputsProps = {
     tipoPagamento: any,
     dataPagamento: Date | null,
   ) => void;
+  subTotal: number;
+  valorRestante: number;
 };
 
 const top100Films = [
@@ -142,10 +146,15 @@ const top100Films = [
   { title: 'Monty Python and the Holy Grail', year: 1975 },
 ];
 
-const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
+const SidebarInputs: FC<SidebarInputsProps> = ({
+  handleNewItem,
+  subTotal,
+  valorRestante,
+}) => {
   const [valor, setValor] = useState(0);
   const [tipoPagamento, setTipoPagamento] = useState<any>(null);
   const [dataPagamento, setDataPagamento] = useState<Date | null>(new Date());
+  const refDate = useRef<any>(null);
   const classes = useStyles();
 
   function getModoAvista() {
@@ -155,6 +164,40 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
     }
     return false;
   }
+
+  /*   useEffect(() => {
+    if (tipoPagamento) {
+      if (tipoPagamento.modo === 0) setDataPagamento(new Date());
+    } else {
+      setDataPagamento(new Date());
+    }
+  }, [tipoPagamento]); */
+
+  function updateDataPagamento() {
+    if (tipoPagamento) {
+      if (tipoPagamento.modo === 0) setDataPagamento(new Date());
+    } else {
+      setDataPagamento(new Date());
+    }
+  }
+
+  function preencheValorComResto() {
+    setValor(valorRestante);
+  }
+
+  function getDataPagamentoFormatted() {
+    if (dataPagamento) return moment(dataPagamento).format('YYYY-MM-DD');
+    return moment().format('YYYY-MM-DD');
+  }
+
+  console.log('data formatada');
+  console.log(getDataPagamentoFormatted());
+
+  console.log('valor restante');
+  console.log(valorRestante);
+  console.log(subTotal);
+  console.log('valor');
+  console.log(valor);
 
   return (
     <Paper elevation={3}>
@@ -179,7 +222,10 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
         /> */}
         <AutoCompleteTiposPagamento
           value={tipoPagamento}
-          onChange={(value) => setTipoPagamento(value)}
+          onChange={(value) => {
+            updateDataPagamento();
+            setTipoPagamento(value);
+          }}
         />
         {/* <MuiPickersUtilsProvider utils={DateFnsUtils} css={{ width: '100%' }}>
           <KeyboardDatePicker
@@ -202,7 +248,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
           id="date"
           label="Date de pagamento"
           type="date"
-          defaultValue="2017-05-24"
+          /* defaultValue="2017-05-24" */
           color="secondary"
           className={classes.textField}
           InputLabelProps={{
@@ -210,6 +256,13 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
           }}
           variant="outlined"
           disabled={getModoAvista()}
+          /* value={getDataPagamentoFormatted()} */
+          /* onChange={(e) => {
+            console.log('novo valor data');
+            console.log(e.target.value);
+            setDataPagamento(new Date(e.target.value));
+          }} */
+          inputRef={refDate}
         />
         <Box width="100%" display="flex">
           <PrecoInput
@@ -218,6 +271,10 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
             onChange={(value: number) => setValor(value)}
             fullwidth
             disabled={false}
+            error={valor > valorRestante}
+            helperText={
+              valor > valorRestante ? 'total acima do valor da compra' : ''
+            }
           />
         </Box>
         <Box width="100%" marginBottom="10px">
@@ -225,6 +282,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
             variant="contained"
             color="secondary"
             fullWidth
+            onClick={() => preencheValorComResto()}
             /* onClick={() => {
             handleNewItem(valor, tipoPagamento, dataPagamento);
             setValor(0);
@@ -240,11 +298,24 @@ const SidebarInputs: FC<SidebarInputsProps> = ({ handleNewItem }) => {
           variant="contained"
           color="secondary"
           onClick={() => {
-            handleNewItem(valor, tipoPagamento, dataPagamento);
+            handleNewItem(
+              valor,
+              tipoPagamento,
+              refDate === null ? new Date() : new Date(refDate.current.value),
+            );
             setValor(0);
             setDataPagamento(new Date());
             setTipoPagamento(null);
+            console.log(refDate.current);
           }}
+          disabled={
+            tipoPagamento === null ||
+            valor <= 0 ||
+            valor === null ||
+            valor === undefined ||
+            isNaN(valor) ||
+            valor > valorRestante
+          }
         >
           Adicionar à lista
         </Button>
