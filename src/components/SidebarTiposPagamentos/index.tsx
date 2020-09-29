@@ -173,11 +173,11 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
     }
   }, [tipoPagamento]); */
 
-  function updateDataPagamento() {
+  function updateDataPagamento(tipoPagamento) {
     if (tipoPagamento) {
-      if (tipoPagamento.modo === 0) setDataPagamento(new Date());
+      if (tipoPagamento.modo === 0) refDate.current.value = getDataAtual();
     } else {
-      setDataPagamento(new Date());
+      refDate.current.value = getDataAtual();
     }
   }
 
@@ -187,6 +187,10 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
 
   function getDataPagamentoFormatted() {
     if (dataPagamento) return moment(dataPagamento).format('YYYY-MM-DD');
+    return moment().format('YYYY-MM-DD');
+  }
+
+  function getDataAtual() {
     return moment().format('YYYY-MM-DD');
   }
 
@@ -223,7 +227,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
         <AutoCompleteTiposPagamento
           value={tipoPagamento}
           onChange={(value) => {
-            updateDataPagamento();
+            updateDataPagamento(value);
             setTipoPagamento(value);
           }}
         />
@@ -248,7 +252,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
           id="date"
           label="Date de pagamento"
           type="date"
-          /* defaultValue="2017-05-24" */
+          defaultValue={getDataAtual()}
           color="secondary"
           className={classes.textField}
           InputLabelProps={{
@@ -306,7 +310,9 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             setValor(0);
             setDataPagamento(new Date());
             setTipoPagamento(null);
-            console.log(refDate.current);
+            refDate.current.value = getDataAtual();
+            console.log('data pagamento kkkk');
+            console.log(new Date(refDate.current.value));
           }}
           disabled={
             tipoPagamento === null ||
