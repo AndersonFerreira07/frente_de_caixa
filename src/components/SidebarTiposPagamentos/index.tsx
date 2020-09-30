@@ -194,6 +194,17 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
     return moment().format('YYYY-MM-DD');
   }
 
+  function buildObjDate(dateText: string) {
+    const ano = parseInt(dateText.substring(0, 4), 10);
+    const mes = parseInt(dateText.substring(5, 7), 10);
+    const dia = parseInt(dateText.substring(8, 10), 10);
+    const dataBuild = new Date();
+    dataBuild.setFullYear(ano);
+    dataBuild.setMonth(mes - 1);
+    dataBuild.setDate(dia);
+    return dataBuild;
+  }
+
   console.log('data formatada');
   console.log(getDataPagamentoFormatted());
 
@@ -305,7 +316,9 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             handleNewItem(
               valor,
               tipoPagamento,
-              refDate === null ? new Date() : new Date(refDate.current.value),
+              refDate === null
+                ? new Date()
+                : buildObjDate(refDate.current.value),
             );
             setValor(0);
             setDataPagamento(new Date());

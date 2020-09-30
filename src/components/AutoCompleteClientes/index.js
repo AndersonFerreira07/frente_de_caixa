@@ -14,12 +14,12 @@ function sleep(delay = 0) {
   });
 }
 
-export default function Asynchronous() {
+export default function Asynchronous({ value, onChange }) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const loading = open && options.length === 0;
 
-  const [value, setValue] = React.useState(options[0]);
+  // const [value, setValue] = React.useState(options[0]);
   const [inputValue, setInputValue] = React.useState('');
 
   function query(url) {
@@ -75,7 +75,8 @@ export default function Asynchronous() {
       }}
       value={value}
       onChange={(event, newValue) => {
-        setValue(newValue);
+        onChange(newValue);
+        // setValue(newValue);
       }}
       inputValue={inputValue}
       onInputChange={(event, newInputValue) => {

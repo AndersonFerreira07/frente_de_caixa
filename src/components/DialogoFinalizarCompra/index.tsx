@@ -30,6 +30,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
   KeyboardDatePicker,
 } from '@material-ui/pickers'; */
 
+import moment from 'moment';
+
 import AutoCompleteClientes from '../AutoCompleteClientes';
 import DialogoNota from '../DialogoNota';
 import LabelSubTotal from '../LabelSubtotal';
@@ -302,6 +304,8 @@ const DialogoFinalizarCompra: RefForwardingComponent<
   type CountdownHandle = React.ElementRef<typeof DialogoNota>;
   const refDialogoNota = useRef<CountdownHandle>(null);
   const [itens, setItens] = useState<Array<Row2>>([]);
+  const [cliente, setCliente] = useState<any>(null);
+  const refDate = useRef<any>(null);
 
   useImperativeHandle(ref, () => ({
     handleOpen() {
@@ -318,7 +322,31 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     props.handleConfirma();
   };
 
+  function getTodosDados() {
+    const listaItens = props.lista;
+    const listaParcelas = itens;
+    const dataVenda = buildObjDate(refDate.current.value);
+    const clienteLocal = cliente;
+    return {
+      listaItens,
+      listaParcelas,
+      dataVenda,
+      clienteLocal,
+    };
+  }
+
+  function isDadosValidos() {
+    if (cliente === null) {
+      return false;
+    }
+    if (itens.length <= 0) {
+      return false;
+    }
+    return true;
+  }
+
   const handleOpenDialogoNota = () => {
+    console.log(getTodosDados());
     if (refDialogoNota.current)
       refDialogoNota.current.handleOpen(
         testeDadosCompra[0],
@@ -371,6 +399,21 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     return props.subTotal - soma;
   }
 
+  function getDataAtual() {
+    return moment().format('YYYY-MM-DD');
+  }
+
+  function buildObjDate(dateText: string) {
+    const ano = parseInt(dateText.substring(0, 4), 10);
+    const mes = parseInt(dateText.substring(5, 7), 10);
+    const dia = parseInt(dateText.substring(8, 10), 10);
+    const dataBuild = new Date();
+    dataBuild.setFullYear(ano);
+    dataBuild.setMonth(mes - 1);
+    dataBuild.setDate(dia);
+    return dataBuild;
+  }
+
   return (
     <div>
       <Dialog
@@ -402,7 +445,12 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               <Typography variant="h6" className={classes.title}>
                 Cancelar
               </Typography>
-              <Button autoFocus color="inherit" onClick={handleOpenDialogoNota}>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleOpenDialogoNota}
+                disabled={!isDadosValidos() || getValorRestante() !== 0}
+              >
                 Salvar
               </Button>
             </Toolbar>
@@ -418,7 +466,10 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               )}
             /> */}
 
-            <AutoCompleteClientes />
+            <AutoCompleteClientes
+              value={cliente}
+              onChange={(value) => setCliente(value)}
+            />
 
             <Box marginLeft="20px">
               {/* <MuiPickersUtilsProvider
@@ -440,15 +491,17 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               </MuiPickersUtilsProvider> */}
               <TextField
                 id="date"
-                label="Date de pagamento"
+                label="Date da Venda"
                 type="date"
                 color="secondary"
-                defaultValue="2017-05-24"
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
                 }}
                 variant="outlined"
+                inputRef={refDate}
+                defaultValue={getDataAtual()}
+                disabled
               />
             </Box>
           </Box>
