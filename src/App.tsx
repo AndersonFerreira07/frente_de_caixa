@@ -4,6 +4,7 @@ import React from 'react';
 import { ptBR } from '@material-ui/core/locale'; */
 
 import FrentePage from './Pages/Frente';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 /* const theme = createMuiTheme({
   palette: {
@@ -15,7 +16,9 @@ function App() {
   return (
     <div className="App" style={{ height: '100vh' }}>
       {/* <ThemeProvider theme={theme}> */}
+      <SnackbarProvider maxSnack={3}>
         <FrentePage />
+        </SnackbarProvider>
       {/* </ThemeProvider> */}
     </div>
   );

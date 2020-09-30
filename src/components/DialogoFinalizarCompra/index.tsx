@@ -31,6 +31,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 } from '@material-ui/pickers'; */
 
 import moment from 'moment';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 import AutoCompleteClientes from '../AutoCompleteClientes';
 import DialogoNota from '../DialogoNota';
@@ -306,6 +307,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
   const [itens, setItens] = useState<Array<Row2>>([]);
   const [cliente, setCliente] = useState<any>(null);
   const refDate = useRef<any>(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   useImperativeHandle(ref, () => ({
     handleOpen() {
@@ -345,9 +347,25 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     return true;
   }
 
+  function messagesError() {
+    if (cliente === null) {
+      enqueueSnackbar('Campo cliente não foi preenchido!');
+    }
+    if (itens.length <= 0) {
+      enqueueSnackbar('é necessário ao menos um registro de parcela!');
+    }
+    if (getValorRestante() !== 0) {
+      enqueueSnackbar(
+        'O valor total da venda não foi integralmente distribuído nas parcelas!',
+      );
+    }
+  }
+
   const handleOpenDialogoNota = () => {
     console.log(getTodosDados());
-    if (refDialogoNota.current)
+    if (!isDadosValidos() || getValorRestante() !== 0) {
+      messagesError();
+    } else if (refDialogoNota.current)
       refDialogoNota.current.handleOpen(
         testeDadosCompra[0],
         testeConfig,
@@ -449,7 +467,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
                 autoFocus
                 color="inherit"
                 onClick={handleOpenDialogoNota}
-                disabled={!isDadosValidos() || getValorRestante() !== 0}
+                // disabled={!isDadosValidos() || getValorRestante() !== 0}
               >
                 Salvar
               </Button>

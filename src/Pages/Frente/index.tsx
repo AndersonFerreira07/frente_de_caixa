@@ -24,6 +24,8 @@ import LabelSemAtendente from '../../components/LabelSemAtendente'
 
 import api from '../../services/api'
 
+import { SnackbarProvider, useSnackbar } from 'notistack';
+
 export type FrenteProps = {};
 
 const lista = [
@@ -59,6 +61,8 @@ const Frente: FC<FrenteProps> = () => {
   const [modoSearch, setModoSearch] = useState(true)
   const [produto, setProduto] = useState<any>(null)
   const [atendente, setAtendente] = useState('')
+
+  const { enqueueSnackbar } = useSnackbar();
 
   type CountdownHandle = React.ElementRef<typeof DialogoConfirmacao>;
   const componentRef = useRef<CountdownHandle>(null);
@@ -255,7 +259,11 @@ const Frente: FC<FrenteProps> = () => {
                   break;
                 case 1:
                   if (componentRef2.current)
-                    componentRef2.current.handleOpen();
+                    if(itens.length > 0) {
+                      componentRef2.current.handleOpen();
+                    } else {
+                      enqueueSnackbar('É necessário ao menos um item na venda!');
+                    }
                   break;
                 case 2:
                   if (componentRef.current)

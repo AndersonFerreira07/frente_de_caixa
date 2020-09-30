@@ -37,9 +37,15 @@ Funcionalidades:
     ✔ preencer com resto @done(20-09-30 11:30)
     ✔ adiconar item talea tipos pagamento @done(20-09-28 12:25)
     ✔ remover items tabela tipos pagamento @done(20-09-28 12:11)
+    ✔ esconder data de pagamento para pagamento a vista no sideimput tipos pagamentos @done(20-09-28 12:25)
     ☐ visual mais bonito do dialogo finalizar venda
     ☐ enviar dados para servidor
     ☐ get dados para exibir na impressao
-    ✔ esconder data de pagamento para pagamento a vista no sideimput tipos pagamentos @done(20-09-28 12:25)
+    ☐ cliente default
+    ☐ tipo pagamento default
+    ☐ tabela tipos pagamento mais bonita
+    ☐ ao salvar enviar para server e obter obejto total da venda
+    ☐ tela imprimir, escolhe imprimir ou não
+
     
 
