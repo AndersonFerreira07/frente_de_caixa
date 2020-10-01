@@ -16,7 +16,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { createObjVenda } from '../../utils/createObjVenda';
 import NotaFC from '../NotaFC';
 
-export type DialogoNotaProps = {};
+export type DialogoNotaProps = {
+  handleClose: () => void;
+};
 
 export type DialogoNotaHandle = {
   handleOpen: (vendaObj: any, config: any, isNota: boolean) => void;
@@ -38,6 +40,7 @@ const DialogoNota: RefForwardingComponent<
 
   const handleClose = () => {
     setOpen(false);
+    props.handleClose();
   };
 
   useImperativeHandle(ref, () => ({

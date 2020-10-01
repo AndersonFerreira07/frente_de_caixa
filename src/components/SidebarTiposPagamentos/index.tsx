@@ -205,6 +205,8 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
     return dataBuild;
   }
 
+  useEffect(() => {}, []); // get tipo pagamento default
+
   console.log('data formatada');
   console.log(getDataPagamentoFormatted());
 

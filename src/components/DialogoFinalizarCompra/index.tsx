@@ -5,6 +5,7 @@ import React, {
   useState,
   RefForwardingComponent,
   useRef,
+  useEffect,
 } from 'react';
 
 /* import DateFnsUtils from '@date-io/date-fns'; */
@@ -319,6 +320,14 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     setOpen(false);
   };
 
+  function closeDialogoNota() {
+    setItens([]);
+    refDate.current.value = getDataAtual();
+    setCliente(null);
+    setOpen(false);
+    props.handleConfirma();
+  }
+
   const handleSalvar = () => {
     setOpen(false);
     props.handleConfirma();
@@ -361,17 +370,19 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     }
   }
 
-  const handleOpenDialogoNota = () => {
+  async function submitDadosVenda() {
+    return testeDadosCompra[0];
+  }
+
+  async function handleOpenDialogoNota() {
     console.log(getTodosDados());
     if (!isDadosValidos() || getValorRestante() !== 0) {
       messagesError();
-    } else if (refDialogoNota.current)
-      refDialogoNota.current.handleOpen(
-        testeDadosCompra[0],
-        testeConfig,
-        false,
-      );
-  };
+    } else if (refDialogoNota.current) {
+      const response = await submitDadosVenda();
+      refDialogoNota.current.handleOpen(response, testeConfig, false);
+    }
+  }
 
   function handleNewItem(
     valor: number,
@@ -431,6 +442,8 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     dataBuild.setDate(dia);
     return dataBuild;
   }
+
+  useEffect(() => {}, []); // get cliente default
 
   return (
     <div>
@@ -560,7 +573,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
             </Box>
           </Box>
         </Box>
-        <DialogoNota ref={refDialogoNota} />
+        <DialogoNota ref={refDialogoNota} handleClose={closeDialogoNota} />
       </Dialog>
     </div>
   );

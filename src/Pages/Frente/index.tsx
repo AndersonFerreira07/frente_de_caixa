@@ -308,8 +308,8 @@ const Frente: FC<FrenteProps> = () => {
       <Box margin="10px">
         { atendente !== '' ? <Footer tela={tela} disabledPartes={disablePeso()}/> : <LabelSemAtendente/>}
       </Box>
-      <DialogoConfirmacao ref={componentRef} handleConfirma={handleFinalizaVenda}/>
-      <DialogoFinalizarCompra ref={componentRef2} handleConfirma={handleFinalizaVenda} lista={itens} subTotal={getSubTotal()}/>
+      {tela === 0 && <DialogoConfirmacao ref={componentRef} handleConfirma={handleFinalizaVenda}/>}
+      {tela === 0 && <DialogoFinalizarCompra ref={componentRef2} handleConfirma={handleFinalizaVenda} lista={itens} subTotal={getSubTotal()}/>}
       { atendente !== '' && <KeyboardEventHandler
         handleKeys={['f2', 'f4', 'f7', 'f8', 'f9']}
         onKeyEvent={(key, e) => {

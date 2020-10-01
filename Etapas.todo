@@ -43,9 +43,9 @@ Funcionalidades:
     ☐ get dados para exibir na impressao
     ☐ cliente default
     ☐ tipo pagamento default
-    ☐ tabela tipos pagamento mais bonita
+    ✔ tabela tipos pagamento mais bonita @done(20-10-01 11:46)
     ☐ ao salvar enviar para server e obter obejto total da venda
-    ☐ tela imprimir, escolhe imprimir ou não
+    ✔ tela imprimir, escolhe imprimir ou não @done(20-10-01 12:33)
 
     
 

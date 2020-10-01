@@ -90,6 +90,13 @@ const SidebarInputs: RefForwardingComponent<
     return false;
   }
 
+  function dadosAusentes() {
+    if (unidades <= 0 || isNaN(unidades)) {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <Paper elevation={3} style={{ opacity: '0.75' }}>
       <Box
@@ -138,7 +145,7 @@ const SidebarInputs: RefForwardingComponent<
         <Button
           variant="contained"
           color="secondary"
-          disabled={disabled || isError(unidades, produto)}
+          disabled={disabled || isError(unidades, produto) || dadosAusentes()}
           onClick={() => {
             handleNewItem(unidades, peso, precoUnitario);
             setPeso(0);

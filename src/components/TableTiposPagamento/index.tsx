@@ -55,7 +55,7 @@ export type Row = {
 };
 
 type RowFormated = {
-  valor: number;
+  valor: string;
   tipoPgamento: number;
   dataPagamento: string;
   uidd: string;
@@ -120,7 +120,7 @@ const headCells: HeadCell[] = [
   { id: 'valor', numeric: true, disablePadding: false, label: 'Valor' },
   {
     id: 'dataPagamento',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Data de Pagamento',
   },
@@ -358,7 +358,7 @@ const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
     for (let i = 0; i < list.length; i += 1) {
       listFormated.push({
         uidd: list[i].uidd,
-        valor: list[i].valor,
+        valor: formatMoeda(list[i].valor),
         tipoPgamento: list[i].tipoPgamento.nome,
         dataPagamento: moment(list[i].dataPagamento).format('DD/MM/YYYY'),
       });
