@@ -6,20 +6,24 @@ import React, {
   useEffect,
 } from 'react';
 
-import { Box, Button, Paper } from '@material-ui/core';
+import { Box, Button, Paper, TextField } from '@material-ui/core';
 
 import IntegerInput from '../IntegerInput';
 import PesoInput from '../PesoInput';
 import PrecoInput from '../PrecoInput';
+import SelectInput from '../Select';
 
 export type SidebarInputsProps = {
   handleNewItem: (
     quantidade: number,
     peso: number,
     precoUnitario: number,
+    obs: string,
   ) => void;
   disabled: boolean;
   produto: any;
+  listaPrecos: any;
+  cont: number;
 };
 
 export type SidebarInputsHandle = {
@@ -30,10 +34,11 @@ export type SidebarInputsHandle = {
 const SidebarInputs: RefForwardingComponent<
   SidebarInputsHandle,
   SidebarInputsProps
-> = ({ handleNewItem, disabled, produto }, ref) => {
+> = ({ handleNewItem, disabled, produto, listaPrecos, cont }, ref) => {
   const [unidades, setUnidades] = useState(0);
   const [peso, setPeso] = useState(0);
   const [precoUnitario, setPresoUnitario] = useState(0);
+  const [obs, setObs] = useState('');
   /* const [precoTotal, setPrecoTotal] = useState(0); */
 
   useImperativeHandle(ref, () => ({
@@ -94,8 +99,24 @@ const SidebarInputs: RefForwardingComponent<
     if (unidades <= 0 || isNaN(unidades)) {
       return true;
     }
+    if (produto) {
+      if (produto.unidade.modo !== 2 && (peso <= 0 || isNaN(peso))) return true;
+    }
     return false;
   }
+
+  /* const listaPrecos = [
+    {
+      value: 10,
+    },
+    {
+      value: 12,
+    },
+  ]; */
+
+  useEffect(() => {
+    setPresoUnitario(listaPrecos[0].value);
+  }, [cont]);
 
   return (
     <Paper elevation={3} style={{ opacity: '0.75' }}>
@@ -104,6 +125,7 @@ const SidebarInputs: RefForwardingComponent<
         flexDirection="column"
         justifyContent="space-between"
         padding="15px"
+        overflow="auto"
         // bgcolor="red"
       >
         <IntegerInput
@@ -126,11 +148,19 @@ const SidebarInputs: RefForwardingComponent<
             disabled={disabled || !disablePeso()}
           />
         )}
-        <PrecoInput
+        {/* <PrecoInput
           label="Preço Unitário"
           value={precoUnitario}
           onChange={(value: number) => setPresoUnitario(value)}
           fullwidth={false}
+          disabled={disabled}
+        /> */}
+        <SelectInput
+          value={precoUnitario}
+          onChange={(value: number) => setPresoUnitario(value)}
+          label="Preço Unitário"
+          lista={listaPrecos}
+          fullwidth
           disabled={disabled}
         />
         <PrecoInput
@@ -142,16 +172,27 @@ const SidebarInputs: RefForwardingComponent<
           /* error
           helperText="Incorrect entry." */
         />
+        {/* <TextField
+          id="outlined-basic"
+          label="Observação"
+          variant="outlined"
+          value={obs}
+          onChange={(e) => setObs(e.target.value)}
+          // size="small"
+          margin="normal"
+          color="secondary"
+        /> */}
         <Button
           variant="contained"
           color="secondary"
           disabled={disabled || isError(unidades, produto) || dadosAusentes()}
           onClick={() => {
-            handleNewItem(unidades, peso, precoUnitario);
+            handleNewItem(unidades, peso, precoUnitario, obs);
             setPeso(0);
             /* setPrecoTotal(0); */
             setPresoUnitario(0);
             setUnidades(0);
+            setObs('');
           }}
         >
           Adicionar à lista

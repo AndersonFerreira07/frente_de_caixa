@@ -38,14 +38,26 @@ Funcionalidades:
     ✔ adiconar item talea tipos pagamento @done(20-09-28 12:25)
     ✔ remover items tabela tipos pagamento @done(20-09-28 12:11)
     ✔ esconder data de pagamento para pagamento a vista no sideimput tipos pagamentos @done(20-09-28 12:25)
+    ✔ tabela tipos pagamento mais bonita @done(20-10-01 11:46)
+    ✔ tela imprimir, escolhe imprimir ou não @done(20-10-01 12:33)
     ☐ visual mais bonito do dialogo finalizar venda
     ☐ enviar dados para servidor
     ☐ get dados para exibir na impressao
     ☐ cliente default
     ☐ tipo pagamento default
-    ✔ tabela tipos pagamento mais bonita @done(20-10-01 11:46)
     ☐ ao salvar enviar para server e obter obejto total da venda
-    ✔ tela imprimir, escolhe imprimir ou não @done(20-10-01 12:33)
+
+    ✔ selects @done(20-10-02 16:06)
+    ✔ descricoes @done(20-10-02 15:20)
+    ✔ validação peso @done(20-10-02 14:40)
+    ☐ defaults cliente
+    ☐ defaults tipo pagamaneto
+    ✔ defaults precos @done(20-10-02 16:43)
+    ✔ background tipo pagamento @done(20-10-02 16:20)
+    ✔ responsividade melhor @done(20-10-02 15:32)
+    ✔ disable itens se nao tiver o tipo pagamento @done(20-10-02 15:36)
+    ☐ mensagens de erro nos inputs unidades, peso, preço
+
 
     
 

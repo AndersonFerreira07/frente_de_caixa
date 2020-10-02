@@ -47,6 +47,7 @@ const IntegerInput: FC<IntegerInputProps> = ({
   return (
     <TextField
       label={label}
+      // margin="dense"
       margin="normal"
       value={value}
       variant="outlined"
@@ -59,6 +60,7 @@ const IntegerInput: FC<IntegerInputProps> = ({
       }}
       error={error}
       helperText={helperText}
+      // size="small"
     />
   );
 };

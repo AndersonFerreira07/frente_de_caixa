@@ -50,6 +50,7 @@ const PrecoInput: FC<PrecoInputProps> = ({
   return (
     <TextField
       label={label}
+      // margin="dense"
       margin="normal"
       value={value}
       variant="outlined"
@@ -64,6 +65,7 @@ const PrecoInput: FC<PrecoInputProps> = ({
       }}
       error={error}
       helperText={helperText}
+      // size="small"
     />
   );
 };

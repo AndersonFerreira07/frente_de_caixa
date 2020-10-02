@@ -457,11 +457,11 @@ const DialogoFinalizarCompra: RefForwardingComponent<
           height="100vh"
           display="flex"
           flexDirection="column"
-          /* css={{
+          css={{
             background:
               'url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg)',
             backgroundSize: 'cover',
-          }} */
+          }}
         >
           <AppBar className={classes.appBar} color="secondary">
             <Toolbar>
@@ -486,7 +486,11 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               </Button>
             </Toolbar>
           </AppBar>
-          <Box padding="20px 0px 0px 20px" display="flex">
+          <Box
+            padding="20px"
+            display="flex"
+            css={{ backgroundColor: 'white', opacity: '0.75' }}
+          >
             {/* <Autocomplete
               id="combo-box-demo"
               options={top100Films}
@@ -558,7 +562,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               </Box>
               <Box
                 display="flex"
-                justifyContent="space-between"
+                /* justifyContent="space-between" */
                 flexDirection="column"
                 marginLeft="20px"
                 flex={3}
@@ -568,12 +572,33 @@ const DialogoFinalizarCompra: RefForwardingComponent<
                   subTotal={props.subTotal}
                   valorRestante={getValorRestante()}
                 />
-                <LabelSubTotal valor={props.subTotal} isOpaco />
+                <LabelSubTotal valor={props.subTotal} />
               </Box>
             </Box>
           </Box>
         </Box>
         <DialogoNota ref={refDialogoNota} handleClose={closeDialogoNota} />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
       </Dialog>
     </div>
   );

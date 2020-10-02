@@ -46,6 +46,7 @@ const PesoInput: FC<PesoInputProps> = ({
   return (
     <TextField
       label={label}
+      // margin="dense"
       margin="normal"
       value={value}
       variant="outlined"
@@ -56,6 +57,7 @@ const PesoInput: FC<PesoInputProps> = ({
       InputProps={{
         inputComponent: NumberFormatCustom,
       }}
+      // size="small"
     />
   );
 };

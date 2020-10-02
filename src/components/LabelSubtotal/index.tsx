@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor: 'red',
     /* width: '100px',
     height: '100px', */
-    height: '100%',
+    height: 'min(100%, 150px)',
     marginTop: '15px',
     color: 'white',
     boxSizing: 'border-box',
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor: 'red',
     /* width: '100px',
     height: '100px', */
-    height: '100%',
+    height: 'min(100%, 150px)',
     marginTop: '15px',
     color: 'white',
     boxSizing: 'border-box',

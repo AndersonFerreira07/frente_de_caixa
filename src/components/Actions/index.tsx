@@ -60,7 +60,7 @@ const Actions: FC<ActionsProps> = ({ onClick, disabled }) => {
         height="100%"
         // bgcolor="red"
       >
-        <Button
+        {/* <Button
           variant="contained"
           color="secondary"
           className={classes.btn}
@@ -68,7 +68,7 @@ const Actions: FC<ActionsProps> = ({ onClick, disabled }) => {
           disabled={disabled[0]}
         >
           Nova Venda
-        </Button>
+        </Button> */}
 
         <Button
           variant="contained"

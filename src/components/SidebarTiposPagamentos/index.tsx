@@ -13,6 +13,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import moment from 'moment';
 
+import api from '../../services/api';
 import AutoCompleteTiposPagamento from '../AutoCompleteTiposPagamento';
 import PrecoInput from '../PrecoInput';
 
@@ -205,7 +206,12 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
     return dataBuild;
   }
 
-  useEffect(() => {}, []); // get tipo pagamento default
+  useEffect(() => {
+    async function getTipoPagamentoDefault() {
+      const data = await api.get('/config2');
+      const { tipo_pagamento_id } = data.data;
+    }
+  }, []); // get tipo pagamento default
 
   console.log('data formatada');
   console.log(getDataPagamentoFormatted());
@@ -217,7 +223,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
   console.log(valor);
 
   return (
-    <Paper elevation={3}>
+    <Paper elevation={3} style={{ opacity: '0.75' }}>
       <Box
         display="flex"
         flexDirection="column"
@@ -272,7 +278,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             shrink: true,
           }}
           variant="outlined"
-          disabled={getModoAvista()}
+          disabled={getModoAvista() || tipoPagamento === null}
           /* value={getDataPagamentoFormatted()} */
           /* onChange={(e) => {
             console.log('novo valor data');
@@ -287,7 +293,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             value={valor}
             onChange={(value: number) => setValor(value)}
             fullwidth
-            disabled={false}
+            disabled={tipoPagamento === null}
             error={valor > valorRestante}
             helperText={
               valor > valorRestante ? 'total acima do valor da compra' : ''
@@ -307,6 +313,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             setTipoPagamento(null);
           }} */
             /* css={{ marginBottom: '10px' }} */
+            disabled={tipoPagamento === null}
           >
             Preencher com resto
           </Button>

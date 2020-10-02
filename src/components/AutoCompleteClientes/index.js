@@ -89,7 +89,7 @@ export default function Asynchronous({ value, onChange }) {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Clientes"
+          label="Cliente"
           variant="outlined"
           color="secondary"
           InputProps={{

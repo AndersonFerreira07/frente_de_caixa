@@ -53,6 +53,15 @@ const lista = [
   
 ];
 
+const listaPrecos = [
+    {
+      value: 10,
+    },
+    {
+      value: 12,
+    },
+  ];
+
 const Frente: FC<FrenteProps> = () => {
 
   const [itens, setItens] = useState<Array<Row>>([]);
@@ -61,6 +70,7 @@ const Frente: FC<FrenteProps> = () => {
   const [modoSearch, setModoSearch] = useState(true)
   const [produto, setProduto] = useState<any>(null)
   const [atendente, setAtendente] = useState('')
+  const [contAux, setContAux] = useState(0)
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -102,6 +112,7 @@ const Frente: FC<FrenteProps> = () => {
     quantidade: number,
     peso: number,
     precoUnitario: number,
+    obs: string
   ) {
     const position = searchItemInArray(produto, itens);
     console.log('position')
@@ -112,7 +123,8 @@ const Frente: FC<FrenteProps> = () => {
         peso,
         total: getTotal(peso, quantidade, precoUnitario, produto),
         unidades: quantidade,
-        unitario: precoUnitario
+        unitario: precoUnitario,
+        obs: obs
       }])
     } else {  
       const itens2 = itens.slice()
@@ -122,6 +134,7 @@ const Frente: FC<FrenteProps> = () => {
         produto: produto,
         unitario: precoUnitario,
         total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
+        obs: obs
       }
       setItens(itens2)
     }
@@ -182,6 +195,7 @@ const Frente: FC<FrenteProps> = () => {
     /* setItens([]) */
     if (componentRef4.current)
       componentRef4.current.reset();
+    setContAux(contAux + 1)
   }
 
   async function getAtendente() {
@@ -281,8 +295,8 @@ const Frente: FC<FrenteProps> = () => {
               }
             }}
           />
-          {(produto !== null && atendente !== '') && <LabelEstoque produto={produto}/>}
           <LabelAtendente atendente={atendente}/>
+          {(produto !== null && atendente !== '') && <LabelEstoque produto={produto}/>}
         </Box> : null}
         {(tela === 0 && atendente !== '') && <Box padding="0 10px" flex={4}>
           <Table2 rows={itens} removeItens={removeItens} produto={produto}/>
@@ -291,9 +305,9 @@ const Frente: FC<FrenteProps> = () => {
           flex={2}
           display="flex"
           flexDirection="column"
-          justifyContent="space-between"
+          /* justifyContent="space-between" */
         >
-          <SidebarInputs handleNewItem={addNewItem} ref={componentRef4} disabled={produto === null} produto={produto}/>
+          <SidebarInputs handleNewItem={addNewItem} ref={componentRef4} disabled={produto === null} produto={produto} listaPrecos={listaPrecos} cont={contAux}/>
           <LabelSubTotal valor={getSubTotal()} />
         </Box>}
         
@@ -320,8 +334,13 @@ const Frente: FC<FrenteProps> = () => {
                 if(tela === 1) setTela(0) 
               break;
             case 'f4':
-              if (componentRef2.current)
-                componentRef2.current.handleOpen();
+              if (componentRef2.current) {
+                if(itens.length > 0) {
+                  componentRef2.current.handleOpen();
+                } else {
+                  enqueueSnackbar('É necessário ao menos um item na venda!');
+                }
+              }
               break;
             case 'f7':
               if (componentRef.current)

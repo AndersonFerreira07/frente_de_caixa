@@ -21,11 +21,11 @@ export const Default = Template.bind({});
 Default.args = {
   lista: [
     {
-      label: 'RS: 12,34',
+      /* label: 'RS: 12,34', */
       value: 0,
     },
     {
-      label: 'RS: 16,34',
+      /* label: 'RS: 16,34', */
       value: 1,
     },
   ],

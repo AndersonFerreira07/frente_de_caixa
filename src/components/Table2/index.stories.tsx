@@ -25,6 +25,7 @@ const lista = [
     peso: 34,
     unitario: 23,
     total: 45,
+    obs: 'lalla',
   },
   {
     produto: 'Mussarela2',
@@ -32,6 +33,7 @@ const lista = [
     peso: 34,
     unitario: 23,
     total: 45,
+    obs: 'lalla',
   },
   {
     produto: 'Mussarela3',
@@ -39,6 +41,7 @@ const lista = [
     peso: 34,
     unitario: 23,
     total: 45,
+    obs: 'lalla',
   },
 ];
 
