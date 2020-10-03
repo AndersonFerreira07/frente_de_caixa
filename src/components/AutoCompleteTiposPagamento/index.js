@@ -7,6 +7,7 @@ import fetch from 'cross-fetch';
 import { stringify } from 'query-string';
 
 import api from '../../services/api';
+import { getHost } from '../../services/host';
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -39,9 +40,7 @@ export default function Asynchronous({ value, onChange }) {
     }
 
     (async () => {
-      const tiposPagamento = await api(
-        query(`http://localhost:3333/tipospagamento`),
-      );
+      const tiposPagamento = await api(query(`${getHost()}/tipospagamento`));
       await sleep(1e3); // For demo purposes.
 
       if (active) {

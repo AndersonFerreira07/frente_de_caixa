@@ -6,11 +6,11 @@ import axios from 'axios';
 //   // getRefreshToken,
 //   // setNewToken
 // } from './alth';
-// import { getHost } from './host';
+import { getHost } from './host';
 
 const api = axios.create({
   // baseURL: 'https://caruarufriosbackend.herokuapp.com',
-  baseURL: 'http://localhost:3333',
+  baseURL: getHost(),
 });
 
 api.interceptors.request.use(async (config) => {

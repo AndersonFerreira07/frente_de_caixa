@@ -3,7 +3,7 @@ export const HOST = '@host';
 export const getHost = () => {
   const host = localStorage.getItem(HOST);
   if (host === null) {
-    return 'http://localhost:3333';
+    return 'https://caruarufriosbackend.herokuapp.com';
   }
   return host;
 };
