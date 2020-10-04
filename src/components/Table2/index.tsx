@@ -58,7 +58,7 @@ export type Row = {
   peso: number;
   unitario: number;
   total: number;
-  obs: string;
+  // obs: string;
 };
 
 type RowFormated = {
@@ -67,7 +67,7 @@ type RowFormated = {
   peso: string;
   unitario: string;
   total: string;
-  obs: string;
+  // obs: string;
 };
 
 interface Data {
@@ -86,7 +86,7 @@ function createData(
   total: number,
   obs: string,
 ): Row {
-  return { produto, unidades, peso, unitario, total, obs };
+  return { produto, unidades, peso, unitario, total };
 }
 
 const rows = [createData('Cupcake', 305, 3.7, 67, 4.3, 'llala')];
@@ -143,7 +143,7 @@ const headCells: HeadCell[] = [
   { id: 'peso', numeric: true, disablePadding: false, label: 'Peso (Kg)' },
   { id: 'unitario', numeric: true, disablePadding: false, label: 'Unitário' },
   { id: 'total', numeric: true, disablePadding: false, label: 'Total' },
-  { id: 'obs', numeric: true, disablePadding: false, label: 'Obs.' },
+  // { id: 'obs', numeric: true, disablePadding: false, label: 'Obs.' },
 ];
 
 interface EnhancedTableProps {
@@ -390,7 +390,7 @@ const Table2: FC<Table2Props> = ({ rows, removeItens, produto }) => {
         peso: disablePeso(list[i].produto) ? String(list[i].peso) : '-',
         unitario: formatMoeda(list[i].unitario),
         total: formatMoeda(list[i].total),
-        obs: list[i].obs,
+        // obs: list[i].obs,
       });
     }
     return listFormated;
@@ -466,7 +466,7 @@ const Table2: FC<Table2Props> = ({ rows, removeItens, produto }) => {
                       <TableCell align="right">{row.peso}</TableCell>
                       <TableCell align="right">{row.unitario}</TableCell>
                       <TableCell align="right">{row.total}</TableCell>
-                      <TableCell align="right">{row.obs}</TableCell>
+                      {/* <TableCell align="right">{row.obs}</TableCell> */}
                     </StyledTableRow>
                   );
                 },

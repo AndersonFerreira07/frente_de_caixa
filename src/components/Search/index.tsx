@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, forwardRef } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 
 import Divider from '@material-ui/core/Divider';
@@ -41,53 +41,70 @@ export type SearchProps = {
   fullwidth: boolean;
   disabled: boolean;
   searchHandle: () => void;
+  handleF4: (code: number) => void;
 };
 
-const Search: FC<SearchProps> = ({
-  label,
-  value,
-  onChange,
-  fullwidth,
-  disabled = false,
-  searchHandle,
-}) => {
-  const classes = useStyles();
+const Search = forwardRef<any, SearchProps>(
+  (
+    {
+      label,
+      value,
+      onChange,
+      fullwidth,
+      disabled = false,
+      searchHandle,
+      handleF4,
+    },
+    forwardedRef,
+  ) => {
+    const classes = useStyles();
 
-  function keyPress(e) {
-    if (e.keyCode === 13) {
-      searchHandle();
+    function keyPress(e) {
+      if (e.keyCode === 13) {
+        searchHandle();
+      }
+      if (e.keyCode === 115) {
+        handleF4(115);
+      }
+      if (e.keyCode === 119) {
+        handleF4(119);
+      }
+      if (e.keyCode === 120) {
+        handleF4(120);
+      }
     }
-  }
 
-  return (
-    <Paper
-      component="form"
-      className={classes.root}
-      onSubmit={(e) => e.preventDefault()}
-    >
-      {/* <IconButton className={classes.iconButton} aria-label="menu">
+    return (
+      <Paper
+        component="form"
+        className={classes.root}
+        onSubmit={(e) => e.preventDefault()}
+      >
+        {/* <IconButton className={classes.iconButton} aria-label="menu">
         <MenuIcon />
       </IconButton> */}
-      <InputBase
-        className={classes.input}
-        placeholder={label}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        inputProps={{ 'aria-label': 'Código de barras' }}
-        fullWidth={fullwidth}
-        disabled={disabled}
-        onKeyDown={keyPress}
-      />
-      <IconButton
-        // type="submit"
-        className={classes.iconButton}
-        aria-label="search"
-        disabled={disabled}
-        onClick={() => searchHandle()}
-      >
-        <SearchIcon />
-      </IconButton>
-      {/* <Divider className={classes.divider} orientation="vertical" />
+        <InputBase
+          className={classes.input}
+          placeholder={label}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          inputProps={{ 'aria-label': 'Código de barras' }}
+          fullWidth={fullwidth}
+          disabled={disabled}
+          onKeyDown={keyPress}
+          inputRef={forwardedRef}
+          autoFocus
+        />
+        <IconButton
+          // type="submit"
+          className={classes.iconButton}
+          aria-label="search"
+          disabled={disabled}
+          onClick={() => searchHandle()}
+        >
+          <SearchIcon />
+        </IconButton>
+        {/* <Divider className={classes.divider} orientation="vertical" />
       <IconButton
         color="primary"
         className={classes.iconButton}
@@ -95,8 +112,9 @@ const Search: FC<SearchProps> = ({
       >
         <DirectionsIcon />
       </IconButton> */}
-    </Paper>
-  );
-};
+      </Paper>
+    );
+  },
+);
 
 export default Search;

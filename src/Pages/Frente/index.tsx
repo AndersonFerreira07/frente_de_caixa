@@ -86,6 +86,8 @@ const Frente: FC<FrenteProps> = () => {
   type CountdownHandle4 = React.ElementRef<typeof SidebarInputs>;
   const componentRef4 = useRef<CountdownHandle4>(null);
 
+  const refSearch = useRef<any>(null);
+
   const nomeProduto = produto !== null ? produto.nome : 'Nenhum Produto';
 
   function handleSoma(unidades: number, peso: number) {
@@ -93,7 +95,14 @@ const Frente: FC<FrenteProps> = () => {
       componentRef4.current.setValues(unidades, peso)
   }
 
-  function searchItemInArray(produto, itens) {
+  function searchItemInArray(produto, precoUnitario, itens) {
+    for(let i = 0; i < itens.length; i++) {
+      if(produto.id === itens[i].produto.id && precoUnitario === itens[i].unitario) return i
+    }
+    return -1
+  }
+
+  function searchItemInArray2(produto, itens) {
     for(let i = 0; i < itens.length; i++) {
       if(produto.id === itens[i].produto.id) return i
     }
@@ -112,33 +121,34 @@ const Frente: FC<FrenteProps> = () => {
     quantidade: number,
     peso: number,
     precoUnitario: number,
-    obs: string
+    //obs: string
   ) {
-    const position = searchItemInArray(produto, itens);
+    const position = searchItemInArray(produto, precoUnitario, itens);
     console.log('position')
     console.log(position)
-    if(position < 0) {
+    if(position < 0 ) {
       setItens([...itens, {
         produto: produto,
-        peso,
+        peso: produto.unidade.modo === 2 ? 0 : peso,
         total: getTotal(peso, quantidade, precoUnitario, produto),
         unidades: quantidade,
         unitario: precoUnitario,
-        obs: obs
+        //obs: obs
       }])
     } else {  
       const itens2 = itens.slice()
       itens2[position] = {
-        peso: itens2[position].peso + peso,
+        peso: (itens2[position].peso + (produto.unidade.modo === 2 ? 0 : peso)),
         unidades: itens2[position].unidades + quantidade,
         produto: produto,
         unitario: precoUnitario,
         total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
-        obs: obs
+        //obs: obs
       }
       setItens(itens2)
     }
     setProduto(null)
+    if(refSearch.current) refSearch.current.focus()
   }
 
   function getOpen() {
@@ -183,11 +193,13 @@ const Frente: FC<FrenteProps> = () => {
     const data = await api.get(`/produtos2/${search}`)
     console.log(data.data)
     if(data.data.length > 0) {
-      const index = searchItemInArray(data.data[0], itens);
+      const index = searchItemInArray2(data.data[0], itens);
       if(index >= 0) {
         data.data[0].unidadesDisponivel = data.data[0].unidadesDisponivel - itens[index].unidades
       }
       setProduto(data.data[0]);
+      if (componentRef4.current)
+        componentRef4.current.focus();
     } else {
       setProduto(null);
     }
@@ -255,6 +267,33 @@ const Frente: FC<FrenteProps> = () => {
           fullwidth
           disabled={false}
           searchHandle={searchHandle}
+          ref={refSearch}
+          handleF4={(code) => {
+            switch (code) {
+              case 115:
+                if (componentRef2.current)
+                  if(itens.length > 0) {
+                    componentRef2.current.handleOpen();
+                  } else {
+                    enqueueSnackbar('É necessário ao menos um item na venda!');
+                  }
+                break;
+              case 119:
+                if (componentRef.current)
+                  componentRef.current.handleOpen(
+                    'Cancelar Venda',
+                'Tem certeza que deseja cancelar o cadastro desta venda ',
+                  );
+                break;
+              /* case 120:
+                if (componentRef3.current && produto !== null)
+                  if(produto.unidade.modo === 0)
+                    componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
+                break; */
+              default:
+                break;
+
+          }}}
         />
       </Box> : <Box margin="10px"/>}
       <Box display="flex" justifyContent="space-between" padding="10px">
@@ -307,7 +346,19 @@ const Frente: FC<FrenteProps> = () => {
           flexDirection="column"
           /* justifyContent="space-between" */
         >
-          <SidebarInputs handleNewItem={addNewItem} ref={componentRef4} disabled={produto === null} produto={produto} listaPrecos={listaPrecos} cont={contAux}/>
+          <SidebarInputs 
+            handleNewItem={addNewItem} 
+            ref={componentRef4} 
+            disabled={produto === null} 
+            produto={produto} 
+            listaPrecos={listaPrecos} 
+            cont={contAux}
+            handleF9={() => {
+              if (componentRef3.current && produto !== null)
+                if(produto.unidade.modo === 0)
+                  componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
+            }}
+          />
           <LabelSubTotal valor={getSubTotal()} />
         </Box>}
         

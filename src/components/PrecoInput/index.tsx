@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, forwardRef } from 'react';
 import NumberFormat from 'react-number-format';
 
 import { TextField } from '@material-ui/core';
@@ -36,38 +36,49 @@ export type PrecoInputProps = {
   disabled: boolean;
   error?: boolean;
   helperText?: string;
+  handleEnter?: () => void;
 };
 
-const PrecoInput: FC<PrecoInputProps> = ({
-  label,
-  value,
-  onChange,
-  fullwidth,
-  disabled = false,
-  error = false,
-  helperText = '',
-}) => {
-  return (
-    <TextField
-      label={label}
-      // margin="dense"
-      margin="normal"
-      value={value}
-      variant="outlined"
-      fullWidth={fullwidth}
-      disabled={disabled}
-      color="secondary"
-      onChange={(e) => onChange(parseFloat(e.target.value))}
-      name="numberformat"
-      id="formatted-numberformat-input"
-      InputProps={{
-        inputComponent: NumberFormatCustom,
-      }}
-      error={error}
-      helperText={helperText}
-      // size="small"
-    />
-  );
-};
+const PrecoInput = forwardRef<any, PrecoInputProps>(
+  (
+    {
+      label,
+      value,
+      onChange,
+      fullwidth,
+      disabled = false,
+      error = false,
+      helperText = '',
+      handleEnter = () => {},
+    },
+    forwardedRef,
+  ) => {
+    return (
+      <TextField
+        label={label}
+        // margin="dense"
+        margin="normal"
+        value={value}
+        variant="outlined"
+        fullWidth={fullwidth}
+        disabled={disabled}
+        color="secondary"
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        name="numberformat"
+        id="formatted-numberformat-input"
+        InputProps={{
+          inputComponent: NumberFormatCustom,
+        }}
+        error={error}
+        helperText={helperText}
+        inputRef={forwardedRef}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') handleEnter();
+        }}
+        // size="small"
+      />
+    );
+  },
+);
 
 export default PrecoInput;

@@ -4,6 +4,7 @@ import React, {
   useState,
   RefForwardingComponent,
   useEffect,
+  useRef,
 } from 'react';
 
 import { Box, Button, Paper, TextField } from '@material-ui/core';
@@ -18,28 +19,37 @@ export type SidebarInputsProps = {
     quantidade: number,
     peso: number,
     precoUnitario: number,
-    obs: string,
+    // obs: string,
   ) => void;
   disabled: boolean;
   produto: any;
   listaPrecos: any;
   cont: number;
+  handleF9: () => void;
 };
 
 export type SidebarInputsHandle = {
   setValues: (unidadesNew: number, pesoNew: number) => void;
   reset: () => void;
+  focus: () => void;
 };
 
 const SidebarInputs: RefForwardingComponent<
   SidebarInputsHandle,
   SidebarInputsProps
-> = ({ handleNewItem, disabled, produto, listaPrecos, cont }, ref) => {
+> = (
+  { handleNewItem, disabled, produto, listaPrecos, cont, handleF9 },
+  ref,
+) => {
   const [unidades, setUnidades] = useState(0);
   const [peso, setPeso] = useState(0);
   const [precoUnitario, setPresoUnitario] = useState(0);
-  const [obs, setObs] = useState('');
+  // const [obs, setObs] = useState('');
   /* const [precoTotal, setPrecoTotal] = useState(0); */
+  const refQtde = useRef<any>(null);
+  const refPeso = useRef<any>(null);
+  const refPreco = useRef<any>(null);
+  const refButton = useRef<any>(null);
 
   useImperativeHandle(ref, () => ({
     setValues(unidadesNew: number, pesoNew: number) {
@@ -50,6 +60,12 @@ const SidebarInputs: RefForwardingComponent<
       setPeso(0);
       setUnidades(0);
       setPresoUnitario(0);
+    },
+    focus() {
+      if (refQtde.current) {
+        refQtde.current.focus();
+        refQtde.current.select();
+      }
     },
   }));
 
@@ -115,8 +131,11 @@ const SidebarInputs: RefForwardingComponent<
   ]; */
 
   useEffect(() => {
-    setPresoUnitario(listaPrecos[0].value);
+    // setPresoUnitario(listaPrecos[0].value);
   }, [cont]);
+
+  console.log('QUNARIDADE KKKKK');
+  console.log(unidades);
 
   return (
     <Paper elevation={3} style={{ opacity: '0.75' }}>
@@ -138,6 +157,19 @@ const SidebarInputs: RefForwardingComponent<
           helperText={
             isError(unidades, produto) ? 'Unidades acima do disponível' : ''
           }
+          ref={refQtde}
+          handleEnter={() => {
+            if (showPeso()) {
+              if (refPeso.current) {
+                refPeso.current.focus();
+                refPeso.current.select();
+              }
+            } else if (refPreco.current) {
+              refPreco.current.focus();
+              refPreco.current.select();
+            }
+          }}
+          handleF9={() => handleF9()}
         />
         {showPeso() && (
           <PesoInput
@@ -146,29 +178,45 @@ const SidebarInputs: RefForwardingComponent<
             onChange={(value: number) => setPeso(value)}
             fullwidth={false}
             disabled={disabled || !disablePeso()}
+            ref={refPeso}
+            handleEnter={() => {
+              if (refPreco.current) {
+                refPreco.current.focus();
+                refPreco.current.select();
+              }
+            }}
           />
         )}
-        {/* <PrecoInput
+        <PrecoInput
           label="Preço Unitário"
           value={precoUnitario}
           onChange={(value: number) => setPresoUnitario(value)}
           fullwidth={false}
           disabled={disabled}
-        /> */}
-        <SelectInput
+          ref={refPreco}
+          handleEnter={() => {
+            if (refButton.current) {
+              refButton.current.click();
+              // refButton.current.select();
+            }
+            // if (refPeso.current) refPeso.current.focus();
+          }}
+        />
+        {/* <SelectInput
           value={precoUnitario}
           onChange={(value: number) => setPresoUnitario(value)}
           label="Preço Unitário"
           lista={listaPrecos}
           fullwidth
           disabled={disabled}
-        />
+        /> */}
         <PrecoInput
           label="Preço Total"
           value={calculaPrecoTotal()}
           onChange={(value: number) => console.log(value)}
           fullwidth={false}
           disabled
+
           /* error
           helperText="Incorrect entry." */
         />
@@ -187,13 +235,14 @@ const SidebarInputs: RefForwardingComponent<
           color="secondary"
           disabled={disabled || isError(unidades, produto) || dadosAusentes()}
           onClick={() => {
-            handleNewItem(unidades, peso, precoUnitario, obs);
+            handleNewItem(unidades, peso, precoUnitario);
             setPeso(0);
             /* setPrecoTotal(0); */
             setPresoUnitario(0);
             setUnidades(0);
-            setObs('');
+            // setObs('');
           }}
+          ref={refButton}
         >
           Adicionar à lista
         </Button>

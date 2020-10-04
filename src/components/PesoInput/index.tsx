@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, forwardRef } from 'react';
 import NumberFormat from 'react-number-format';
 
 import { TextField } from '@material-ui/core';
@@ -34,32 +34,43 @@ export type PesoInputProps = {
   onChange: (value: number) => void;
   fullwidth: boolean;
   disabled: boolean;
+  handleEnter?: () => void;
 };
 
-const PesoInput: FC<PesoInputProps> = ({
-  label,
-  value,
-  onChange,
-  fullwidth,
-  disabled = false,
-}) => {
-  return (
-    <TextField
-      label={label}
-      // margin="dense"
-      margin="normal"
-      value={value}
-      variant="outlined"
-      fullWidth={fullwidth}
-      disabled={disabled}
-      color="secondary"
-      onChange={(e) => onChange(parseFloat(e.target.value))}
-      InputProps={{
-        inputComponent: NumberFormatCustom,
-      }}
-      // size="small"
-    />
-  );
-};
+const PesoInput = forwardRef<any, PesoInputProps>(
+  (
+    {
+      label,
+      value,
+      onChange,
+      fullwidth,
+      disabled = false,
+      handleEnter = () => {},
+    },
+    forwardedRef,
+  ) => {
+    return (
+      <TextField
+        label={label}
+        // margin="dense"
+        margin="normal"
+        value={value}
+        variant="outlined"
+        fullWidth={fullwidth}
+        disabled={disabled}
+        color="secondary"
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        InputProps={{
+          inputComponent: NumberFormatCustom,
+        }}
+        inputRef={forwardedRef}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') handleEnter();
+        }}
+        // size="small"
+      />
+    );
+  },
+);
 
 export default PesoInput;
