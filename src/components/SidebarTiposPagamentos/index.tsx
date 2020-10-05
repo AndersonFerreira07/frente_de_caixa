@@ -300,30 +300,23 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             }
           />
         </Box>
-        <Box width="100%" marginBottom="10px">
+        {/* <Box width="100%" marginBottom="10px">
           <Button
             variant="contained"
             color="secondary"
             fullWidth
             onClick={() => preencheValorComResto()}
-            /* onClick={() => {
-            handleNewItem(valor, tipoPagamento, dataPagamento);
-            setValor(0);
-            setDataPagamento(new Date());
-            setTipoPagamento(null);
-          }} */
-            /* css={{ marginBottom: '10px' }} */
             disabled={tipoPagamento === null}
           >
             Preencher com resto
           </Button>
-        </Box>
+        </Box> */}
         <Button
           variant="contained"
           color="secondary"
           onClick={() => {
             handleNewItem(
-              valor,
+              isNaN(valor) ? valorRestante : valor,
               tipoPagamento,
               refDate === null
                 ? new Date()
@@ -341,11 +334,11 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             valor <= 0 ||
             valor === null ||
             valor === undefined ||
-            isNaN(valor) ||
+            (isNaN(valor) && valorRestante <= 0) ||
             valor > valorRestante
           }
         >
-          Adicionar à lista
+          {isNaN(valor) ? 'Preencher' : 'Adicionar'}
         </Button>
       </Box>
     </Paper>

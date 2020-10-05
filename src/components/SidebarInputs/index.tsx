@@ -170,6 +170,24 @@ const SidebarInputs: RefForwardingComponent<
             }
           }}
           handleF9={() => handleF9()}
+          handleDirection={(direction) => {
+            if (direction === 40) {
+              if (showPeso()) {
+                if (refPeso.current) {
+                  refPeso.current.focus();
+                  refPeso.current.select();
+                }
+              } else if (refPreco.current) {
+                refPreco.current.focus();
+                refPreco.current.select();
+              }
+            } else if (direction === 38) {
+              if (refPreco.current) {
+                refPreco.current.focus();
+                refPreco.current.select();
+              }
+            }
+          }}
         />
         {showPeso() && (
           <PesoInput
@@ -183,6 +201,20 @@ const SidebarInputs: RefForwardingComponent<
               if (refPreco.current) {
                 refPreco.current.focus();
                 refPreco.current.select();
+              }
+            }}
+            handleF9={() => handleF9()}
+            handleDirection={(direction) => {
+              if (direction === 40) {
+                if (refPreco.current) {
+                  refPreco.current.focus();
+                  refPreco.current.select();
+                }
+              } else if (direction === 38) {
+                if (refQtde.current) {
+                  refQtde.current.focus();
+                  refQtde.current.select();
+                }
               }
             }}
           />
@@ -200,6 +232,24 @@ const SidebarInputs: RefForwardingComponent<
               // refButton.current.select();
             }
             // if (refPeso.current) refPeso.current.focus();
+          }}
+          handleDirection={(direction) => {
+            if (direction === 38) {
+              if (showPeso()) {
+                if (refPeso.current) {
+                  refPeso.current.focus();
+                  refPeso.current.select();
+                }
+              } else if (refQtde.current) {
+                refQtde.current.focus();
+                refQtde.current.select();
+              }
+            } else if (direction === 40) {
+              if (refQtde.current) {
+                refQtde.current.focus();
+                refQtde.current.select();
+              }
+            }
           }}
         />
         {/* <SelectInput

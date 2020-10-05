@@ -46,10 +46,22 @@ const useStyles = makeStyles((theme) => ({
 export type ActionsProps = {
   onClick: (action: number) => void;
   disabled: boolean[];
+  produto: any;
 };
 
-const Actions: FC<ActionsProps> = ({ onClick, disabled }) => {
+const Actions: FC<ActionsProps> = ({ onClick, disabled, produto }) => {
   const classes = useStyles();
+
+  function showButtonPorPartes() {
+    if (produto) {
+      if (produto.unidade.modo === 0) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
   return (
     <Paper elevation={3} className={classes.container}>
       <Box
@@ -77,7 +89,7 @@ const Actions: FC<ActionsProps> = ({ onClick, disabled }) => {
           onClick={() => onClick(1)}
           disabled={disabled[1]}
         >
-          Fechar Venda
+          Fechar Venda (F4)
         </Button>
 
         {/* <Button
@@ -96,8 +108,20 @@ const Actions: FC<ActionsProps> = ({ onClick, disabled }) => {
           onClick={() => onClick(3)}
           disabled={disabled[2]}
         >
-          Cancelar Venda
+          Cancelar Venda (F8)
         </Button>
+
+        {showButtonPorPartes() && (
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.btn}
+            onClick={() => onClick(5)}
+            disabled={disabled[2]}
+          >
+            Por partes (F9)
+          </Button>
+        )}
       </Box>
     </Paper>
   );

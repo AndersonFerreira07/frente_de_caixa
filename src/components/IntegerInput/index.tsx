@@ -35,6 +35,7 @@ export type IntegerInputProps = {
   helperText: string;
   handleEnter?: () => void;
   handleF9?: () => void;
+  handleDirection?: (direction: number) => void;
 };
 
 const IntegerInput = forwardRef<any, IntegerInputProps>(
@@ -49,6 +50,7 @@ const IntegerInput = forwardRef<any, IntegerInputProps>(
       helperText,
       handleEnter = () => {},
       handleF9 = () => {},
+      handleDirection = (direction: number) => {},
     },
     forwardedRef,
   ) => {
@@ -69,9 +71,11 @@ const IntegerInput = forwardRef<any, IntegerInputProps>(
         error={error}
         helperText={helperText}
         inputRef={forwardedRef}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') handleEnter();
-          if (e.key === 'F9') handleF9();
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) handleEnter();
+          if (e.keyCode === 120) handleF9();
+          if (e.keyCode === 38) handleDirection(38);
+          if (e.keyCode === 40) handleDirection(40);
         }}
         // size="small"
       />

@@ -37,6 +37,7 @@ export type PrecoInputProps = {
   error?: boolean;
   helperText?: string;
   handleEnter?: () => void;
+  handleDirection?: (direction: number) => void;
 };
 
 const PrecoInput = forwardRef<any, PrecoInputProps>(
@@ -50,6 +51,7 @@ const PrecoInput = forwardRef<any, PrecoInputProps>(
       error = false,
       helperText = '',
       handleEnter = () => {},
+      handleDirection = (direction: number) => {},
     },
     forwardedRef,
   ) => {
@@ -72,8 +74,10 @@ const PrecoInput = forwardRef<any, PrecoInputProps>(
         error={error}
         helperText={helperText}
         inputRef={forwardedRef}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') handleEnter();
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) handleEnter();
+          if (e.keyCode === 38) handleDirection(38);
+          if (e.keyCode === 40) handleDirection(40);
         }}
         // size="small"
       />

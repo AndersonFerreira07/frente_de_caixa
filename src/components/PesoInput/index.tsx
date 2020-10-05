@@ -35,6 +35,8 @@ export type PesoInputProps = {
   fullwidth: boolean;
   disabled: boolean;
   handleEnter?: () => void;
+  handleF9?: () => void;
+  handleDirection?: (direction: number) => void;
 };
 
 const PesoInput = forwardRef<any, PesoInputProps>(
@@ -46,6 +48,8 @@ const PesoInput = forwardRef<any, PesoInputProps>(
       fullwidth,
       disabled = false,
       handleEnter = () => {},
+      handleF9 = () => {},
+      handleDirection = (direction: number) => {},
     },
     forwardedRef,
   ) => {
@@ -64,8 +68,11 @@ const PesoInput = forwardRef<any, PesoInputProps>(
           inputComponent: NumberFormatCustom,
         }}
         inputRef={forwardedRef}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') handleEnter();
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) handleEnter();
+          if (e.keyCode === 120) handleF9();
+          if (e.keyCode === 38) handleDirection(38);
+          if (e.keyCode === 40) handleDirection(40);
         }}
         // size="small"
       />

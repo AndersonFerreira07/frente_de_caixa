@@ -302,6 +302,7 @@ const Frente: FC<FrenteProps> = () => {
           >
           <Actions
             disabled={getDisabled()}
+            produto={produto}
             onClick={(action) => {
               switch (action) {
                 case 0:
@@ -328,6 +329,11 @@ const Frente: FC<FrenteProps> = () => {
                       'Cancelar Venda',
                   'Tem certeza que deseja cancelar o cadastro desta venda ',
                     );
+                  break;
+                case 5:
+                  if (componentRef3.current && produto !== null)
+                    if(produto.unidade.modo === 0)
+                      componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
                   break;
                 default:
                   break;
@@ -371,7 +377,7 @@ const Frente: FC<FrenteProps> = () => {
         </Box>}
       </Box>
       <Box margin="10px">
-        { atendente !== '' ? <Footer tela={tela} disabledPartes={disablePeso()}/> : <LabelSemAtendente/>}
+        { atendente !== '' && tela === 1 ? <Footer tela={tela} disabledPartes={disablePeso()}/> : tela === 1 ? <LabelSemAtendente/> : null}
       </Box>
       {tela === 0 && <DialogoConfirmacao ref={componentRef} handleConfirma={handleFinalizaVenda}/>}
       {tela === 0 && <DialogoFinalizarCompra ref={componentRef2} handleConfirma={handleFinalizaVenda} lista={itens} subTotal={getSubTotal()}/>}
