@@ -1,5 +1,13 @@
 /*  */ import 'date-fns';
-import React, { useState, FC, useEffect, useRef } from 'react';
+import React, {
+  useImperativeHandle,
+  forwardRef,
+  useState,
+  RefForwardingComponent,
+  useEffect,
+  useRef,
+  FC,
+} from 'react';
 
 /*  */ import DateFnsUtils from '@date-io/date-fns';
 import { Box, Button, Paper } from '@material-ui/core';
@@ -147,16 +155,33 @@ const top100Films = [
   { title: 'Monty Python and the Holy Grail', year: 1975 },
 ];
 
-const SidebarInputs: FC<SidebarInputsProps> = ({
-  handleNewItem,
-  subTotal,
-  valorRestante,
-}) => {
+export type SidebarInputsHandle = {
+  focus: () => void;
+};
+
+const SidebarInputs: RefForwardingComponent<
+  SidebarInputsHandle,
+  SidebarInputsProps
+> = ({ handleNewItem, subTotal, valorRestante }, ref) => {
   const [valor, setValor] = useState(0);
   const [tipoPagamento, setTipoPagamento] = useState<any>(null);
   const [dataPagamento, setDataPagamento] = useState<Date | null>(new Date());
   const refDate = useRef<any>(null);
   const classes = useStyles();
+
+  const refMeioPagamento = useRef<any>(null);
+  const refValor = useRef<any>(null);
+  const refButton = useRef<any>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus() {
+      console.log('OLA MEU AMIGO ENTROU!');
+      if (refValor.current) {
+        refValor.current.focus();
+        refValor.current.select();
+      }
+    },
+  }));
 
   function getModoAvista() {
     if (tipoPagamento) {
@@ -213,6 +238,13 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
     }
   }, []); // get tipo pagamento default
 
+  useEffect(() => {
+    if (refMeioPagamento.current) {
+      refMeioPagamento.current.focus();
+      refMeioPagamento.current.select();
+    }
+  }, []); // get tipo pagamento default
+
   console.log('data formatada');
   console.log(getDataPagamentoFormatted());
 
@@ -248,6 +280,18 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
           onChange={(value) => {
             updateDataPagamento(value);
             setTipoPagamento(value);
+          }}
+          ref={refMeioPagamento}
+          handleEnter={() => {
+            if (getModoAvista()) {
+              if (refDate.current) {
+                refDate.current.focus();
+                refDate.current.select();
+              }
+            } else if (refValor.current) {
+              refValor.current.focus();
+              refValor.current.select();
+            }
           }}
         />
         {/* <MuiPickersUtilsProvider utils={DateFnsUtils} css={{ width: '100%' }}>
@@ -285,6 +329,17 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             console.log(e.target.value);
             setDataPagamento(new Date(e.target.value));
           }} */
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) {
+              if (refValor.current) {
+                refValor.current.focus();
+                refValor.current.select();
+              }
+            }
+            /* if (e.keyCode === 120) handleF9();
+            if (e.keyCode === 38) handleDirection(38);
+            if (e.keyCode === 40) handleDirection(40); */
+          }}
           inputRef={refDate}
         />
         <Box width="100%" display="flex">
@@ -293,11 +348,20 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             value={valor}
             onChange={(value: number) => setValor(value)}
             fullwidth
-            disabled={tipoPagamento === null}
+            // disabled={tipoPagamento === null}
+            disabled={false}
             error={valor > valorRestante}
             helperText={
               valor > valorRestante ? 'total acima do valor da compra' : ''
             }
+            ref={refValor}
+            handleEnter={() => {
+              if (refButton.current) {
+                refButton.current.click();
+                // refButton.current.select();
+              }
+              // if (refPeso.current) refPeso.current.focus();
+            }}
           />
         </Box>
         {/* <Box width="100%" marginBottom="10px">
@@ -326,6 +390,10 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             setDataPagamento(new Date());
             setTipoPagamento(null);
             refDate.current.value = getDataAtual();
+            if (refMeioPagamento.current) {
+              refMeioPagamento.current.focus();
+              refMeioPagamento.current.select();
+            }
             console.log('data pagamento kkkk');
             console.log(new Date(refDate.current.value));
           }}
@@ -337,6 +405,7 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
             (isNaN(valor) && valorRestante <= 0) ||
             valor > valorRestante
           }
+          ref={refButton}
         >
           {isNaN(valor) ? 'Preencher' : 'Adicionar'}
         </Button>
@@ -345,4 +414,4 @@ const SidebarInputs: FC<SidebarInputsProps> = ({
   );
 };
 
-export default SidebarInputs;
+export default forwardRef(SidebarInputs);

@@ -252,7 +252,9 @@ const Frente: FC<FrenteProps> = () => {
       height="100%"
       display="grid"
       gridTemplateColumns="1fr"
-      gridTemplateRows="1fr 10fr 1fr"
+      //gridTemplateRows="1fr 10fr 1fr"
+      gridTemplateRows="1fr 10fr"
+
       css={{ background: 'url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg)', backgroundSize: 'cover' }}
       // css={{ background: 'url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/221808/sky.jpg)', backgroundSize: 'cover' }}
     >
@@ -376,9 +378,9 @@ const Frente: FC<FrenteProps> = () => {
           </div>
         </Box>}
       </Box>
-      <Box margin="10px">
+      {(tela === 1) && <Box margin="10px">
         { atendente !== '' && tela === 1 ? <Footer tela={tela} disabledPartes={disablePeso()}/> : tela === 1 ? <LabelSemAtendente/> : null}
-      </Box>
+      </Box>}
       {tela === 0 && <DialogoConfirmacao ref={componentRef} handleConfirma={handleFinalizaVenda}/>}
       {tela === 0 && <DialogoFinalizarCompra ref={componentRef2} handleConfirma={handleFinalizaVenda} lista={itens} subTotal={getSubTotal()}/>}
       { atendente !== '' && <KeyboardEventHandler

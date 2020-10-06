@@ -55,6 +55,10 @@ const SidebarInputs: RefForwardingComponent<
     setValues(unidadesNew: number, pesoNew: number) {
       setUnidades(unidadesNew);
       setPeso(pesoNew);
+      if (refPreco.current) {
+        refPreco.current.focus();
+        refPreco.current.select();
+      }
     },
     reset() {
       setPeso(0);
@@ -94,6 +98,14 @@ const SidebarInputs: RefForwardingComponent<
       return true;
     }
     return true;
+  }
+
+  function conditionShowPeso() {
+    if (produto) {
+      if (produto.unidade.modo === 0) return true;
+      return false;
+    }
+    return false;
   }
 
   useEffect(() => {
@@ -159,7 +171,7 @@ const SidebarInputs: RefForwardingComponent<
           }
           ref={refQtde}
           handleEnter={() => {
-            if (showPeso()) {
+            if (conditionShowPeso()) {
               if (refPeso.current) {
                 refPeso.current.focus();
                 refPeso.current.select();
@@ -172,7 +184,7 @@ const SidebarInputs: RefForwardingComponent<
           handleF9={() => handleF9()}
           handleDirection={(direction) => {
             if (direction === 40) {
-              if (showPeso()) {
+              if (conditionShowPeso()) {
                 if (refPeso.current) {
                   refPeso.current.focus();
                   refPeso.current.select();
@@ -235,7 +247,7 @@ const SidebarInputs: RefForwardingComponent<
           }}
           handleDirection={(direction) => {
             if (direction === 38) {
-              if (showPeso()) {
+              if (conditionShowPeso()) {
                 if (refPeso.current) {
                   refPeso.current.focus();
                   refPeso.current.select();

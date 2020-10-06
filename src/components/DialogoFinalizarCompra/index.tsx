@@ -308,11 +308,17 @@ const DialogoFinalizarCompra: RefForwardingComponent<
   const [itens, setItens] = useState<Array<Row2>>([]);
   const [cliente, setCliente] = useState<any>(null);
   const refDate = useRef<any>(null);
+
+  type SidebarHandle = React.ElementRef<typeof SidebarTiposPagamentos>;
+  const refSidebar = useRef<SidebarHandle>(null);
+
   const { enqueueSnackbar } = useSnackbar();
 
   useImperativeHandle(ref, () => ({
     handleOpen() {
       setOpen(true);
+      console.log('meu lalalalala poajj');
+      if (refSidebar.current) refSidebar.current.focus();
     },
   }));
 
@@ -463,7 +469,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
             backgroundSize: 'cover',
           }}
         >
-          <AppBar className={classes.appBar} color="secondary">
+          {/* <AppBar className={classes.appBar} color="secondary">
             <Toolbar>
               <IconButton
                 edge="start"
@@ -476,19 +482,15 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               <Typography variant="h6" className={classes.title}>
                 Cancelar
               </Typography>
-              <Button
-                autoFocus
-                color="inherit"
-                onClick={handleOpenDialogoNota}
-                // disabled={!isDadosValidos() || getValorRestante() !== 0}
-              >
+              <Button autoFocus color="inherit" onClick={handleOpenDialogoNota}>
                 Salvar
               </Button>
             </Toolbar>
-          </AppBar>
+          </AppBar> */}
           <Box
             padding="20px"
             display="flex"
+            margin="20px"
             css={{ backgroundColor: 'white', opacity: '0.75' }}
           >
             {/* <Autocomplete
@@ -571,6 +573,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
                   handleNewItem={handleNewItem}
                   subTotal={props.subTotal}
                   valorRestante={getValorRestante()}
+                  ref={refSidebar}
                 />
                 <LabelSubTotal valor={props.subTotal} />
               </Box>

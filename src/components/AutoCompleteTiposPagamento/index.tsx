@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import fetch from 'cross-fetch';
+// import fetch from 'cross-fetch';
 import { stringify } from 'query-string';
 
 import api from '../../services/api';
@@ -15,7 +15,16 @@ function sleep(delay = 0) {
   });
 }
 
-export default function Asynchronous({ value, onChange }) {
+export type AutoCompleteTiposPagamentoProps = {
+  value: any;
+  onChange: (newValor: any) => void;
+  handleEnter?: () => void;
+};
+
+const AutoCompleteTiposPagamento = forwardRef<
+  any,
+  AutoCompleteTiposPagamentoProps
+>(({ value, onChange, handleEnter = () => {} }, forwardedRef) => {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const loading = open && options.length === 0;
@@ -92,6 +101,13 @@ export default function Asynchronous({ value, onChange }) {
           label="Meio de pagamento"
           variant="outlined"
           color="secondary"
+          inputRef={forwardedRef}
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) handleEnter();
+            /* if (e.keyCode === 120) handleF9();
+            if (e.keyCode === 38) handleDirection(38);
+            if (e.keyCode === 40) handleDirection(40); */
+          }}
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -107,4 +123,6 @@ export default function Asynchronous({ value, onChange }) {
       )}
     />
   );
-}
+});
+
+export default AutoCompleteTiposPagamento;

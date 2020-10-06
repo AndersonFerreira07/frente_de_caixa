@@ -63,7 +63,7 @@ const LabelSubtotal: FC<LabelSubtotalProps> = ({ valor, isOpaco = false }) => {
         height="100%"
         color="white"
       >
-        <div>SUBTOTAL:</div>
+        <div>TOTAL:</div>
 
         <Paper className={classes.containerInterno} elevation={3}>
           <Box

@@ -7,16 +7,16 @@ Funcionalidades:
   ☐ defaults tipo pagamaneto
   ☐ mensagens de erro nos inputs unidades, peso, preço
   ☐ enter direcionar imputs
-  ☐ botao preencher resto fundir com botao adiconar a lista
+  ✔ botao preencher resto fundir com botao adiconar a lista @done(20-10-05 18:44)
   ☐ melhorar os atalhos
   ☐ adicionar atalhos na parte de finalizar a venda
   ☐ realocar botoes de salvar e cancelar na parte de finalizar venda
   ☐ renomear botoes de salvar e cancelar na parte de finalizar venda
   ☐ senha para tornar preço editavel
   ☐ chamar gerente
-  ☐ remover o rotulo dos atalhos (talvez)
+  ✔ remover o rotulo dos atalhos (talvez) @done(20-10-05 18:43)
   ☐ pesquisar por nome tb, o produto
-  ☐ mesclar itens da venda apenas se o preço for igual
+  ✔ mesclar itens da venda apenas se o preço for igual @done(20-10-05 18:43)
   ☐ funcionalidade de abrir e fechar o caixa no frente de caixa
   ☐ mensagem de validação se preço estiver abaixo da media ponderada dos preços de compra
   ☐ ajeitar nota
