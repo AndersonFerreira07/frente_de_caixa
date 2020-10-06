@@ -4,11 +4,11 @@ Funcionalidades:
   ☐ get dados para exibir na impressao
   ☐ ao salvar enviar para server e obter obejto total da venda
   ☐ defaults cliente
-  ☐ defaults tipo pagamaneto
+  ✔ defaults tipo pagamaneto @done(20-10-06 19:42)
   ☐ mensagens de erro nos inputs unidades, peso, preço
-  ☐ enter direcionar imputs
+  ✔ enter direcionar imputs @done(20-10-06 19:07)
   ✔ botao preencher resto fundir com botao adiconar a lista @done(20-10-05 18:44)
-  ☐ melhorar os atalhos
+  ✔ melhorar os atalhos @done(20-10-06 19:07)
   ☐ adicionar atalhos na parte de finalizar a venda
   ☐ realocar botoes de salvar e cancelar na parte de finalizar venda
   ☐ renomear botoes de salvar e cancelar na parte de finalizar venda

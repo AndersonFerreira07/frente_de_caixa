@@ -165,6 +165,7 @@ const SidebarInputs: RefForwardingComponent<
 > = ({ handleNewItem, subTotal, valorRestante }, ref) => {
   const [valor, setValor] = useState(0);
   const [tipoPagamento, setTipoPagamento] = useState<any>(null);
+  const [tipoPagamentoDefault, setTipoPagamentoDefault] = useState<any>(null);
   const [dataPagamento, setDataPagamento] = useState<Date | null>(new Date());
   const refDate = useRef<any>(null);
   const classes = useStyles();
@@ -176,9 +177,9 @@ const SidebarInputs: RefForwardingComponent<
   useImperativeHandle(ref, () => ({
     focus() {
       console.log('OLA MEU AMIGO ENTROU!');
-      if (refValor.current) {
-        refValor.current.focus();
-        refValor.current.select();
+      if (refMeioPagamento.current) {
+        refMeioPagamento.current.focus();
+        refMeioPagamento.current.select();
       }
     },
   }));
@@ -233,17 +234,22 @@ const SidebarInputs: RefForwardingComponent<
 
   useEffect(() => {
     async function getTipoPagamentoDefault() {
-      const data = await api.get('/config2');
-      const { tipo_pagamento_id } = data.data;
+      const dataConfig = await api.get('/config2');
+      const dataTiposPagamento = await api.get(
+        `/tipospagamento/${dataConfig.data.tipo_pagamento_id}`,
+      );
+      setTipoPagamento(dataTiposPagamento.data);
+      setTipoPagamentoDefault(dataTiposPagamento.data);
     }
+    getTipoPagamentoDefault();
   }, []); // get tipo pagamento default
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (refMeioPagamento.current) {
       refMeioPagamento.current.focus();
       refMeioPagamento.current.select();
     }
-  }, []); // get tipo pagamento default
+  }, []);  */
 
   console.log('data formatada');
   console.log(getDataPagamentoFormatted());
@@ -388,7 +394,8 @@ const SidebarInputs: RefForwardingComponent<
             );
             setValor(0);
             setDataPagamento(new Date());
-            setTipoPagamento(null);
+            // setTipoPagamento(null);
+            setTipoPagamento(tipoPagamentoDefault);
             refDate.current.value = getDataAtual();
             if (refMeioPagamento.current) {
               refMeioPagamento.current.focus();

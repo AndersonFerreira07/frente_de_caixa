@@ -34,6 +34,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
+import api from '../../services/api';
 import AutoCompleteClientes from '../AutoCompleteClientes';
 import DialogoNota from '../DialogoNota';
 import LabelSubTotal from '../LabelSubtotal';
@@ -307,7 +308,9 @@ const DialogoFinalizarCompra: RefForwardingComponent<
   const refDialogoNota = useRef<CountdownHandle>(null);
   const [itens, setItens] = useState<Array<Row2>>([]);
   const [cliente, setCliente] = useState<any>(null);
+  const [clienteDefault, setClienteDefault] = useState<any>(null);
   const refDate = useRef<any>(null);
+  const refClientes = useRef<any>(null);
 
   type SidebarHandle = React.ElementRef<typeof SidebarTiposPagamentos>;
   const refSidebar = useRef<SidebarHandle>(null);
@@ -318,7 +321,11 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     handleOpen() {
       setOpen(true);
       console.log('meu lalalalala poajj');
-      if (refSidebar.current) refSidebar.current.focus();
+      /* if (refClientes.current) {
+        refClientes.current.focus();
+        refClientes.current.select();
+      } */
+      // if (refSidebar.current) refSidebar.current.focus();
     },
   }));
 
@@ -449,7 +456,25 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     return dataBuild;
   }
 
-  useEffect(() => {}, []); // get cliente default
+  useEffect(() => {
+    async function getDefaults() {
+      const dataConfig = await api.get('/config2');
+      // const dataClientes = await api.get('/config2')
+      /* const dataClientes = await api.get(
+        `/clientes/${dataConfig.data.cliente_id}`,
+      ); */
+      // setCliente(dataClientes.data);
+      // setClienteDefault(dataClientes.data);
+    }
+    getDefaults();
+  }, []);
+
+  /*  useEffect(() => {
+    if (refClientes.current) {
+      refClientes.current.focus();
+      refClientes.current.select();
+    }
+  }, []); */
 
   return (
     <div>
@@ -506,6 +531,10 @@ const DialogoFinalizarCompra: RefForwardingComponent<
             <AutoCompleteClientes
               value={cliente}
               onChange={(value) => setCliente(value)}
+              ref={refClientes}
+              handleEnter={() => {
+                if (refSidebar.current) refSidebar.current.focus();
+              }}
             />
 
             <Box marginLeft="20px">
