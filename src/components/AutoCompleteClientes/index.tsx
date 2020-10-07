@@ -107,6 +107,7 @@ const AutoCompleteClientes = forwardRef<any, AutoCompleteClientesProps>(
             if (e.keyCode === 38) handleDirection(38);
             if (e.keyCode === 40) handleDirection(40); */
             }}
+            autoFocus
             InputProps={{
               ...params.InputProps,
               endAdornment: (

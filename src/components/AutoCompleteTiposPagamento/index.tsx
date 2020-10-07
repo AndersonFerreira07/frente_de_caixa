@@ -96,12 +96,9 @@ const AutoCompleteTiposPagamento = forwardRef<
       getOptionLabel={(option) => option.nome}
       options={options}
       loading={loading}
-      onKeyDown={(e) => {
+      /* onKeyDown={(e) => {
         if (e.keyCode === 13) handleEnter();
-        /* if (e.keyCode === 120) handleF9();
-        if (e.keyCode === 38) handleDirection(38);
-        if (e.keyCode === 40) handleDirection(40); */
-      }}
+      }} */
       renderInput={(params) => (
         <TextField
           {...params}

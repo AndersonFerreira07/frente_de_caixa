@@ -286,7 +286,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
       width: '100%',
       opacity: '0.75',
-      maxHeight: '69vh',
+      // maxHeight: '69vh',
     },
     container2: {
       height: '100%',
