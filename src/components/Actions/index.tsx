@@ -47,9 +47,15 @@ export type ActionsProps = {
   onClick: (action: number) => void;
   disabled: boolean[];
   produto: any;
+  editPrice: boolean;
 };
 
-const Actions: FC<ActionsProps> = ({ onClick, disabled, produto }) => {
+const Actions: FC<ActionsProps> = ({
+  onClick,
+  disabled,
+  produto,
+  editPrice,
+}) => {
   const classes = useStyles();
 
   function showButtonPorPartes() {
@@ -120,6 +126,18 @@ const Actions: FC<ActionsProps> = ({ onClick, disabled, produto }) => {
             disabled={disabled[2]}
           >
             Por partes (F9)
+          </Button>
+        )}
+
+        {!editPrice && produto !== null && (
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.btn}
+            onClick={() => onClick(6)}
+            // disabled={editPrice}
+          >
+            Editar Preço (F10)
           </Button>
         )}
       </Box>

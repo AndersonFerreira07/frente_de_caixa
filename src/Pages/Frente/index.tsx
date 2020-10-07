@@ -26,6 +26,8 @@ import api from '../../services/api'
 
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
+import DialogoSenha from '../../components/DialogoSenha'
+
 export type FrenteProps = {};
 
 const lista = [
@@ -71,6 +73,7 @@ const Frente: FC<FrenteProps> = () => {
   const [produto, setProduto] = useState<any>(null)
   const [atendente, setAtendente] = useState('')
   const [contAux, setContAux] = useState(0)
+  const [editPrice, setEditPrice] = useState(false)
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -85,6 +88,9 @@ const Frente: FC<FrenteProps> = () => {
 
   type CountdownHandle4 = React.ElementRef<typeof SidebarInputs>;
   const componentRef4 = useRef<CountdownHandle4>(null);
+
+  type CountdownHandle5 = React.ElementRef<typeof DialogoSenha>;
+  const componentRef5 = useRef<CountdownHandle5>(null);
 
   const refSearch = useRef<any>(null);
 
@@ -149,6 +155,7 @@ const Frente: FC<FrenteProps> = () => {
     }
     setProduto(null)
     if(refSearch.current) refSearch.current.focus()
+    setEditPrice(false)
   }
 
   function getOpen() {
@@ -208,6 +215,7 @@ const Frente: FC<FrenteProps> = () => {
     if (componentRef4.current)
       componentRef4.current.reset();
     setContAux(contAux + 1)
+    setEditPrice(false)
   }
 
   async function getAtendente() {
@@ -240,6 +248,16 @@ const Frente: FC<FrenteProps> = () => {
   useEffect(() => {
     getAtendente()
   }, [])
+
+  async function handleSenhaAutorizacao(senha: string) {
+    const dataConfig = await api.get('/config2')
+    if(senha === dataConfig.data.senha) {
+      setEditPrice(true)
+    } else {
+      enqueueSnackbar('Senha incorreta!');
+    }
+    /* if(componentRef4.current) componentRef4.current */
+  }
 
   console.log('OPEN SOMA PESOS: ' + getOpen())
   console.log('itens kkkk')
@@ -305,6 +323,7 @@ const Frente: FC<FrenteProps> = () => {
           <Actions
             disabled={getDisabled()}
             produto={produto}
+            editPrice={editPrice}
             onClick={(action) => {
               switch (action) {
                 case 0:
@@ -337,6 +356,10 @@ const Frente: FC<FrenteProps> = () => {
                     if(produto.unidade.modo === 0)
                       componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
                   break;
+                case 6:
+                  if (componentRef5.current)
+                  componentRef5.current.handleOpen()
+                  break;
                 default:
                   break;
               }
@@ -366,6 +389,27 @@ const Frente: FC<FrenteProps> = () => {
                 if(produto.unidade.modo === 0)
                   componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
             }}
+            handleF10={() => {
+              if (componentRef5.current)
+                  componentRef5.current.handleOpen()
+            }}
+            handleF4={() => {
+              if (componentRef2.current) {
+                if(itens.length > 0) {
+                  componentRef2.current.handleOpen();
+                } else {
+                  enqueueSnackbar('É necessário ao menos um item na venda!');
+                }
+              }
+            }}
+            handleF8={() => {
+              if (componentRef.current)
+                componentRef.current.handleOpen(
+                  'Cancelar Venda',
+                  'Tem certeza que deseja cancelar o cadastro desta venda ',
+                );
+            }}
+            editPrice={editPrice}
           />
           <LabelSubTotal valor={getSubTotal()} />
         </Box>}
@@ -383,8 +427,9 @@ const Frente: FC<FrenteProps> = () => {
       </Box>}
       {tela === 0 && <DialogoConfirmacao ref={componentRef} handleConfirma={handleFinalizaVenda}/>}
       {tela === 0 && <DialogoFinalizarCompra ref={componentRef2} handleConfirma={handleFinalizaVenda} lista={itens} subTotal={getSubTotal()}/>}
+      {tela === 0 && <DialogoSenha ref={componentRef5} handleClose={handleSenhaAutorizacao}/>}
       { atendente !== '' && <KeyboardEventHandler
-        handleKeys={['f2', 'f4', 'f7', 'f8', 'f9']}
+        handleKeys={['f2', 'f4', 'f7', 'f8', 'f9', 'f10']}
         onKeyEvent={(key, e) => {
           switch (key) {
             case 'f2':
@@ -401,10 +446,10 @@ const Frente: FC<FrenteProps> = () => {
                 }
               }
               break;
-            case 'f7':
+            /* case 'f7':
               if (componentRef.current)
                 componentRef.current.handleOpen('Excluir Item', 'Tem certeza que deseja excluir este item');
-              break;
+              break; */
             case 'f8':
               if (componentRef.current)
                 componentRef.current.handleOpen(
@@ -417,6 +462,10 @@ const Frente: FC<FrenteProps> = () => {
                   if(produto.unidade.modo === 0)
                     componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
               break;
+            case 'f10':
+                if (componentRef5.current && produto !== null)
+                  componentRef5.current.handleOpen()
+                break;
             default:
               break;
           }

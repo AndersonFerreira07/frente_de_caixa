@@ -25,7 +25,11 @@ export type SidebarInputsProps = {
   produto: any;
   listaPrecos: any;
   cont: number;
+  handleF4: () => void;
+  handleF8: () => void;
   handleF9: () => void;
+  handleF10: () => void;
+  editPrice: boolean;
 };
 
 export type SidebarInputsHandle = {
@@ -38,7 +42,18 @@ const SidebarInputs: RefForwardingComponent<
   SidebarInputsHandle,
   SidebarInputsProps
 > = (
-  { handleNewItem, disabled, produto, listaPrecos, cont, handleF9 },
+  {
+    handleNewItem,
+    disabled,
+    produto,
+    listaPrecos,
+    cont,
+    handleF9,
+    editPrice,
+    handleF10,
+    handleF4,
+    handleF8,
+  },
   ref,
 ) => {
   const [unidades, setUnidades] = useState(0);
@@ -50,6 +65,13 @@ const SidebarInputs: RefForwardingComponent<
   const refPeso = useRef<any>(null);
   const refPreco = useRef<any>(null);
   const refButton = useRef<any>(null);
+
+  useEffect(() => {
+    if (refPreco.current) {
+      refPreco.current.focus();
+      refPreco.current.select();
+    }
+  }, [editPrice]);
 
   useImperativeHandle(ref, () => ({
     setValues(unidadesNew: number, pesoNew: number) {
@@ -176,12 +198,20 @@ const SidebarInputs: RefForwardingComponent<
                 refPeso.current.focus();
                 refPeso.current.select();
               }
-            } else if (refPreco.current) {
-              refPreco.current.focus();
-              refPreco.current.select();
+            } else if (editPrice) {
+              if (refPreco.current) {
+                refPreco.current.focus();
+                refPreco.current.select();
+              }
+            } else if (refButton.current) {
+              refButton.current.click();
+              // refButton.current.select();
             }
           }}
+          handleF4={() => handleF4()}
+          handleF8={() => handleF8()}
           handleF9={() => handleF9()}
+          handleF10={() => handleF10()}
           handleDirection={(direction) => {
             if (direction === 40) {
               if (conditionShowPeso()) {
@@ -189,14 +219,23 @@ const SidebarInputs: RefForwardingComponent<
                   refPeso.current.focus();
                   refPeso.current.select();
                 }
-              } else if (refPreco.current) {
-                refPreco.current.focus();
-                refPreco.current.select();
+              } else if (editPrice) {
+                if (refPreco.current) {
+                  refPreco.current.focus();
+                  refPreco.current.select();
+                }
               }
             } else if (direction === 38) {
-              if (refPreco.current) {
-                refPreco.current.focus();
-                refPreco.current.select();
+              if (editPrice) {
+                if (refPreco.current) {
+                  refPreco.current.focus();
+                  refPreco.current.select();
+                }
+              } else if (conditionShowPeso()) {
+                if (refPeso.current) {
+                  refPeso.current.focus();
+                  refPeso.current.select();
+                }
               }
             }
           }}
@@ -210,17 +249,30 @@ const SidebarInputs: RefForwardingComponent<
             disabled={disabled || !disablePeso()}
             ref={refPeso}
             handleEnter={() => {
-              if (refPreco.current) {
-                refPreco.current.focus();
-                refPreco.current.select();
-              }
-            }}
-            handleF9={() => handleF9()}
-            handleDirection={(direction) => {
-              if (direction === 40) {
+              if (editPrice) {
                 if (refPreco.current) {
                   refPreco.current.focus();
                   refPreco.current.select();
+                }
+              } else if (refButton.current) {
+                refButton.current.click();
+                // refButton.current.select();
+              }
+            }}
+            handleF4={() => handleF4()}
+            handleF8={() => handleF8()}
+            handleF9={() => handleF9()}
+            handleF10={() => handleF10()}
+            handleDirection={(direction) => {
+              if (direction === 40) {
+                if (editPrice) {
+                  if (refPreco.current) {
+                    refPreco.current.focus();
+                    refPreco.current.select();
+                  }
+                } else if (refQtde.current) {
+                  refQtde.current.focus();
+                  refQtde.current.select();
                 }
               } else if (direction === 38) {
                 if (refQtde.current) {
@@ -236,8 +288,10 @@ const SidebarInputs: RefForwardingComponent<
           value={precoUnitario}
           onChange={(value: number) => setPresoUnitario(value)}
           fullwidth={false}
-          disabled={disabled}
+          disabled={!editPrice}
           ref={refPreco}
+          handleF4={() => handleF4()}
+          handleF8={() => handleF8()}
           handleEnter={() => {
             if (refButton.current) {
               refButton.current.click();

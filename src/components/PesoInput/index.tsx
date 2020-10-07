@@ -35,7 +35,10 @@ export type PesoInputProps = {
   fullwidth: boolean;
   disabled: boolean;
   handleEnter?: () => void;
+  handleF4?: () => void;
+  handleF8?: () => void;
   handleF9?: () => void;
+  handleF10?: () => void;
   handleDirection?: (direction: number) => void;
 };
 
@@ -48,7 +51,10 @@ const PesoInput = forwardRef<any, PesoInputProps>(
       fullwidth,
       disabled = false,
       handleEnter = () => {},
+      handleF4 = () => {},
+      handleF8 = () => {},
       handleF9 = () => {},
+      handleF10 = () => {},
       handleDirection = (direction: number) => {},
     },
     forwardedRef,
@@ -73,6 +79,10 @@ const PesoInput = forwardRef<any, PesoInputProps>(
           if (e.keyCode === 120) handleF9();
           if (e.keyCode === 38) handleDirection(38);
           if (e.keyCode === 40) handleDirection(40);
+          if (e.keyCode === 121) handleF10();
+
+          if (e.keyCode === 115) handleF4();
+          if (e.keyCode === 119) handleF8();
         }}
         // size="small"
       />
