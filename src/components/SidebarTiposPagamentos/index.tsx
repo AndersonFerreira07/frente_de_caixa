@@ -290,13 +290,13 @@ const SidebarInputs: RefForwardingComponent<
           ref={refMeioPagamento}
           handleEnter={() => {
             if (getModoAvista()) {
-              if (refDate.current) {
-                refDate.current.focus();
-                refDate.current.select();
+              if (refValor.current) {
+                refValor.current.focus();
+                refValor.current.select();
               }
-            } else if (refValor.current) {
-              refValor.current.focus();
-              refValor.current.select();
+            } else if (refDate.current) {
+              refDate.current.focus();
+              refDate.current.select();
             }
           }}
         />
