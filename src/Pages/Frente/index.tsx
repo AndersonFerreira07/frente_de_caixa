@@ -1,6 +1,8 @@
 import React, { FC, useRef, useState, useEffect } from 'react';
 
-import { Box } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
+
+import { makeStyles } from '@material-ui/core';
 
 import Actions from '../../components/Actions';
 import DialogoConfirmacao from '../../components/DialogoConfirmacao';
@@ -27,6 +29,8 @@ import api from '../../services/api'
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
 import DialogoSenha from '../../components/DialogoSenha'
+
+import Ws from '@adonisjs/websocket-client'
 
 export type FrenteProps = {};
 
@@ -64,6 +68,17 @@ const listaPrecos = [
     },
   ];
 
+
+
+  const useStyles = makeStyles((theme) => ({
+    btn: {
+      marginTop: '10px',
+      opacity: '0.75',
+    },
+  }));
+  
+let ws;
+
 const Frente: FC<FrenteProps> = () => {
 
   const [itens, setItens] = useState<Array<Row>>([]);
@@ -93,6 +108,8 @@ const Frente: FC<FrenteProps> = () => {
   const componentRef5 = useRef<CountdownHandle5>(null);
 
   const refSearch = useRef<any>(null);
+
+  const classes = useStyles()
 
   const nomeProduto = produto !== null ? produto.nome : 'Nenhum Produto';
 
@@ -259,6 +276,19 @@ const Frente: FC<FrenteProps> = () => {
     /* if(componentRef4.current) componentRef4.current */
   }
 
+  useEffect(() => {
+    ws = Ws(process.env.REACT_APP_HOST_WS)
+    ws.connect()
+    ws.on('open', () => {
+      ws.subscribe('gerente')
+    })
+    return () => ws.close();
+  }, [])
+
+  function callGerente() {
+    ws.getSubscription('gerente').emit('notificaGerente', {});
+  }
+
   console.log('OPEN SOMA PESOS: ' + getOpen())
   console.log('itens kkkk')
   console.log(itens)
@@ -367,6 +397,15 @@ const Frente: FC<FrenteProps> = () => {
           />
           <LabelAtendente atendente={atendente}/>
           {(produto !== null && atendente !== '') && <LabelEstoque produto={produto}/>}
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.btn}
+            onClick={() => callGerente()}
+            //disabled={disabled[2]}
+          >
+            Chamar Gerente
+          </Button>
         </Box> : null}
         {(tela === 0 && atendente !== '') && <Box padding="0 10px" flex={4}>
           <Table2 rows={itens} removeItens={removeItens} produto={produto}/>
