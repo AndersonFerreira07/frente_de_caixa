@@ -80,9 +80,6 @@ const Search = forwardRef<any, SearchProps>(
         className={classes.root}
         onSubmit={(e) => e.preventDefault()}
       >
-        {/* <IconButton className={classes.iconButton} aria-label="menu">
-        <MenuIcon />
-      </IconButton> */}
         <InputBase
           className={classes.input}
           placeholder={label}
@@ -96,7 +93,6 @@ const Search = forwardRef<any, SearchProps>(
           autoFocus
         />
         <IconButton
-          // type="submit"
           className={classes.iconButton}
           aria-label="search"
           disabled={disabled}
@@ -104,14 +100,6 @@ const Search = forwardRef<any, SearchProps>(
         >
           <SearchIcon />
         </IconButton>
-        {/* <Divider className={classes.divider} orientation="vertical" />
-      <IconButton
-        color="primary"
-        className={classes.iconButton}
-        aria-label="directions"
-      >
-        <DirectionsIcon />
-      </IconButton> */}
       </Paper>
     );
   },

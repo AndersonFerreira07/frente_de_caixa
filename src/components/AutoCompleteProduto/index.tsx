@@ -3,7 +3,6 @@ import React, { forwardRef } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-// import fetch from 'cross-fetch';
 import { stringify } from 'query-string';
 
 import api from '../../services/api';
@@ -15,30 +14,18 @@ function sleep(delay = 0) {
   });
 }
 
-export type AutoCompleteClientesProps = {
+export type AutoCompleteProdutoProps = {
   value: any;
   onChange: (newValor: any) => void;
   handleEnter?: () => void;
-  handleF4?: () => void;
-  handleF8?: () => void;
 };
 
-const AutoCompleteClientes = forwardRef<any, AutoCompleteClientesProps>(
-  (
-    {
-      value,
-      onChange,
-      handleEnter = () => {},
-      handleF4 = () => {},
-      handleF8 = () => {},
-    },
-    forwardedRef,
-  ) => {
+const AutoCompleteProdutos = forwardRef<any, AutoCompleteProdutoProps>(
+  ({ value, onChange, handleEnter = () => {} }, forwardedRef) => {
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const loading = open && options.length === 0;
 
-    // const [value, setValue] = React.useState(options[0]);
     const [inputValue, setInputValue] = React.useState('');
 
     function query(url) {
@@ -58,12 +45,10 @@ const AutoCompleteClientes = forwardRef<any, AutoCompleteClientesProps>(
       }
 
       (async () => {
-        const clientes = await api(query(`${getHost()}/clientes`));
-        await sleep(1e3); // For demo purposes.
-        // const clientes = await response.json();
-        console.log(clientes.data.data);
+        const produtos = await api(query(`${getHost()}/produtos`));
+        await sleep(1e3);
         if (active) {
-          setOptions(clientes.data.data);
+          setOptions(produtos.data.data);
         }
       })();
 
@@ -77,9 +62,6 @@ const AutoCompleteClientes = forwardRef<any, AutoCompleteClientesProps>(
         setOptions([]);
       }
     }, [open]);
-
-    console.log('option slect');
-    console.log(value);
 
     return (
       <Autocomplete
@@ -95,7 +77,6 @@ const AutoCompleteClientes = forwardRef<any, AutoCompleteClientesProps>(
         value={value}
         onChange={(event, newValue) => {
           onChange(newValue);
-          // setValue(newValue);
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
@@ -114,8 +95,9 @@ const AutoCompleteClientes = forwardRef<any, AutoCompleteClientesProps>(
             inputRef={forwardedRef}
             onKeyDown={(e) => {
               if (e.keyCode === 13) handleEnter();
-              if (e.keyCode === 115) handleF4();
-              if (e.keyCode === 119) handleF8();
+              /* if (e.keyCode === 120) handleF9();
+            if (e.keyCode === 38) handleDirection(38);
+            if (e.keyCode === 40) handleDirection(40); */
             }}
             autoFocus
             InputProps={{
@@ -136,4 +118,4 @@ const AutoCompleteClientes = forwardRef<any, AutoCompleteClientesProps>(
   },
 );
 
-export default AutoCompleteClientes;
+export default AutoCompleteProdutos;

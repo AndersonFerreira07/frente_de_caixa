@@ -483,38 +483,23 @@ const DialogoFinalizarCompra: RefForwardingComponent<
 
   return (
     <div>
-      <KeyboardEventHandler
-        handleKeys={['f4', 'f8']}
-        onKeyEvent={(key, e) => {
-          switch (key) {
-            case 'f4':
-              handleClose();
-              break;
-            case 'f8':
-              handleOpenDialogoNota();
-              break;
-            default:
-              break;
-          }
-        }}
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
       >
-        <Dialog
-          fullScreen
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={Transition}
+        <Box
+          height="100vh"
+          display="flex"
+          flexDirection="column"
+          css={{
+            background:
+              'url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg)',
+            backgroundSize: 'cover',
+          }}
         >
-          <Box
-            height="100vh"
-            display="flex"
-            flexDirection="column"
-            css={{
-              background:
-                'url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg)',
-              backgroundSize: 'cover',
-            }}
-          >
-            {/* <AppBar className={classes.appBar} color="secondary">
+          {/* <AppBar className={classes.appBar} color="secondary">
             <Toolbar>
               <IconButton
                 edge="start"
@@ -532,13 +517,13 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               </Button>
             </Toolbar>
           </AppBar> */}
-            <Box
-              padding="20px"
-              display="flex"
-              margin="20px"
-              css={{ backgroundColor: 'white', opacity: '0.75' }}
-            >
-              {/* <Autocomplete
+          <Box
+            padding="20px"
+            display="flex"
+            margin="20px"
+            css={{ backgroundColor: 'white', opacity: '0.75' }}
+          >
+            {/* <Autocomplete
               id="combo-box-demo"
               options={top100Films}
               getOptionLabel={(option) => option.title}
@@ -548,17 +533,19 @@ const DialogoFinalizarCompra: RefForwardingComponent<
               )}
             /> */}
 
-              <AutoCompleteClientes
-                value={cliente}
-                onChange={(value) => setCliente(value)}
-                ref={refClientes}
-                handleEnter={() => {
-                  if (refSidebar.current) refSidebar.current.focus();
-                }}
-              />
+            <AutoCompleteClientes
+              value={cliente}
+              onChange={(value) => setCliente(value)}
+              ref={refClientes}
+              handleEnter={() => {
+                if (refSidebar.current) refSidebar.current.focus();
+              }}
+              handleF4={() => handleClose()}
+              handleF8={() => handleOpenDialogoNota()}
+            />
 
-              <Box marginLeft="20px">
-                {/* <MuiPickersUtilsProvider
+            <Box marginLeft="20px">
+              {/* <MuiPickersUtilsProvider
                 utils={DateFnsUtils}
               >
                 <KeyboardDatePicker
@@ -575,117 +562,118 @@ const DialogoFinalizarCompra: RefForwardingComponent<
                   }}
                 />
               </MuiPickersUtilsProvider> */}
-                <TextField
-                  id="date"
-                  label="Date da Venda"
-                  type="date"
-                  color="secondary"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  inputRef={refDate}
-                  defaultValue={getDataAtual()}
-                  disabled
-                />
-              </Box>
+              <TextField
+                id="date"
+                label="Date da Venda"
+                type="date"
+                color="secondary"
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                inputRef={refDate}
+                defaultValue={getDataAtual()}
+                disabled
+              />
             </Box>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            flexDirection="column"
+            padding="20px"
+            flex={1}
+          >
             <Box
               display="flex"
               justifyContent="space-between"
-              flexDirection="column"
-              padding="20px"
-              flex={1}
+              padding="0px 0px"
+              height="100%"
             >
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                padding="0px 0px"
-                height="100%"
-              >
-                <Box flex={7}>
-                  {/* <Table
+              <Box flex={7}>
+                {/* <Table
                   lista={props.lista}
                   onSelect={() => console.log('kkkk')}
                 /> */}
-                  <TablePacelas rows={itens} removeItens={removeItens} />
-                </Box>
-                <Box
-                  display="flex"
-                  /* justifyContent="space-between" */
-                  flexDirection="column"
-                  marginLeft="20px"
-                  flex={3}
+                <TablePacelas rows={itens} removeItens={removeItens} />
+              </Box>
+              <Box
+                display="flex"
+                /* justifyContent="space-between" */
+                flexDirection="column"
+                marginLeft="20px"
+                flex={3}
+              >
+                <SidebarTiposPagamentos
+                  handleNewItem={handleNewItem}
+                  subTotal={props.subTotal}
+                  valorRestante={getValorRestante()}
+                  ref={refSidebar}
+                  handleF4={() => handleClose()}
+                  handleF8={() => handleOpenDialogoNota()}
+                />
+                <LabelSubTotal valor={props.subTotal} />
+                <Paper
+                  elevation={3}
+                  style={{
+                    opacity: '0.75',
+                    marginTop: '20px',
+                    borderRadius: '4px',
+                  }}
                 >
-                  <SidebarTiposPagamentos
-                    handleNewItem={handleNewItem}
-                    subTotal={props.subTotal}
-                    valorRestante={getValorRestante()}
-                    ref={refSidebar}
-                  />
-                  <LabelSubTotal valor={props.subTotal} />
-                  <Paper
-                    elevation={3}
-                    style={{
-                      opacity: '0.75',
-                      marginTop: '20px',
-                      borderRadius: '4px',
-                    }}
+                  <Box
+                    padding="20px"
+                    display="flex"
+                    justifyContent="space-between"
+                    // margin="20px"
+                    // marginTop="20px"
+                    borderRadius="4px"
+                    css={{ backgroundColor: 'white' }}
                   >
-                    <Box
-                      padding="20px"
-                      display="flex"
-                      justifyContent="space-between"
-                      // margin="20px"
-                      // marginTop="20px"
-                      borderRadius="4px"
-                      css={{ backgroundColor: 'white' }}
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleClose}
                     >
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleClose}
-                      >
-                        Voltar (F4)
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleOpenDialogoNota}
-                      >
-                        Salvar (F8)
-                      </Button>
-                    </Box>
-                  </Paper>
-                </Box>
+                      Voltar (F4)
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleOpenDialogoNota}
+                    >
+                      Salvar (F8)
+                    </Button>
+                  </Box>
+                </Paper>
               </Box>
             </Box>
           </Box>
-          <DialogoNota ref={refDialogoNota} handleClose={closeDialogoNota} />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
+        </Box>
+        <DialogoNota ref={refDialogoNota} handleClose={closeDialogoNota} />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
 
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-          <div className="firefly" />
-        </Dialog>
-      </KeyboardEventHandler>
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+        <div className="firefly" />
+      </Dialog>
     </div>
   );
 };

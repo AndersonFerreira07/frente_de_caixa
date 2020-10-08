@@ -46,6 +46,8 @@ export type SidebarInputsProps = {
   ) => void;
   subTotal: number;
   valorRestante: number;
+  handleF4: () => void;
+  handleF8: () => void;
 };
 
 const top100Films = [
@@ -162,7 +164,7 @@ export type SidebarInputsHandle = {
 const SidebarInputs: RefForwardingComponent<
   SidebarInputsHandle,
   SidebarInputsProps
-> = ({ handleNewItem, subTotal, valorRestante }, ref) => {
+> = ({ handleNewItem, subTotal, valorRestante, handleF4, handleF8 }, ref) => {
   const [valor, setValor] = useState(0);
   const [tipoPagamento, setTipoPagamento] = useState<any>(null);
   const [tipoPagamentoDefault, setTipoPagamentoDefault] = useState<any>(null);
@@ -299,6 +301,8 @@ const SidebarInputs: RefForwardingComponent<
               refDate.current.select();
             }
           }}
+          handleF4={() => handleF4()}
+          handleF8={() => handleF8()}
         />
         {/* <MuiPickersUtilsProvider utils={DateFnsUtils} css={{ width: '100%' }}>
           <KeyboardDatePicker
@@ -342,6 +346,8 @@ const SidebarInputs: RefForwardingComponent<
                 refValor.current.select();
               }
             }
+            if (e.keyCode === 115) handleF4();
+            if (e.keyCode === 119) handleF8();
             /* if (e.keyCode === 120) handleF9();
             if (e.keyCode === 38) handleDirection(38);
             if (e.keyCode === 40) handleDirection(40); */
@@ -368,6 +374,8 @@ const SidebarInputs: RefForwardingComponent<
               }
               // if (refPeso.current) refPeso.current.focus();
             }}
+            handleF4={() => handleF4()}
+            handleF8={() => handleF8()}
           />
         </Box>
         {/* <Box width="100%" marginBottom="10px">
