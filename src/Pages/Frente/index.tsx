@@ -3,6 +3,7 @@ import React, { FC, useRef, useState, useEffect } from 'react';
 import { Box, Button } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core';
+import { Redirect } from 'react-router-dom';
 
 import Actions from '../../components/Actions';
 import DialogoConfirmacao from '../../components/DialogoConfirmacao';
@@ -32,7 +33,7 @@ import DialogoSenha from '../../components/DialogoSenha'
 
 import Ws from '@adonisjs/websocket-client'
 
-import { logout, getUsername } from '../../services/alth';
+import { logout, getUsername, isAuthenticated } from '../../services/alth';
 
 import { useHistory } from 'react-router-dom';
 
@@ -342,7 +343,10 @@ const Frente: FC<FrenteProps> = () => {
   console.log(itens)
 
   return (
-    <Box
+    <>
+    {!isAuthenticated() ? (
+        <Redirect to="/login" />
+      ) : (<Box
       bgcolor="#FFCFF9"
       padding="10px"
       height="100%"
@@ -562,7 +566,7 @@ const Frente: FC<FrenteProps> = () => {
                   'Tem certeza que deseja cancelar o cadastro desta venda ',
                   1
                 );
-              break;
+              break;  
             case 'f9':
               if (componentRef3.current && produto !== null)
                 if(produto.unidade.modo === 0)
@@ -607,7 +611,8 @@ const Frente: FC<FrenteProps> = () => {
       <div className="firefly"/>
       <div className="firefly"/>
       <div className="firefly"/>
-    </Box>
+    </Box>)}
+    </>
   );
 };
 
