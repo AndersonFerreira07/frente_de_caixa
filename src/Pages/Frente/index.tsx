@@ -235,6 +235,31 @@ const Frente: FC<FrenteProps> = () => {
     setEditPrice(false)
   }
 
+
+  async function searchHandle2(codigo) {
+    if(codigo === '') return undefined
+    const data = await api.get(`/produtos2/${codigo}`)
+    console.log(data.data)
+    if(data.data.length > 0) {
+      const index = searchItemInArray2(data.data[0], itens);
+      if(index >= 0) {
+        data.data[0].unidadesDisponivel = data.data[0].unidadesDisponivel - itens[index].unidades
+      }
+      setProduto(data.data[0]);
+      if (componentRef4.current)
+        componentRef4.current.focus();
+    } else {
+      setProduto(null);
+    }
+    setSearch('');
+    /* setItens([]) */
+    if (componentRef4.current)
+      componentRef4.current.reset();
+    setContAux(contAux + 1)
+    setEditPrice(false)
+  }
+
+
   async function getAtendente() {
     const configs = await api.get('/config2')
     if(configs.data.caixa_id !== -1) {
@@ -311,12 +336,13 @@ const Frente: FC<FrenteProps> = () => {
           <Label label={nomeProduto} />
         </Box>
         <Search
-          label="Código de barra"
+          label="Pesquisar produto"
           value={search}
           onChange={(e) => setSearch(e)}
           fullwidth
           disabled={false}
           searchHandle={searchHandle}
+          searchHandle2={searchHandle2}
           ref={refSearch}
           handleF4={(code) => {
             switch (code) {

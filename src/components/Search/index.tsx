@@ -1,14 +1,13 @@
-import React, { FC, forwardRef } from 'react';
-import KeyboardEventHandler from 'react-keyboard-event-handler';
+import React, { forwardRef } from 'react';
 
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import DirectionsIcon from '@material-ui/icons/Directions';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import { useDebounce } from 'use-debounce';
+
+import AutoCompleteProduto from '../AutoCompleteProduto';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,7 +16,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       opacity: '0.75',
-      // width: 400,
     },
     input: {
       marginLeft: theme.spacing(1),
@@ -41,6 +39,7 @@ export type SearchProps = {
   fullwidth: boolean;
   disabled: boolean;
   searchHandle: () => void;
+  searchHandle2: (codigo: string) => void;
   handleF4: (code: number) => void;
 };
 
@@ -54,14 +53,18 @@ const Search = forwardRef<any, SearchProps>(
       disabled = false,
       searchHandle,
       handleF4,
+      searchHandle2,
     },
     forwardedRef,
   ) => {
     const classes = useStyles();
+    const [valueDebounce] = useDebounce(value, 500);
+    const [produto, setProduto] = React.useState<any>(null);
 
     function keyPress(e) {
       if (e.keyCode === 13) {
         searchHandle();
+        setProduto(null);
       }
       if (e.keyCode === 115) {
         handleF4(115);
@@ -74,32 +77,85 @@ const Search = forwardRef<any, SearchProps>(
       }
     }
 
+    function isNumber(valor) {
+      if (
+        valor === '0' ||
+        valor === '1' ||
+        valor === '2' ||
+        valor === '3' ||
+        valor === '4' ||
+        valor === '5' ||
+        valor === '6' ||
+        valor === '7' ||
+        valor === '8' ||
+        valor === '9'
+      ) {
+        return true;
+      }
+      return false;
+    }
+
+    function contemNumber() {
+      if (value.length > 0) {
+        if (isNumber(value[0])) return true;
+        return false;
+      }
+      return false;
+    }
+
+    console.log(`valor kkkkk valor :${value}`);
+    console.log(`produto kkkkk produto`);
+    console.log(produto);
+
     return (
       <Paper
         component="form"
         className={classes.root}
         onSubmit={(e) => e.preventDefault()}
       >
-        <InputBase
-          className={classes.input}
-          placeholder={label}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          inputProps={{ 'aria-label': 'Código de barras' }}
-          fullWidth={fullwidth}
-          disabled={disabled}
-          onKeyDown={keyPress}
-          inputRef={forwardedRef}
-          autoFocus
-        />
-        <IconButton
-          className={classes.iconButton}
-          aria-label="search"
-          disabled={disabled}
-          onClick={() => searchHandle()}
-        >
-          <SearchIcon />
-        </IconButton>
+        {contemNumber() ? (
+          <>
+            <InputBase
+              className={classes.input}
+              placeholder={label}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              inputProps={{ 'aria-label': 'Código de barras' }}
+              fullWidth={fullwidth}
+              disabled={disabled}
+              onKeyDown={keyPress}
+              inputRef={forwardedRef}
+              autoFocus
+            />
+            <IconButton
+              className={classes.iconButton}
+              aria-label="search"
+              disabled={disabled}
+              onClick={() => searchHandle()}
+            >
+              <SearchIcon />
+            </IconButton>
+          </>
+        ) : (
+          <AutoCompleteProduto
+            inputValue={value}
+            onChange={(produtoNew) => setProduto(produtoNew)}
+            updateValue={(newValue) => onChange(newValue)}
+            value={produto}
+            label={label}
+            valueDebounce={valueDebounce}
+            handleF4={handleF4}
+            handleEnter={() => {
+              if (produto) {
+                searchHandle2(produto.codigo);
+              } else {
+                searchHandle2('');
+              }
+              setProduto(null);
+            }}
+            ref={forwardedRef}
+          />
+        )}
       </Paper>
     );
   },

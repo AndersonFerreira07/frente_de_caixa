@@ -73,6 +73,10 @@ const AutoCompleteClientes = forwardRef<any, AutoCompleteClientesProps>(
     }, [loading]);
 
     React.useEffect(() => {
+      (async () => {})();
+    }, [inputValue]);
+
+    React.useEffect(() => {
       if (!open) {
         setOptions([]);
       }
