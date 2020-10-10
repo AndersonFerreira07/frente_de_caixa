@@ -13,11 +13,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export type DialogoConfirmacaoProps = {
-  handleConfirma: () => void;
+  handleConfirma: (codigo: number) => void;
 };
 
 export type DialogoConfirmacaoHandle = {
-  handleOpen: (titleNew: string, contentNew: string) => void;
+  handleOpen: (titleNew: string, contentNew: string, codigoNew: number) => void;
 };
 
 // const DialogoConfirmacao: FC<DialogoConfirmacaoProps> = () => {
@@ -28,13 +28,15 @@ const DialogoConfirmacao: RefForwardingComponent<
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [codigo, setCodigo] = useState(0);
 
   useImperativeHandle(ref, () => ({
-    handleOpen(titleNew: string, contentNew: string) {
+    handleOpen(titleNew: string, contentNew: string, codigoNew: number) {
       console.log('imprime valor kkkk');
       setTitle(titleNew);
       setContent(contentNew);
       setOpen(true);
+      setCodigo(codigoNew);
     },
   }));
 
@@ -44,7 +46,7 @@ const DialogoConfirmacao: RefForwardingComponent<
 
   const handleSalvar = () => {
     setOpen(false);
-    props.handleConfirma();
+    props.handleConfirma(codigo);
   };
 
   return (

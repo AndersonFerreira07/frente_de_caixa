@@ -32,6 +32,10 @@ import DialogoSenha from '../../components/DialogoSenha'
 
 import Ws from '@adonisjs/websocket-client'
 
+import { logout, getUsername } from '../../services/alth';
+
+import { useHistory } from 'react-router-dom';
+
 export type FrenteProps = {};
 
 const lista = [
@@ -89,6 +93,7 @@ const Frente: FC<FrenteProps> = () => {
   const [atendente, setAtendente] = useState('')
   const [contAux, setContAux] = useState(0)
   const [editPrice, setEditPrice] = useState(false)
+  const history = useHistory();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -108,6 +113,8 @@ const Frente: FC<FrenteProps> = () => {
   const componentRef5 = useRef<CountdownHandle5>(null);
 
   const refSearch = useRef<any>(null);
+
+  const refBtCallGerente = useRef<any>(null);
 
   const classes = useStyles()
 
@@ -261,14 +268,16 @@ const Frente: FC<FrenteProps> = () => {
 
 
   async function getAtendente() {
-    const configs = await api.get('/config2')
+    /* const configs = await api.get('/config2')
     if(configs.data.caixa_id !== -1) {
       const caixa = await api.get(`/caixas/${configs.data.caixa_id}`)
       const user = await api.get(`/adms/${caixa.data.user_id}`)
       setAtendente(user.data.username)
     } else {
       setAtendente('')
-    }
+    } */
+    const username = getUsername()
+    setAtendente(username ? username : '')
   }
 
   function disablePeso() {
@@ -312,6 +321,20 @@ const Frente: FC<FrenteProps> = () => {
 
   function callGerente() {
     ws.getSubscription('gerente').emit('notificaGerente', {});
+  }
+
+  function handleConfirma(codigo: number) {
+    switch (codigo) {
+      case 1:
+        handleFinalizaVenda()
+        break;
+      case 2:
+        logout();
+        history.push('/login');
+        break;
+      default:
+        break;
+    }
   }
 
   console.log('OPEN SOMA PESOS: ' + getOpen())
@@ -358,8 +381,18 @@ const Frente: FC<FrenteProps> = () => {
                 if (componentRef.current)
                   componentRef.current.handleOpen(
                     'Cancelar Venda',
-                'Tem certeza que deseja cancelar o cadastro desta venda ',
+                'Tem certeza que deseja cancelar o cadastro desta venda ', 1
                   );
+                break;
+                case 45:
+                  if (refBtCallGerente.current) {
+                    refBtCallGerente.current.click()
+                    enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!');
+                  }
+                  break;
+                case 46:
+                  if (componentRef.current)
+                    componentRef.current.handleOpen('Logout', 'Tem certeza que deseja deslogar!', 2)
                 break;
               /* case 120:
                 if (componentRef3.current && produto !== null)
@@ -398,13 +431,13 @@ const Frente: FC<FrenteProps> = () => {
                   break;
                 case 2:
                   if (componentRef.current)
-                    componentRef.current.handleOpen('Excluir Item', 'Tem certeza que deseja excluir este item');
+                    componentRef.current.handleOpen('Excluir Item', 'Tem certeza que deseja excluir este item', 1);
                   break;
                 case 3:
                   if (componentRef.current)
                     componentRef.current.handleOpen(
                       'Cancelar Venda',
-                  'Tem certeza que deseja cancelar o cadastro desta venda ',
+                  'Tem certeza que deseja cancelar o cadastro desta venda ', 1
                     );
                   break;
                 case 5:
@@ -415,6 +448,10 @@ const Frente: FC<FrenteProps> = () => {
                 case 6:
                   if (componentRef5.current)
                   componentRef5.current.handleOpen()
+                  break;
+                case 7:
+                  if (componentRef.current)
+                  componentRef.current.handleOpen('Logout', 'Tem certeza que deseja deslogar!', 2)
                   break;
                 default:
                   break;
@@ -428,9 +465,11 @@ const Frente: FC<FrenteProps> = () => {
             color="secondary"
             className={classes.btn}
             onClick={() => callGerente()}
+            style={{ padding: '20px' }}
+            ref={refBtCallGerente}
             //disabled={disabled[2]}
           >
-            Chamar Gerente
+            Chamar Gerente (Ins)
           </Button>
         </Box> : null}
         {(tela === 0 && atendente !== '') && <Box padding="0 10px" flex={4}>
@@ -472,6 +511,7 @@ const Frente: FC<FrenteProps> = () => {
                 componentRef.current.handleOpen(
                   'Cancelar Venda',
                   'Tem certeza que deseja cancelar o cadastro desta venda ',
+                  1
                 );
             }}
             editPrice={editPrice}
@@ -490,11 +530,11 @@ const Frente: FC<FrenteProps> = () => {
       {(tela === 1) && <Box margin="10px">
         { atendente !== '' && tela === 1 ? <Footer tela={tela} disabledPartes={disablePeso()}/> : tela === 1 ? <LabelSemAtendente/> : null}
       </Box>}
-      {tela === 0 && <DialogoConfirmacao ref={componentRef} handleConfirma={handleFinalizaVenda}/>}
+      <DialogoConfirmacao ref={componentRef} handleConfirma={handleConfirma}/> }
       {tela === 0 && <DialogoFinalizarCompra ref={componentRef2} handleConfirma={handleFinalizaVenda} lista={itens} subTotal={getSubTotal()}/>}
       {tela === 0 && <DialogoSenha ref={componentRef5} handleClose={handleSenhaAutorizacao}/>}
       { atendente !== '' && <KeyboardEventHandler
-        handleKeys={['f2', 'f4', 'f7', 'f8', 'f9', 'f10']}
+        handleKeys={['f2', 'f4', 'f7', 'f8', 'f9', 'f10', 'delete', 'insert']}
         onKeyEvent={(key, e) => {
           switch (key) {
             case 'f2':
@@ -516,21 +556,31 @@ const Frente: FC<FrenteProps> = () => {
                 componentRef.current.handleOpen('Excluir Item', 'Tem certeza que deseja excluir este item');
               break; */
             case 'f8':
-              if (componentRef.current)
+              if (componentRef.current && tela === 0)
                 componentRef.current.handleOpen(
                   'Cancelar Venda',
                   'Tem certeza que deseja cancelar o cadastro desta venda ',
+                  1
                 );
               break;
             case 'f9':
               if (componentRef3.current && produto !== null)
-                  if(produto.unidade.modo === 0)
-                    componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
+                if(produto.unidade.modo === 0)
+                  componentRef3.current.handleOpen(0, 0, getUnidadesDisponiveis());
               break;
             case 'f10':
-                if (componentRef5.current && produto !== null)
-                  componentRef5.current.handleOpen()
-                break;
+              if (componentRef5.current && produto !== null)
+                componentRef5.current.handleOpen()
+              break;
+            case 'delete':
+              if (componentRef.current)
+                componentRef.current.handleOpen('Logout', 'Tem certeza que deseja deslogar!', 2)
+              break;
+            case 'insert':
+              if (refBtCallGerente.current)
+                refBtCallGerente.current.click()
+                enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!');
+              break;
             default:
               break;
           }

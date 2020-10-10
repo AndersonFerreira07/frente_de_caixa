@@ -5,6 +5,8 @@ import { ptBR } from '@material-ui/core/locale'; */
 
 import FrentePage from './Pages/Frente';
 import { SnackbarProvider, useSnackbar } from 'notistack';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Login from './Pages/Login'
 
 /* const theme = createMuiTheme({
   palette: {
@@ -15,11 +17,12 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 function App() {
   return (
     <div className="App" style={{ height: '100vh' }}>
-      {/* <ThemeProvider theme={theme}> */}
-      <SnackbarProvider maxSnack={3}>
-        <FrentePage />
-        </SnackbarProvider>
-      {/* </ThemeProvider> */}
+      <SnackbarProvider maxSnack={5}>
+        <Router>
+          <Route exact path="/" component={FrentePage} />
+          <Route path="/login" component={Login} />
+        </Router>
+      </SnackbarProvider>
     </div>
   );
 }

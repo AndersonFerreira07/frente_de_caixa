@@ -10,6 +10,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 // const useStyles = makeStyles(theme => ({
 
 // }))
+import { getUsername } from '../../services/alth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +55,8 @@ const Footer: FC<FooterProps> = ({ tela, disabledPartes }) => {
         // css={{ opacity: '0.5' }}
       >
         {tela === 1 && <div>F2 - Nova Venda</div>}
+        {tela === 1 && <div>DEL - Sair</div>}
+        {tela === 1 && <div>{`Atendente: ${getUsername()}`}</div>}
         {tela === 0 && <div>F4 - Fechar Venda</div>}
         {/* <div>F7 - Excluir Item</div> */}
         {tela === 0 && <div>F8 - Cancelar Venda</div>}

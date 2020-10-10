@@ -61,8 +61,8 @@ const LabelEstoque: FC<LabelEstoqueProps> = ({ produto, isOpaco = false }) => {
         <Paper className={classes.containerInterno} elevation={3}>
           <Box
             display="flex"
-            justifyContent="flex-start"
-            alignItems="flex-start"
+            justifyContent="center"
+            alignItems="center"
             flexDirection="column"
             width="100%"
             /* height="100%" */
@@ -70,11 +70,11 @@ const LabelEstoque: FC<LabelEstoqueProps> = ({ produto, isOpaco = false }) => {
             color="black"
             padding="10px"
           >
-            <div>
+            <div style={{ fontSize: '16px' }}>
               <span style={{ fontWeight: 'bold' }}>Produto: </span>
               <span>{produto.nome}</span>
             </div>
-            <div style={{ marginTop: '5px' }}>
+            <div style={{ marginTop: '5px', fontSize: '16px' }}>
               <span style={{ fontWeight: 'bold' }}>Unidades Disponiveis: </span>
               <span>{produto.unidadesDisponivel}</span>
             </div>

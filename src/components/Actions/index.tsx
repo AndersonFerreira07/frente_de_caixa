@@ -1,6 +1,9 @@
 import React, { FC } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { makeStyles, Box, Button, Paper } from '@material-ui/core';
+
+import { logout } from '../../services/alth';
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -57,6 +60,7 @@ const Actions: FC<ActionsProps> = ({
   editPrice,
 }) => {
   const classes = useStyles();
+  const history = useHistory();
 
   function showButtonPorPartes() {
     if (produto) {
@@ -140,6 +144,20 @@ const Actions: FC<ActionsProps> = ({
             Editar Preço (F10)
           </Button>
         )}
+
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.btn}
+          onClick={() => onClick(7)}
+          /* onClick={() => {
+            logout();
+            history.push('/login');
+          }} */
+          // disabled={editPrice}
+        >
+          Logout (DEL)
+        </Button>
       </Box>
     </Paper>
   );

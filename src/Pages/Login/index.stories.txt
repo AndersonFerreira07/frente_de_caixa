@@ -1,0 +1,21 @@
+import React from 'react';
+
+import { Story, Meta } from '@storybook/react';
+
+import Login, { LoginProps } from '.';
+
+export default {
+  title: 'Login',
+  component: Login,
+  argTypes: {
+    // propValue: { control: 'color' },
+    // handle: { action: 'clicked' }
+  },
+  arg: {},
+} as Meta;
+
+const Template: Story<LoginProps> = (args) => <Login {...args} />;
+
+export const LoginDefault = Template.bind({});
+
+LoginDefault.args = {};
