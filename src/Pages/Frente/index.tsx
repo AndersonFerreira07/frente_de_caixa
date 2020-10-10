@@ -468,7 +468,10 @@ const Frente: FC<FrenteProps> = () => {
             variant="contained"
             color="secondary"
             className={classes.btn}
-            onClick={() => callGerente()}
+            onClick={() => {
+              callGerente()
+              enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!');
+            }}
             style={{ padding: '20px' }}
             ref={refBtCallGerente}
             //disabled={disabled[2]}
@@ -583,7 +586,6 @@ const Frente: FC<FrenteProps> = () => {
             case 'insert':
               if (refBtCallGerente.current)
                 refBtCallGerente.current.click()
-                enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!');
               break;
             default:
               break;
