@@ -73,6 +73,11 @@ const SidebarInputs: RefForwardingComponent<
     }
   }, [editPrice]);
 
+  useEffect(() => {
+    if (produto) setPresoUnitario(produto.valorVenda);
+    else setPresoUnitario(0);
+  }, [cont]);
+
   useImperativeHandle(ref, () => ({
     setValues(unidadesNew: number, pesoNew: number) {
       setUnidades(unidadesNew);
@@ -152,6 +157,9 @@ const SidebarInputs: RefForwardingComponent<
     if (produto) {
       if (produto.unidade.modo !== 2 && (peso <= 0 || isNaN(peso))) return true;
     }
+    if (precoUnitario <= 0 || isNaN(precoUnitario)) {
+      return true;
+    }
     return false;
   }
 
@@ -168,8 +176,28 @@ const SidebarInputs: RefForwardingComponent<
     // setPresoUnitario(listaPrecos[0].value);
   }, [cont]);
 
+  function getPrecoMinimo() {
+    if (produto) return produto.precoMedio;
+    return 0;
+  }
+
+  function formatMoeda(valor: number) {
+    return valor.toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  }
+
+  function getUnidadesDisponiveis() {
+    if (produto) return produto.unidadesDisponivel;
+    return 0;
+  }
+
   console.log('QUNARIDADE KKKKK');
   console.log(unidades);
+
+  console.log('PRODUTO KKKKKA NO SIDEBAR INPUTS');
+  console.log(produto);
 
   return (
     <Paper elevation={3} style={{ opacity: '0.75' }}>
@@ -189,7 +217,9 @@ const SidebarInputs: RefForwardingComponent<
           disabled={disabled}
           error={isError(unidades, produto)}
           helperText={
-            isError(unidades, produto) ? 'Unidades acima do disponível' : ''
+            isError(unidades, produto)
+              ? `Unidades acima do disponível (${getUnidadesDisponiveis()})`
+              : ''
           }
           ref={refQtde}
           handleEnter={() => {
@@ -317,6 +347,19 @@ const SidebarInputs: RefForwardingComponent<
               }
             }
           }}
+          error={
+            produto &&
+            (getPrecoMinimo() > precoUnitario ||
+              precoUnitario <= 0 ||
+              isNaN(precoUnitario))
+          }
+          helperText={
+            produto && getPrecoMinimo() > precoUnitario && precoUnitario > 0
+              ? `Preço abaixo do mínimo (${formatMoeda(getPrecoMinimo())})`
+              : produto && (precoUnitario <= 0 || isNaN(precoUnitario))
+              ? 'Valor inválido'
+              : ''
+          }
         />
         {/* <SelectInput
           value={precoUnitario}

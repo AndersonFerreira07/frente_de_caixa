@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo512.png';
 import { formatCEP, formatCPF, formatTelefone } from '../../utils/formats';
 
 const useStyles = makeStyles({

@@ -102,7 +102,9 @@ const LoginTela = ({}) => {
 
       history.push('/');
     } catch (error) {
-      enqueueSnackbar('Usuário ou senha incorretos!');
+      enqueueSnackbar('Usuário ou senha incorretos!', {
+        variant: 'error',
+      });
     }
     setLoading(false);
 

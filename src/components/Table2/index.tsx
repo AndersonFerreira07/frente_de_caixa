@@ -58,6 +58,7 @@ export type Row = {
   peso: number;
   unitario: number;
   total: number;
+  uidd: string;
   // obs: string;
 };
 
@@ -67,6 +68,7 @@ type RowFormated = {
   peso: string;
   unitario: string;
   total: string;
+  uidd: string;
   // obs: string;
 };
 
@@ -86,7 +88,14 @@ function createData(
   total: number,
   obs: string,
 ): Row {
-  return { produto, unidades, peso, unitario, total };
+  return {
+    produto,
+    unidades,
+    peso,
+    unitario,
+    total,
+    uidd: `${produto}${unitario}`,
+  };
 }
 
 const rows = [createData('Cupcake', 305, 3.7, 67, 4.3, 'llala')];
@@ -339,7 +348,7 @@ const Table2: FC<Table2Props> = ({ rows, removeItens, produto }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.produto.nome);
+      const newSelecteds = rows.map((n) => n.uidd);
       setSelected(newSelecteds);
       return;
     }
@@ -390,6 +399,7 @@ const Table2: FC<Table2Props> = ({ rows, removeItens, produto }) => {
         peso: disablePeso(list[i].produto) ? String(list[i].peso) : '-',
         unitario: formatMoeda(list[i].unitario),
         total: formatMoeda(list[i].total),
+        uidd: list[i].uidd,
         // obs: list[i].obs,
       });
     }
@@ -404,6 +414,9 @@ const Table2: FC<Table2Props> = ({ rows, removeItens, produto }) => {
   const listaFormatada = formataDados(rows);
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
+
+  console.log('VALOR PRECOS TABELA');
+  console.log(rows);
 
   return (
     <div className={classes.container2}>
@@ -436,16 +449,16 @@ const Table2: FC<Table2Props> = ({ rows, removeItens, produto }) => {
             <TableBody>
               {stableSort(listaFormatada, getComparator(order, orderBy)).map(
                 (row, index) => {
-                  const isItemSelected = isSelected(row.produto);
+                  const isItemSelected = isSelected(row.uidd);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   return (
                     <StyledTableRow
                       hover
-                      onClick={(event) => handleClick(event, row.produto)}
+                      onClick={(event) => handleClick(event, row.uidd)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.produto}
+                      key={row.uidd}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

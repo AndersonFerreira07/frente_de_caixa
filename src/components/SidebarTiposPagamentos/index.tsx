@@ -20,6 +20,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 } from '@material-ui/pickers'; */
 
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 
 import api from '../../services/api';
 import AutoCompleteTiposPagamento from '../AutoCompleteTiposPagamento';
@@ -48,6 +49,7 @@ export type SidebarInputsProps = {
   valorRestante: number;
   handleF4: () => void;
   handleF8: () => void;
+  focusImprimir: () => void;
 };
 
 const top100Films = [
@@ -164,13 +166,17 @@ export type SidebarInputsHandle = {
 const SidebarInputs: RefForwardingComponent<
   SidebarInputsHandle,
   SidebarInputsProps
-> = ({ handleNewItem, subTotal, valorRestante, handleF4, handleF8 }, ref) => {
+> = (
+  { handleNewItem, subTotal, valorRestante, handleF4, handleF8, focusImprimir },
+  ref,
+) => {
   const [valor, setValor] = useState(0);
   const [tipoPagamento, setTipoPagamento] = useState<any>(null);
   const [tipoPagamentoDefault, setTipoPagamentoDefault] = useState<any>(null);
   const [dataPagamento, setDataPagamento] = useState<Date | null>(new Date());
   const refDate = useRef<any>(null);
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const refMeioPagamento = useRef<any>(null);
   const refValor = useRef<any>(null);
@@ -253,6 +259,13 @@ const SidebarInputs: RefForwardingComponent<
     }
   }, []);  */
 
+  useEffect(() => {
+    if (valorRestante === 0)
+      enqueueSnackbar('Agora você pode finalizar a venda, se assim desejar!', {
+        variant: 'success',
+      });
+  }, [valorRestante]);
+
   console.log('data formatada');
   console.log(getDataPagamentoFormatted());
 
@@ -303,6 +316,7 @@ const SidebarInputs: RefForwardingComponent<
           }}
           handleF4={() => handleF4()}
           handleF8={() => handleF8()}
+          disabled={valorRestante <= 0}
         />
         {/* <MuiPickersUtilsProvider utils={DateFnsUtils} css={{ width: '100%' }}>
           <KeyboardDatePicker
@@ -332,7 +346,9 @@ const SidebarInputs: RefForwardingComponent<
             shrink: true,
           }}
           variant="outlined"
-          disabled={getModoAvista() || tipoPagamento === null}
+          disabled={
+            getModoAvista() || tipoPagamento === null || valorRestante <= 0
+          }
           /* value={getDataPagamentoFormatted()} */
           /* onChange={(e) => {
             console.log('novo valor data');
@@ -361,10 +377,18 @@ const SidebarInputs: RefForwardingComponent<
             onChange={(value: number) => setValor(value)}
             fullwidth
             // disabled={tipoPagamento === null}
-            disabled={false}
-            error={valor > valorRestante}
+            disabled={valorRestante <= 0}
+            error={
+              valorRestante <= 0 ? false : valor > valorRestante || valor <= 0
+            }
             helperText={
-              valor > valorRestante ? 'total acima do valor da compra' : ''
+              valorRestante <= 0
+                ? ''
+                : valor > valorRestante
+                ? 'total acima do valor da compra'
+                : valor <= 0 || isNaN(valor)
+                ? 'Valor invalido'
+                : ''
             }
             ref={refValor}
             handleEnter={() => {
@@ -405,9 +429,13 @@ const SidebarInputs: RefForwardingComponent<
             // setTipoPagamento(null);
             setTipoPagamento(tipoPagamentoDefault);
             refDate.current.value = getDataAtual();
-            if (refMeioPagamento.current) {
-              refMeioPagamento.current.focus();
-              refMeioPagamento.current.select();
+            if (valorRestante - valor > 0) {
+              if (refMeioPagamento.current) {
+                refMeioPagamento.current.focus();
+                refMeioPagamento.current.select();
+              }
+            } else {
+              focusImprimir();
             }
             console.log('data pagamento kkkk');
             console.log(new Date(refDate.current.value));
@@ -418,7 +446,8 @@ const SidebarInputs: RefForwardingComponent<
             valor === null ||
             valor === undefined ||
             (isNaN(valor) && valorRestante <= 0) ||
-            valor > valorRestante
+            valor > valorRestante ||
+            valorRestante <= 0
           }
           ref={refButton}
         >

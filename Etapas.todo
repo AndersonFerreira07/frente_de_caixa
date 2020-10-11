@@ -3,25 +3,39 @@ Funcionalidades:
   ☐ enviar dados para servidor
   ☐ get dados para exibir na impressao
   ☐ ao salvar enviar para server e obter obejto total da venda
-  ☐ defaults cliente
-  ✔ defaults tipo pagamaneto @done(20-10-06 19:42)
-  ☐ mensagens de erro nos inputs unidades, peso, preço
-  ✔ enter direcionar imputs @done(20-10-06 19:07)
-  ✔ botao preencher resto fundir com botao adiconar a lista @done(20-10-05 18:44)
-  ✔ melhorar os atalhos @done(20-10-06 19:07)
-  ☐ adicionar atalhos na parte de finalizar a venda
-  ☐ realocar botoes de salvar e cancelar na parte de finalizar venda
-  ☐ renomear botoes de salvar e cancelar na parte de finalizar venda
-  ☐ senha para tornar preço editavel
-  ☐ chamar gerente
-  ✔ remover o rotulo dos atalhos (talvez) @done(20-10-05 18:43)
-  ☐ pesquisar por nome tb, o produto
-  ✔ mesclar itens da venda apenas se o preço for igual @done(20-10-05 18:43)
   ☐ funcionalidade de abrir e fechar o caixa no frente de caixa
-  ☐ mensagem de validação se preço estiver abaixo da media ponderada dos preços de compra
   ☐ ajeitar nota
+  ☐ diminuir alguns paddings e tamanhos
+  ☐ ajeitar bug do rotulo de sleção q empurra tabela pra baixo
+  ☐ mensagem quando o produto nao tiver unidades
+  ☐ no calculo do preco medio levar em consideração a nota
+  ☐ sinalizador de salvare imprimir venda
+  ☐ no vampo pesquisa quando nao tiver nada sugeriri os mais pesquisados
+  ☐ autocoomplete cliente igual ao de produtos
+  ☐ autocomplete meio de pagamento igual ao de produto
 
 Archive:
+  ✔ ajeitar erro slecionar item, ta selecionando varios do mesmo produto @done(20-10-11 14:56) @project(Funcionalidades)
+  ✔ mensagens de erro nos inputs unidades, peso, preço @done(20-10-11 11:30) @project(Funcionalidades)
+  ✔ impedir parcelas com valor zero @done(20-10-11 10:26) @project(Funcionalidades)
+  ✔ notificar quando completar o valor das parcelas @done(20-10-11 11:30) @project(Funcionalidades)
+  ✔ botão de salvar piscando @done(20-10-11 11:19) @project(Funcionalidades)
+  ✔ valor preco valo ponderado @done(20-10-11 10:08) @project(Funcionalidades)
+  ✔ não perimitir adicionar item se o preço estiver nulo ou zero @done(20-10-11 09:44) @project(Funcionalidades)
+  ✔ defaults cliente @done(20-10-11 09:23) @project(Funcionalidades)
+  ✔ defaults tipo pagamaneto @done(20-10-06 19:42) @project(Funcionalidades)
+  ✔ enter direcionar imputs @done(20-10-06 19:07) @project(Funcionalidades)
+  ✔ botao preencher resto fundir com botao adiconar a lista @done(20-10-05 18:44) @project(Funcionalidades)
+  ✔ melhorar os atalhos @done(20-10-06 19:07) @project(Funcionalidades)
+  ✔ adicionar atalhos na parte de finalizar a venda @done(20-10-11 09:22) @project(Funcionalidades)
+  ✔ realocar botoes de salvar e cancelar na parte de finalizar venda @done(20-10-11 09:22) @project(Funcionalidades)
+  ✔ renomear botoes de salvar e cancelar na parte de finalizar venda @done(20-10-11 09:22) @project(Funcionalidades)
+  ✔ senha para tornar preço editavel @done(20-10-11 09:22) @project(Funcionalidades)
+  ✔ chamar gerente @done(20-10-11 09:22) @project(Funcionalidades)
+  ✔ remover o rotulo dos atalhos (talvez) @done(20-10-05 18:43) @project(Funcionalidades)
+  ✔ pesquisar por nome tb, o produto @done(20-10-11 09:22) @project(Funcionalidades)
+  ✔ mesclar itens da venda apenas se o preço for igual @done(20-10-05 18:43) @project(Funcionalidades)
+  ✔ mensagem de validação se preço estiver abaixo da media ponderada dos preços de compra @done(20-10-11 09:22) @project(Funcionalidades)
   ✔ LABELS DIALOGOS MAIS SIMPLES @done(20-09-13 12:09) @project(UI)
   ✔ ROLAGEM NA TABELA @done(20-09-13 12:09) @project(UI)
   ✔ SELECT PREÇOS @done(20-10-04 10:31) @project(UI)

@@ -164,6 +164,7 @@ const Frente: FC<FrenteProps> = () => {
         total: getTotal(peso, quantidade, precoUnitario, produto),
         unidades: quantidade,
         unitario: precoUnitario,
+        uidd: `${produto.nome}${precoUnitario}`
         //obs: obs
       }])
     } else {  
@@ -174,6 +175,7 @@ const Frente: FC<FrenteProps> = () => {
         produto: produto,
         unitario: precoUnitario,
         total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
+        uidd: `${produto.nome}${precoUnitario}`
         //obs: obs
       }
       setItens(itens2)
@@ -202,7 +204,7 @@ const Frente: FC<FrenteProps> = () => {
     let arrayNew = itens.slice()
     for (let i = 0; i < indices.length; i++) {
       arrayNew = arrayNew.filter(function( obj ) {
-        return obj.produto.nome !== indices[i];
+        return obj.uidd !== indices[i];
     });
     setItens(arrayNew)
     }
@@ -221,6 +223,11 @@ const Frente: FC<FrenteProps> = () => {
     setItens([])
   }
 
+  async function getPrecoMedio(id) {
+    const dataPreco = await api.get(`/produtos/precomedio/${id}`);
+    return dataPreco.data.precomedio;
+  }
+
   async function searchHandle() {
     const data = await api.get(`/produtos2/${search}`)
     console.log(data.data)
@@ -229,6 +236,8 @@ const Frente: FC<FrenteProps> = () => {
       if(index >= 0) {
         data.data[0].unidadesDisponivel = data.data[0].unidadesDisponivel - itens[index].unidades
       }
+      data.data[0].precoMedio = await getPrecoMedio(data.data[0].id);
+      data.data[0].valorVenda = data.data[0].precoMedio === 0 ? 0 : data.data[0].precoMedio + data.data[0].lucrovarejo;
       setProduto(data.data[0]);
       if (componentRef4.current)
         componentRef4.current.focus();
@@ -253,6 +262,8 @@ const Frente: FC<FrenteProps> = () => {
       if(index >= 0) {
         data.data[0].unidadesDisponivel = data.data[0].unidadesDisponivel - itens[index].unidades
       }
+      data.data[0].precoMedio = await getPrecoMedio(data.data[0].id)
+      data.data[0].valorVenda = data.data[0].precoMedio === 0 ? 0 : data.data[0].precoMedio + data.data[0].lucrovarejo;
       setProduto(data.data[0]);
       if (componentRef4.current)
         componentRef4.current.focus();
@@ -306,7 +317,9 @@ const Frente: FC<FrenteProps> = () => {
     if(senha === dataConfig.data.senha) {
       setEditPrice(true)
     } else {
-      enqueueSnackbar('Senha incorreta!');
+      enqueueSnackbar('Senha incorreta!', { 
+        variant: 'error',
+    });
     }
     /* if(componentRef4.current) componentRef4.current */
   }
@@ -337,6 +350,8 @@ const Frente: FC<FrenteProps> = () => {
         break;
     }
   }
+
+
 
   console.log('OPEN SOMA PESOS: ' + getOpen())
   console.log('itens kkkk')
@@ -378,7 +393,9 @@ const Frente: FC<FrenteProps> = () => {
                   if(itens.length > 0) {
                     componentRef2.current.handleOpen();
                   } else {
-                    enqueueSnackbar('É necessário ao menos um item na venda!');
+                    enqueueSnackbar('É necessário ao menos um item na venda!', { 
+                      variant: 'warning',
+                  });
                   }
                 break;
               case 119:
@@ -391,7 +408,9 @@ const Frente: FC<FrenteProps> = () => {
                 case 45:
                   if (refBtCallGerente.current) {
                     refBtCallGerente.current.click()
-                    enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!');
+                    enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!', { 
+                      variant: 'info',
+                  });
                   }
                   break;
                 case 46:
@@ -430,7 +449,9 @@ const Frente: FC<FrenteProps> = () => {
                     if(itens.length > 0) {
                       componentRef2.current.handleOpen();
                     } else {
-                      enqueueSnackbar('É necessário ao menos um item na venda!');
+                      enqueueSnackbar('É necessário ao menos um item na venda!', { 
+                        variant: 'warning',
+                    });
                     }
                   break;
                 case 2:
@@ -470,7 +491,9 @@ const Frente: FC<FrenteProps> = () => {
             className={classes.btn}
             onClick={() => {
               callGerente()
-              enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!');
+              enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!', { 
+                variant: 'info',
+            });
             }}
             style={{ padding: '20px' }}
             ref={refBtCallGerente}
@@ -509,7 +532,9 @@ const Frente: FC<FrenteProps> = () => {
                 if(itens.length > 0) {
                   componentRef2.current.handleOpen();
                 } else {
-                  enqueueSnackbar('É necessário ao menos um item na venda!');
+                  enqueueSnackbar('É necessário ao menos um item na venda!', { 
+                    variant: 'warning',
+                });
                 }
               }
             }}
@@ -554,7 +579,9 @@ const Frente: FC<FrenteProps> = () => {
                 if(itens.length > 0) {
                   componentRef2.current.handleOpen();
                 } else {
-                  enqueueSnackbar('É necessário ao menos um item na venda!');
+                  enqueueSnackbar('É necessário ao menos um item na venda!', { 
+                    variant: 'warning',
+                });
                 }
               }
               break;

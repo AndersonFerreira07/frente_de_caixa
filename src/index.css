@@ -1397,3 +1397,22 @@
     box-shadow: 0 0 2vw 0.4vw yellow;
   }
 }
+
+
+
+
+
+
+
+@keyframes btnImprimirAnimation {
+  0% {
+    background-color: #c3454a;
+  }
+  100% {
+    background-color: green;
+  }
+}
+
+.btnImprimir {
+  animation: btnImprimirAnimation 2s ease-in 5s infinite alternate;
+}

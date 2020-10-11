@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { makeStyles } from '@material-ui/core';
 
-import logo from '../../assets/logo2.png';
+import logo from '../../assets/logo512.png';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes travel': {

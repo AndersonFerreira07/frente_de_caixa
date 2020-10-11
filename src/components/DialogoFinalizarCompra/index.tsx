@@ -156,24 +156,37 @@ const tiposPagamentosList: Array<Row2> = [
   },
 ];
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    appBar: {
-      position: 'relative',
-      /* opacity: '0.75', */
+const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
     },
-    title: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
+    to: {
+      opacity: 1,
     },
-    textField: {
-      /* marginLeft: theme.spacing(1),
+  },
+  appBar: {
+    position: 'relative',
+    /* opacity: '0.75', */
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+  textField: {
+    /* marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
       width: 200, */
-      // marginTop: '10px',
-    },
-  }),
-);
+    // marginTop: '10px',
+  },
+  btnImprimir: {
+    // backgroundColor: 'green',
+    // opacity: 0,
+    // animation: '$fadeIn .2s ease-in-out',
+    backgroundColor: theme.palette.secondary.main,
+    opacity: 0.4,
+  },
+}));
 
 const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
@@ -313,6 +326,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
   const [clienteDefault, setClienteDefault] = useState<any>(null);
   const refDate = useRef<any>(null);
   const refClientes = useRef<any>(null);
+  const refBtnImprimir = useRef<any>(null);
 
   type SidebarHandle = React.ElementRef<typeof SidebarTiposPagamentos>;
   const refSidebar = useRef<SidebarHandle>(null);
@@ -377,14 +391,21 @@ const DialogoFinalizarCompra: RefForwardingComponent<
 
   function messagesError() {
     if (cliente === null) {
-      enqueueSnackbar('Campo cliente não foi preenchido!');
+      enqueueSnackbar('Campo cliente não foi preenchido!', {
+        variant: 'warning',
+      });
     }
     if (itens.length <= 0) {
-      enqueueSnackbar('é necessário ao menos um registro de parcela!');
+      enqueueSnackbar('É necessário ao menos um registro de parcela!', {
+        variant: 'warning',
+      });
     }
     if (getValorRestante() !== 0) {
       enqueueSnackbar(
         'O valor total da venda não foi integralmente distribuído nas parcelas!',
+        {
+          variant: 'warning',
+        },
       );
     }
   }
@@ -612,6 +633,9 @@ const DialogoFinalizarCompra: RefForwardingComponent<
                   ref={refSidebar}
                   handleF4={() => handleClose()}
                   handleF8={() => handleOpenDialogoNota()}
+                  focusImprimir={() => {
+                    // if (refBtnImprimir.current) refBtnImprimir.current.focus();
+                  }}
                 />
                 <LabelSubTotal valor={props.subTotal} />
                 <Paper
@@ -641,7 +665,14 @@ const DialogoFinalizarCompra: RefForwardingComponent<
                     <Button
                       variant="contained"
                       color="secondary"
+                      className={
+                        getValorRestante() !== 0
+                          ? classes.btnImprimir
+                          : 'btnImprimir'
+                      }
                       onClick={handleOpenDialogoNota}
+                      // disabled={getValorRestante() !== 0}
+                      ref={refBtnImprimir}
                     >
                       Salvar (F8)
                     </Button>

@@ -26,6 +26,7 @@ const lista = [
     unitario: 23,
     total: 45,
     obs: 'lalla',
+    uidd: 'Mussarela123',
   },
   {
     produto: 'Mussarela2',
@@ -34,6 +35,7 @@ const lista = [
     unitario: 23,
     total: 45,
     obs: 'lalla',
+    uidd: 'Mussarela223',
   },
   {
     produto: 'Mussarela3',
@@ -42,6 +44,7 @@ const lista = [
     unitario: 23,
     total: 45,
     obs: 'lalla',
+    uidd: 'Mussarela323',
   },
 ];
 

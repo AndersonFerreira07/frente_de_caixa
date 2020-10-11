@@ -21,6 +21,7 @@ export type AutoCompleteTiposPagamentoProps = {
   handleEnter?: () => void;
   handleF4?: () => void;
   handleF8?: () => void;
+  disabled?: boolean;
 };
 
 const AutoCompleteTiposPagamento = forwardRef<
@@ -34,6 +35,7 @@ const AutoCompleteTiposPagamento = forwardRef<
       handleEnter = () => {},
       handleF4 = () => {},
       handleF8 = () => {},
+      disabled = false,
     },
     forwardedRef,
   ) => {
@@ -108,6 +110,7 @@ const AutoCompleteTiposPagamento = forwardRef<
         getOptionLabel={(option) => option.nome}
         options={options}
         loading={loading}
+        disabled={disabled}
         /* onKeyDown={(e) => {
         if (e.keyCode === 13) handleEnter();
       }} */
