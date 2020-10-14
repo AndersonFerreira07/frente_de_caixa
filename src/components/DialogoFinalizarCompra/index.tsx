@@ -41,7 +41,7 @@ import AutoCompleteClientes from '../AutoCompleteClientes';
 import DialogoNota from '../DialogoNota';
 import LabelSubTotal from '../LabelSubtotal';
 import SidebarTiposPagamentos from '../SidebarTiposPagamentos';
-import Table, { Row } from '../Table';
+import Table, { Row } from '../Table2';
 import TablePacelas, { Row as Row2 } from '../TableTiposPagamento';
 
 const testeConfig = {
@@ -367,15 +367,37 @@ const DialogoFinalizarCompra: RefForwardingComponent<
   };
 
   function getTodosDados() {
-    const listaItens = props.lista;
-    const listaParcelas = itens;
-    const dataVenda = buildObjDate(refDate.current.value);
-    const clienteLocal = cliente;
+    const listaItens: Array<any> = [];
+    const listaParcelas: Array<any> = [];
+
+    for (let i = 0; i < props.lista.length; i += 1) {
+      listaItens.push({
+        peso: props.lista[i].peso,
+        unidades: props.lista[i].unidades,
+        precoVenda: props.lista[i].produto.valorVenda,
+        lucro:
+          props.lista[i].produto.valorVenda - props.lista[i].produto.precoMedio,
+        produto_id: props.lista[i].produto.id,
+      });
+    }
+
+    for (let i = 0; i < itens.length; i += 1) {
+      listaParcelas.push({
+        tipo_pagamento_id: itens[i].tipoPgamento.id,
+        dataPagamento: itens[i].dataPagamento,
+        valor: itens[i].valor,
+        dataPagamentoReal: itens[i].tipoPgamento.modo === 0 ? new Date() : null,
+        modo: itens[i].tipoPgamento.modo,
+      });
+    }
+
     return {
+      /* listaItens: props.lista,
+      listaParcelas: itens, */
       listaItens,
       listaParcelas,
-      dataVenda,
-      clienteLocal,
+      dataVenda: buildObjDate(refDate.current.value),
+      cliente: cliente.id,
     };
   }
 
@@ -411,6 +433,14 @@ const DialogoFinalizarCompra: RefForwardingComponent<
   }
 
   async function submitDadosVenda() {
+    // return testeDadosCompra[0];
+    const dados = getTodosDados();
+    const data = await api.post('/vendastotalfc', {
+      ...dados,
+    });
+    // return data.data;
+    console.log('RETORNO VENDA TOTAL FC API');
+    console.log(data.data);
     return testeDadosCompra[0];
   }
 
@@ -682,7 +712,11 @@ const DialogoFinalizarCompra: RefForwardingComponent<
             </Box>
           </Box>
         </Box>
-        <DialogoNota ref={refDialogoNota} handleClose={closeDialogoNota} />
+        <DialogoNota
+          ref={refDialogoNota}
+          handleClose={closeDialogoNota}
+          itens={itens}
+        />
         <div className="firefly" />
         <div className="firefly" />
         <div className="firefly" />

@@ -15,9 +15,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { createObjVenda } from '../../utils/createObjVenda';
 import NotaFC from '../NotaFC';
+// import ButtonDownloads from '../testePdf/ButtonDownloads';
 
 export type DialogoNotaProps = {
   handleClose: () => void;
+  itens: Array<any>;
 };
 
 export type DialogoNotaHandle = {
@@ -76,6 +78,7 @@ const DialogoNota: RefForwardingComponent<
           <Button onClick={handlePrint} color="primary">
             Imprimir
           </Button>
+          {/* <ButtonDownloads itens={props.itens} /> */}
         </DialogActions>
       </Dialog>
     </div>

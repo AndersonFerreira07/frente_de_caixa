@@ -19,7 +19,7 @@
 
 @-webkit-keyframes travel {
   from { left: 0;     }
-  to   { left: 640px; }
+  to   { left: calc(100% - 150px); }
 }
 
 @-webkit-keyframes bounce {
@@ -28,7 +28,7 @@
     -webkit-animation-timing-function: ease-out;
   }
   50% {
-    bottom: 220px;
+    bottom: calc(100% - 150px);
     -webkit-animation-timing-function: ease-in;
   }
 }
@@ -42,7 +42,7 @@
 
 @keyframes travel {
   from { left: 0;     }
-  to   { left: 90%; }
+  to   { left: calc(100% - 150px); }
 }
 
 @keyframes bounce {
@@ -51,23 +51,23 @@
     animation-timing-function: ease-out;
   }
   50% {
-    bottom: 90%;
+    bottom: calc(100% - 150px);
     animation-timing-function: ease-in;
   }
 }
 
 @keyframes spin {
   from {
-    /* -moz-transform: rotate(0);
+    -moz-transform: rotate(0);
     -o-transform: rotate(0);
     -ms-transform: rotate(0);
-    transform: rotate(0); */
+    transform: rotate(0);
   }
   to {
-    /* -moz-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
     -o-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
-    transform: rotate(360deg); */
+    transform: rotate(360deg);
   }
 }
 

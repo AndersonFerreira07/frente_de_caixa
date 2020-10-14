@@ -10,6 +10,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/pickers": "^3.2.10",
     "@mui-treasury/components": "^1.9.1",
+    "@react-pdf/renderer": "^1.6.11",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -45,7 +46,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "urtmui": "utils-react-typescript-materialui-cli"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -85,6 +87,7 @@
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.1.0",
     "prettier": "^2.1.1",
-    "react-is": "^16.13.1"
+    "react-is": "^16.13.1",
+    "utils-react-typescript-materialui-cli": "^1.1.0"
   }
 }

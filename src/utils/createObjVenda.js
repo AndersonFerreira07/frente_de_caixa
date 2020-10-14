@@ -9,12 +9,17 @@ function compareDatas(a, b) {
 export function createObjVenda(vendaObj, config, isNota) {
   const vendaObjNew = {};
 
+  console.log('step 1');
   const dataVenda = moment(new Date(vendaObj.data)).format('DD/MM/YYYY');
+  console.log('step 1.1');
   vendaObjNew.razao = vendaObj.cliente.empresa;
+  console.log('step 1.1.1');
   vendaObjNew.cpf = vendaObj.cliente.cpf;
   vendaObjNew.fantasia = vendaObj.cliente.razaosocial;
   vendaObjNew.email = vendaObj.cliente.email;
   vendaObjNew.resp = vendaObj.cliente.nome;
+  console.log('step 1.2');
+
   // vendaObjNew.frete = vendaObj.frete;
   vendaObjNew.frete = 0;
   vendaObjNew.entrega = dataVenda;
@@ -33,6 +38,7 @@ export function createObjVenda(vendaObj, config, isNota) {
   vendaObjNew.empresario = config.empresario;
   vendaObjNew.cpfEmpresario = config.cpf;
   vendaObjNew.banco = config.banco;
+  console.log('step 2');
 
   // vendaObjNew.meioPagamento = vendaObj.tipoPagamento.nome;
 
@@ -40,6 +46,7 @@ export function createObjVenda(vendaObj, config, isNota) {
   vendaObjNew.enderecoEmpresa = config.enderecoEmpresa;
   vendaObjNew.cepEmpresa = config.cep;
   vendaObjNew.foneEmpresa = config.telefone;
+  console.log('step 3');
 
   // vendaObjNew.modoPagamento = vendaObj.tipoPagamento.modo;
 

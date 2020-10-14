@@ -5,10 +5,12 @@ Funcionalidades:
   ☐ ao salvar enviar para server e obter obejto total da venda
   ☐ funcionalidade de abrir e fechar o caixa no frente de caixa
   ☐ ajeitar nota
+  ☐ no calculo do preco medio levar em consideração a nota
+
+  
   ☐ diminuir alguns paddings e tamanhos
   ☐ ajeitar bug do rotulo de sleção q empurra tabela pra baixo
   ☐ mensagem quando o produto nao tiver unidades
-  ☐ no calculo do preco medio levar em consideração a nota
   ☐ sinalizador de salvare imprimir venda
   ☐ no vampo pesquisa quando nao tiver nada sugeriri os mais pesquisados
   ☐ autocoomplete cliente igual ao de produtos
