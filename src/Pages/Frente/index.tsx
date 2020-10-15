@@ -141,10 +141,10 @@ const Frente: FC<FrenteProps> = () => {
   }
 
   function getTotal(peso, unidades, precoUnitario, produto) {
-    if(produto.unidade.modo === 0) {
-      return peso * precoUnitario
-    } else {
+    if(produto.unidade.modo === 2) {
       return unidades * precoUnitario
+    } else {
+      return peso * precoUnitario
     }
   }
 
