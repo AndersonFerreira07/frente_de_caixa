@@ -9,17 +9,12 @@ function compareDatas(a, b) {
 export function createObjVenda(vendaObj, config, isNota) {
   const vendaObjNew = {};
 
-  console.log('step 1');
   const dataVenda = moment(new Date(vendaObj.data)).format('DD/MM/YYYY');
-  console.log('step 1.1');
   vendaObjNew.razao = vendaObj.cliente.empresa;
-  console.log('step 1.1.1');
   vendaObjNew.cpf = vendaObj.cliente.cpf;
   vendaObjNew.fantasia = vendaObj.cliente.razaosocial;
   vendaObjNew.email = vendaObj.cliente.email;
   vendaObjNew.resp = vendaObj.cliente.nome;
-  console.log('step 1.2');
-
   // vendaObjNew.frete = vendaObj.frete;
   vendaObjNew.frete = 0;
   vendaObjNew.entrega = dataVenda;
@@ -38,7 +33,6 @@ export function createObjVenda(vendaObj, config, isNota) {
   vendaObjNew.empresario = config.empresario;
   vendaObjNew.cpfEmpresario = config.cpf;
   vendaObjNew.banco = config.banco;
-  console.log('step 2');
 
   // vendaObjNew.meioPagamento = vendaObj.tipoPagamento.nome;
 
@@ -46,7 +40,6 @@ export function createObjVenda(vendaObj, config, isNota) {
   vendaObjNew.enderecoEmpresa = config.enderecoEmpresa;
   vendaObjNew.cepEmpresa = config.cep;
   vendaObjNew.foneEmpresa = config.telefone;
-  console.log('step 3');
 
   // vendaObjNew.modoPagamento = vendaObj.tipoPagamento.modo;
 
@@ -55,36 +48,31 @@ export function createObjVenda(vendaObj, config, isNota) {
   ).toUpperCase()} OS PRODUTOS CONSTANTES NA PRESENTE NOTA, NA DATA E HORA INDICADAS A SEGUIR:`;
 
   const listaProdutos = [];
-  for (let i = 0; i < vendaObj.itens.length; i++) {
+  for (let i = 0; i < vendaObj.itensProdutos.length; i++) {
     const {
       unidades: unidadesItem,
       peso: pesoItem,
-      observacao,
+      // observacao,
       precoVenda,
-      lote: {
-        numero: numeroLote,
-        nota,
-        validade,
-        ativo: ativoLote,
-        produto: {
-          nome: nomeProduto,
-          ativo: ativoProduto,
-          codigo,
-          unidade: { nome: nomeUnidade, modo },
-        },
+      produto: {
+        nome: nomeProduto,
+        ativo,
+        codigo,
+        unidade: { nome: nomeUnidade, modo },
       },
-    } = vendaObj.itens[i];
+    } = vendaObj.itensProdutos[i];
 
-    if (!isNota || (isNota && nota))
+    if (true)
       listaProdutos.push({
+        // if(!isNota || (isNota && nota))  listaProdutos.push({
         descricao: nomeProduto,
-        observacao,
+        observacao: '',
         qtde: unidadesItem,
         tipo: nomeUnidade,
         peso: pesoItem,
         valorUnitario: precoVenda,
         tipoUnidade: modo,
-        numeroLote,
+        numeroLote: 5,
       });
   }
 
@@ -119,29 +107,23 @@ export function createObjVenda(vendaObj, config, isNota) {
 
 export function createResumo(vendaObj) {
   const vendaObjNew = [];
-  for (let i = 0; i < vendaObj.itens.length; i++) {
+  for (let i = 0; i < vendaObj.itensProdutos.length; i++) {
     const {
       unidades: unidadesItem,
       peso: pesoItem,
-      observacao,
+      // observacao,
       precoVenda,
-      lote: {
-        numero: numeroLote,
-        nota,
-        validade,
-        ativo: ativoLote,
-        produto: {
-          nome: nomeProduto,
-          ativo: ativoProduto,
-          codigo,
-          unidade: { nome: nomeUnidade, modo },
-        },
+      produto: {
+        nome: nomeProduto,
+        ativo,
+        codigo,
+        unidade: { nome: nomeUnidade, modo },
       },
-    } = vendaObj.itens[i];
+    } = vendaObj.itensProdutos[i];
 
     vendaObjNew.push({
       produto: nomeProduto,
-      lote: `#${numeroLote}`,
+      lote: `#${5}`,
       precoVenda: `R$ ${precoVenda}`,
       unidades: unidadesItem,
       peso: pesoItem > 0 ? `${pesoItem} Kg` : '-',

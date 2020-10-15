@@ -441,7 +441,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     // return data.data;
     console.log('RETORNO VENDA TOTAL FC API');
     console.log(data.data);
-    return testeDadosCompra[0];
+    return data.data[0];
   }
 
   async function handleOpenDialogoNota() {

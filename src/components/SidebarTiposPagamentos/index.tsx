@@ -346,9 +346,9 @@ const SidebarInputs: RefForwardingComponent<
             shrink: true,
           }}
           variant="outlined"
-          disabled={
+          /* disabled={
             getModoAvista() || tipoPagamento === null || valorRestante <= 0
-          }
+          } */
           /* value={getDataPagamentoFormatted()} */
           /* onChange={(e) => {
             console.log('novo valor data');
@@ -421,6 +421,8 @@ const SidebarInputs: RefForwardingComponent<
               isNaN(valor) ? valorRestante : valor,
               tipoPagamento,
               refDate === null
+                ? new Date()
+                : tipoPagamento.modo === 0
                 ? new Date()
                 : buildObjDate(refDate.current.value),
             );
