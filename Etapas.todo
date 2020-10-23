@@ -1,22 +1,36 @@
 
 Funcionalidades:
-  ☐ enviar dados para servidor
-  ☐ get dados para exibir na impressao
-  ☐ ao salvar enviar para server e obter obejto total da venda
-  ☐ funcionalidade de abrir e fechar o caixa no frente de caixa
-  ☐ ajeitar nota
-  ☐ no calculo do preco medio levar em consideração a nota
+  Definir preço de venda:
+    ☐ definir na aba produtos
+    ☐ calcular lucro e mragem de lucro na tela produtos
+    ☐ produto comprado por nota aumentar preco de compra (incluir taxa)
+    ☐ mudar preco de venda quando chegar outro item (notificação)
+    ☐ notificação de quando o preço muda 
+  ☐ Nota Nova
+  ☐ Troco inicial FC
+  Configurações FC:
+    ☐ Escolha do caixa fisico vinculado
+  ☐ Parcelas troco FC
+  ☐ Entradas
+  ☐ Saídas (transferências)
+  ☐ Relatório e resumo caixa
+  ☐ Compras FC
+  ☐ Responsivel
+  ☐ Drive impressão
 
-  
-  ☐ diminuir alguns paddings e tamanhos
-  ☐ ajeitar bug do rotulo de sleção q empurra tabela pra baixo
-  ☐ mensagem quando o produto nao tiver unidades
-  ☐ sinalizador de salvare imprimir venda
-  ☐ no vampo pesquisa quando nao tiver nada sugeriri os mais pesquisados
-  ☐ autocoomplete cliente igual ao de produtos
-  ☐ autocomplete meio de pagamento igual ao de produto
+  Melhorias:
+    ☐ diminuir alguns paddings e tamanhos
+    ☐ ajeitar bug do rotulo de sleção q empurra tabela pra baixo
+    ☐ mensagem quando o produto nao tiver unidades
+    ☐ autocoomplete cliente igual ao de produtos
+    ☐ autocomplete meio de pagamento igual ao de produto
+
 
 Archive:
+  ✔ sinalizador de salvare imprimir venda @done(20-10-21 09:59) @project(Funcionalidades)
+  ✔ enviar dados para servidor @done(20-10-21 09:49) @project(Funcionalidades)
+  ✔ get dados para exibir na impressao @done(20-10-21 09:50) @project(Funcionalidades)
+  ✔ ao salvar enviar para server e obter obejto total da venda @done(20-10-21 09:50) @project(Funcionalidades)
   ✔ ajeitar erro slecionar item, ta selecionando varios do mesmo produto @done(20-10-11 14:56) @project(Funcionalidades)
   ✔ mensagens de erro nos inputs unidades, peso, preço @done(20-10-11 11:30) @project(Funcionalidades)
   ✔ impedir parcelas com valor zero @done(20-10-11 10:26) @project(Funcionalidades)

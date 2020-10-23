@@ -221,6 +221,7 @@ const Frente: FC<FrenteProps> = () => {
   function handleFinalizaVenda() {
     setTela(1)
     setItens([])
+    setProduto(null)
   }
 
   async function getPrecoMedio(id) {
