@@ -52,6 +52,8 @@ export type Row = {
   tipoPgamento: any;
   dataPagamento: Date | null;
   uidd: string;
+  valorRecebido: number;
+  troco: number;
 };
 
 type RowFormated = {
@@ -59,6 +61,9 @@ type RowFormated = {
   tipoPgamento: number;
   dataPagamento: string;
   uidd: string;
+  valorRecebido: string;
+  troco: string;
+  modo: number;
 };
 
 interface Data {
@@ -124,6 +129,13 @@ const headCells: HeadCell[] = [
     disablePadding: false,
     label: 'Data de Pagamento',
   },
+  {
+    id: 'valorRecebido',
+    numeric: true,
+    disablePadding: false,
+    label: 'Valor Recebido',
+  },
+  { id: 'troco', numeric: true, disablePadding: false, label: 'Troco' },
 ];
 
 interface EnhancedTableProps {
@@ -361,6 +373,9 @@ const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
         valor: formatMoeda(list[i].valor),
         tipoPgamento: list[i].tipoPgamento.nome,
         dataPagamento: moment(list[i].dataPagamento).format('DD/MM/YYYY'),
+        valorRecebido: formatMoeda(list[i].valorRecebido),
+        troco: formatMoeda(list[i].troco),
+        modo: list[i].tipoPgamento.modo,
       });
     }
     return listFormated;
@@ -434,6 +449,13 @@ const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
                       </TableCell>
                       <TableCell align="right">{row.valor}</TableCell>
                       <TableCell align="right">{row.dataPagamento}</TableCell>
+
+                      <TableCell align="right">
+                        {row.modo === 0 ? row.valorRecebido : '-'}
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.modo === 0 ? row.troco : '-'}
+                      </TableCell>
                     </StyledTableRow>
                   );
                 },

@@ -73,6 +73,7 @@ export function createObjVenda(vendaObj, config, isNota) {
         valorUnitario: precoVenda,
         tipoUnidade: modo,
         numeroLote: 5,
+        unidadeFinanceira: modo === 2 ? parseInt(unidadesItem, 10) : pesoItem,
       });
   }
 
@@ -88,6 +89,7 @@ export function createObjVenda(vendaObj, config, isNota) {
       valorNota,
       datapagamento,
       tipoPagamento,
+      troco,
     } = vendaObj.parcelas[i];
     const datapagamentoFormat = moment(new Date(datapagamento)).format(
       'DD/MM/YYYY',
@@ -97,6 +99,7 @@ export function createObjVenda(vendaObj, config, isNota) {
       data: datapagamentoFormat,
       tipoPagamento,
       numero: `${i + 1}`,
+      troco,
     });
   }
 

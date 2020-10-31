@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       // justifyContent: 'center',
       // width: 400,
-      height: '50px',
+      height: '90px',
       fontSize: '27px',
       backgroundColor: theme.palette.secondary.main,
       color: theme.palette.common.white,
@@ -54,9 +54,44 @@ const Footer: FC<FooterProps> = ({ tela, disabledPartes }) => {
         flexWrap="wrap"
         // css={{ opacity: '0.5' }}
       >
-        {tela === 1 && <div>F2 - Nova Venda</div>}
-        {tela === 1 && <div>DEL - Sair</div>}
-        {tela === 1 && <div>{`Atendente: ${getUsername()}`}</div>}
+        <Box display="flex" flexDirection="column" alignItems="flex-start">
+          <div>F2 - Nova Venda</div>
+          <div>F5 - Relatório e Resumo</div>
+        </Box>
+        <Box display="flex" flexDirection="column" alignItems="flex-start">
+          <div>F3 - Nova Entrada</div>
+          <div>DEL - Sair</div>
+        </Box>
+        <Box display="flex" flexDirection="column" alignItems="flex-start">
+          <div>F4 - Saídas </div>
+          <div>{`Atendente: ${getUsername()}`}</div>
+        </Box>
+        {/* {tela === 1 && (
+          <div style={{ width: '33.33%', textAlign: 'left' }}>
+            F2 - Nova Venda
+          </div>
+        )}
+        {tela === 1 && (
+          <div style={{ width: '33.33%', textAlign: 'center' }}>
+            F3 - Nova Entrada
+          </div>
+        )}
+        {tela === 1 && (
+          <div style={{ width: '33.33%', textAlign: 'right' }}>F4 - Saídas</div>
+        )} */}
+        {/* {tela === 1 && (
+          <div style={{ width: '33.33%', textAlign: 'left' }}>
+            F5 - Relatório e resumo
+          </div>
+        )}
+        {tela === 1 && (
+          <div style={{ width: '33.33%', textAlign: 'center' }}>DEL - Sair</div>
+        )}
+        {tela === 1 && (
+          <div
+            style={{ width: '33.33%', textAlign: 'right' }}
+          >{`Atendente: ${getUsername()}`}</div>
+        )} */}
         {tela === 0 && <div>F4 - Fechar Venda</div>}
         {/* <div>F7 - Excluir Item</div> */}
         {tela === 0 && <div>F8 - Cancelar Venda</div>}

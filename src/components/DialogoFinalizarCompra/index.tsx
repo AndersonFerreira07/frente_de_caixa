@@ -153,6 +153,9 @@ const tiposPagamentosList: Array<Row2> = [
     tipoPgamento: 10,
     dataPagamento: new Date(),
     uidd: 'produto1',
+    valorRecebido: 10,
+
+    troco: 20,
   },
 ];
 
@@ -388,6 +391,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
         valor: itens[i].valor,
         dataPagamentoReal: itens[i].tipoPgamento.modo === 0 ? new Date() : null,
         modo: itens[i].tipoPgamento.modo,
+        troco: itens[i].troco ? itens[i].troco : 0,
       });
     }
 
@@ -458,6 +462,8 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     valor: number,
     tipoPagamento: any,
     dataPagamento: Date | null,
+    valorRecebido: number,
+    troco: number,
   ) {
     setItens([
       ...itens,
@@ -466,6 +472,8 @@ const DialogoFinalizarCompra: RefForwardingComponent<
         tipoPgamento: tipoPagamento,
         valor,
         uidd: `${tipoPagamento.nome}${itens.length}`,
+        valorRecebido,
+        troco,
       },
     ]);
   }

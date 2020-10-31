@@ -237,8 +237,10 @@ const Frente: FC<FrenteProps> = () => {
       if(index >= 0) {
         data.data[0].unidadesDisponivel = data.data[0].unidadesDisponivel - itens[index].unidades
       }
-      data.data[0].precoMedio = await getPrecoMedio(data.data[0].id);
-      data.data[0].valorVenda = data.data[0].precoMedio === 0 ? 0 : data.data[0].precoMedio + data.data[0].lucrovarejo;
+      //data.data[0].precoMedio = await getPrecoMedio(data.data[0].id);
+      data.data[0].precoMedio = data.data[0].precoCompraMedio;
+      //data.data[0].valorVenda = data.data[0].precoMedio === 0 ? 0 : data.data[0].precoMedio + data.data[0].lucrovarejo;
+      data.data[0].valorVenda = data.data[0].precoVenda
       setProduto(data.data[0]);
       if (componentRef4.current)
         componentRef4.current.focus();

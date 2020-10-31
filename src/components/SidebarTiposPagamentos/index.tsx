@@ -44,6 +44,8 @@ export type SidebarInputsProps = {
     valor: number,
     tipoPagamento: any,
     dataPagamento: Date | null,
+    valorRecebido: number,
+    troco: number,
   ) => void;
   subTotal: number;
   valorRestante: number;
@@ -174,6 +176,7 @@ const SidebarInputs: RefForwardingComponent<
   const [tipoPagamento, setTipoPagamento] = useState<any>(null);
   const [tipoPagamentoDefault, setTipoPagamentoDefault] = useState<any>(null);
   const [dataPagamento, setDataPagamento] = useState<Date | null>(new Date());
+  const [valorRecebidoAVista, setValorRecebidoAVista] = useState(0);
   const refDate = useRef<any>(null);
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -181,6 +184,7 @@ const SidebarInputs: RefForwardingComponent<
   const refMeioPagamento = useRef<any>(null);
   const refValor = useRef<any>(null);
   const refButton = useRef<any>(null);
+  const refValorRecebido = useRef<any>(null);
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -392,10 +396,17 @@ const SidebarInputs: RefForwardingComponent<
             }
             ref={refValor}
             handleEnter={() => {
-              if (refButton.current) {
+              if (getModoAvista()) {
+                if (refValorRecebido.current) {
+                  refValorRecebido.current.focus();
+                  refValorRecebido.current.select();
+                  // refButton.current.select();
+                }
+              } else if (refButton.current) {
                 refButton.current.click();
                 // refButton.current.select();
               }
+
               // if (refPeso.current) refPeso.current.focus();
             }}
             handleF4={() => handleF4()}
@@ -413,6 +424,52 @@ const SidebarInputs: RefForwardingComponent<
             Preencher com resto
           </Button>
         </Box> */}
+
+        <Box width="100%" display={getModoAvista() ? 'flex' : 'none'}>
+          <PrecoInput
+            label="Valor Recebido"
+            value={valorRecebidoAVista}
+            onChange={(value: number) => setValorRecebidoAVista(value)}
+            fullwidth
+            disabled={!getModoAvista()}
+            error={isNaN(valorRecebidoAVista)}
+            helperText={!isNaN(valorRecebidoAVista) ? '' : 'Valor inválido'}
+            ref={refValorRecebido}
+            handleEnter={() => {
+              if (refButton.current) {
+                refButton.current.click();
+                // refButton.current.select();
+              }
+              // if (refPeso.current) refPeso.current.focus();
+            }}
+            handleF4={() => handleF4()}
+            handleF8={() => handleF8()}
+          />
+        </Box>
+
+        {false && (
+          <Box width="100%" display="flex">
+            <PrecoInput
+              label="Troco"
+              value={valorRecebidoAVista - valor}
+              onChange={(value: number) => console.log('kkkkkk Troco')}
+              fullwidth
+              disabled
+              // error={isNaN(valorRecebidoAVista)}
+              // helperText={!isNaN(valorRecebidoAVista) ? '' : 'Valor inválido'}
+              handleEnter={() => {
+                if (refButton.current) {
+                  refButton.current.click();
+                  // refButton.current.select();
+                }
+                // if (refPeso.current) refPeso.current.focus();
+              }}
+              handleF4={() => handleF4()}
+              handleF8={() => handleF8()}
+            />
+          </Box>
+        )}
+
         <Button
           variant="contained"
           color="secondary"
@@ -425,9 +482,12 @@ const SidebarInputs: RefForwardingComponent<
                 : tipoPagamento.modo === 0
                 ? new Date()
                 : buildObjDate(refDate.current.value),
+              valorRecebidoAVista,
+              valorRecebidoAVista - valor,
             );
             setValor(0);
             setDataPagamento(new Date());
+            setValorRecebidoAVista(0);
             // setTipoPagamento(null);
             setTipoPagamento(tipoPagamentoDefault);
             refDate.current.value = getDataAtual();

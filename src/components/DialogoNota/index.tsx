@@ -14,7 +14,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { createObjVenda } from '../../utils/createObjVenda';
-import NotaFC from '../NotaFC';
+import NotaFC from '../NotaFC2';
 // import ButtonDownloads from '../testePdf/ButtonDownloads';
 
 export type DialogoNotaProps = {

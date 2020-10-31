@@ -1,22 +1,12 @@
 
 Funcionalidades:
-  Definir preço de venda:
-    ☐ definir na aba produtos
-    ☐ calcular lucro e mragem de lucro na tela produtos
-    ☐ produto comprado por nota aumentar preco de compra (incluir taxa)
-    ☐ mudar preco de venda quando chegar outro item (notificação)
-    ☐ notificação de quando o preço muda 
-  ☐ Nota Nova
-  ☐ Troco inicial FC
+  ☐ Troco inicial FC 
   Configurações FC:
     ☐ Escolha do caixa fisico vinculado
-  ☐ Parcelas troco FC
   ☐ Entradas
   ☐ Saídas (transferências)
   ☐ Relatório e resumo caixa
-  ☐ Compras FC
-  ☐ Responsivel
-  ☐ Drive impressão
+  
 
   Melhorias:
     ☐ diminuir alguns paddings e tamanhos
@@ -24,9 +14,19 @@ Funcionalidades:
     ☐ mensagem quando o produto nao tiver unidades
     ☐ autocoomplete cliente igual ao de produtos
     ☐ autocomplete meio de pagamento igual ao de produto
-
+    ☐ mudar preco de venda quando chegar outro item (notificação)
+    ☐ notificação de quando o preço muda 
+    ☐ fazer preço venda nota dependente das taxas cadastradas
+    ☐ Compras FC
+    ☐ Responsivel @project(Funcionalidades) 
+    ☐ Drive impressão
 
 Archive:
+  ✔ Nota Nova @project(Funcionalidades) @done(20-10-31 11:26) @project(Funcionalidades)
+  ✔ definir na aba produtos @done(20-10-23 10:03) @project(Funcionalidades.Definir preço de venda)
+  ✔ calcular lucro e mragem de lucro na tela produtos @done(20-10-23 12:32) @project(Funcionalidades.Definir preço de venda)
+  ✔ produto comprado por nota aumentar preco de compra (incluir taxa) @done(20-10-23 13:24) @project(Funcionalidades.Definir preço de venda)
+  ✔ Parcelas troco FC @done(20-10-23 10:42) @project(Funcionalidades)
   ✔ sinalizador de salvare imprimir venda @done(20-10-21 09:59) @project(Funcionalidades)
   ✔ enviar dados para servidor @done(20-10-21 09:49) @project(Funcionalidades)
   ✔ get dados para exibir na impressao @done(20-10-21 09:50) @project(Funcionalidades)
