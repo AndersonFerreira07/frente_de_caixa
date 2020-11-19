@@ -3,7 +3,6 @@ import React, { FC, useRef, useState, useEffect } from 'react';
 import { Box, Button } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
 
 import Actions from '../../components/Actions';
 import DialogoConfirmacao from '../../components/DialogoConfirmacao';
@@ -27,7 +26,7 @@ import LabelSemAtendente from '../../components/LabelSemAtendente'
 
 import api from '../../services/api'
 
-import { SnackbarProvider, useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
 import DialogoSenha from '../../components/DialogoSenha'
 
@@ -39,31 +38,6 @@ import { useHistory } from 'react-router-dom';
 
 export type FrenteProps = {};
 
-const lista = [
-  {
-    produto: 'Mussarela',
-    unidades: 45,
-    peso: 34,
-    unitario: 23,
-    total: 45,
-  },
-  {
-    produto: 'Mussarela',
-    unidades: 45,
-    peso: 34,
-    unitario: 23,
-    total: 45,
-  },
-  {
-    produto: 'Mussarela',
-    unidades: 45,
-    peso: 34,
-    unitario: 23,
-    total: 45,
-  },
-  
-];
-
 const listaPrecos = [
     {
       value: 10,
@@ -73,21 +47,19 @@ const listaPrecos = [
     },
   ];
 
-
-
-  const useStyles = makeStyles((theme) => ({
-    btn: {
-      marginTop: '10px',
-      opacity: '0.75',
-    },
-  }));
+const useStyles = makeStyles((theme) => ({
+  btn: {
+    marginTop: '10px',
+    opacity: '0.75',
+  },
+}));
   
 let ws;
 
 const Frente: FC<FrenteProps> = () => {
 
   const [itens, setItens] = useState<Array<Row>>([]);
-  const [tela, setTela] = useState(1);
+  const [tela, setTela] = useState(0);
   const [search, setSearch] = useState('')
   const [modoSearch, setModoSearch] = useState(true)
   const [produto, setProduto] = useState<any>(null)
@@ -121,6 +93,10 @@ const Frente: FC<FrenteProps> = () => {
 
   const nomeProduto = produto !== null ? produto.nome : 'Nenhum Produto';
 
+  function irParaTelaInit() {
+    history.push('/');
+  }
+
   function handleSoma(unidades: number, peso: number) {
     if (componentRef4.current)
       componentRef4.current.setValues(unidades, peso)
@@ -152,7 +128,6 @@ const Frente: FC<FrenteProps> = () => {
     quantidade: number,
     peso: number,
     precoUnitario: number,
-    //obs: string
   ) {
     const position = searchItemInArray(produto, precoUnitario, itens);
     console.log('position')
@@ -165,7 +140,6 @@ const Frente: FC<FrenteProps> = () => {
         unidades: quantidade,
         unitario: precoUnitario,
         uidd: `${produto.nome}${precoUnitario}`
-        //obs: obs
       }])
     } else {  
       const itens2 = itens.slice()
@@ -176,7 +150,6 @@ const Frente: FC<FrenteProps> = () => {
         unitario: precoUnitario,
         total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
         uidd: `${produto.nome}${precoUnitario}`
-        //obs: obs
       }
       setItens(itens2)
     }
@@ -200,7 +173,6 @@ const Frente: FC<FrenteProps> = () => {
   }
 
   function removeItens (indices: string[]) {
-    //console.log(indices)
     let arrayNew = itens.slice()
     for (let i = 0; i < indices.length; i++) {
       arrayNew = arrayNew.filter(function( obj ) {
@@ -219,7 +191,8 @@ const Frente: FC<FrenteProps> = () => {
   }
 
   function handleFinalizaVenda() {
-    setTela(1)
+    // setTela(1)
+    irParaTelaInit()
     setItens([])
     setProduto(null)
   }
@@ -237,9 +210,7 @@ const Frente: FC<FrenteProps> = () => {
       if(index >= 0) {
         data.data[0].unidadesDisponivel = data.data[0].unidadesDisponivel - itens[index].unidades
       }
-      //data.data[0].precoMedio = await getPrecoMedio(data.data[0].id);
       data.data[0].precoMedio = data.data[0].precoCompraMedio;
-      //data.data[0].valorVenda = data.data[0].precoMedio === 0 ? 0 : data.data[0].precoMedio + data.data[0].lucrovarejo;
       data.data[0].valorVenda = data.data[0].precoVenda
       setProduto(data.data[0]);
       if (componentRef4.current)
@@ -324,7 +295,6 @@ const Frente: FC<FrenteProps> = () => {
         variant: 'error',
     });
     }
-    /* if(componentRef4.current) componentRef4.current */
   }
 
   useEffect(() => {
@@ -354,28 +324,8 @@ const Frente: FC<FrenteProps> = () => {
     }
   }
 
-
-
-  console.log('OPEN SOMA PESOS: ' + getOpen())
-  console.log('itens kkkk')
-  console.log(itens)
-
   return (
     <>
-    {!isAuthenticated() ? (
-        <Redirect to="/login" />
-      ) : (<Box
-      bgcolor="#FFCFF9"
-      padding="10px"
-      height="100%"
-      display="grid"
-      gridTemplateColumns="1fr"
-      //gridTemplateRows="1fr 10fr 1fr"
-      gridTemplateRows="1fr 10fr"
-
-      css={{ background: 'url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg)', backgroundSize: 'cover' }}
-      // css={{ background: 'url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/221808/sky.jpg)', backgroundSize: 'cover' }}
-    >
       { tela === 0 && atendente !== '' ? <Box margin="10px">
         <Box margin="0px 0px 10px">
           <Label label={nomeProduto} />
@@ -622,28 +572,6 @@ const Frente: FC<FrenteProps> = () => {
           }
         }} 
     />}
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-      <div className="firefly"/>
-    </Box>)}
     </>
   );
 };

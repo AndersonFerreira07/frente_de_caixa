@@ -56,15 +56,20 @@ const Footer: FC<FooterProps> = ({ tela, disabledPartes }) => {
       >
         <Box display="flex" flexDirection="column" alignItems="flex-start">
           <div>F2 - Nova Venda</div>
-          <div>F5 - Relatório e Resumo</div>
+          <div>F8 - Relatório e Resumo</div>
         </Box>
         <Box display="flex" flexDirection="column" alignItems="flex-start">
-          <div>F3 - Nova Entrada</div>
+          <div>F4 - Nova Entrada</div>
+          <div>F9 - Configurações </div>
+        </Box>
+        <Box display="flex" flexDirection="column" alignItems="flex-start">
+          <div>F7 - Transferências </div>
           <div>DEL - Sair</div>
         </Box>
+
         <Box display="flex" flexDirection="column" alignItems="flex-start">
-          <div>F4 - Saídas </div>
           <div>{`Atendente: ${getUsername()}`}</div>
+          <div>{` `}</div>
         </Box>
         {/* {tela === 1 && (
           <div style={{ width: '33.33%', textAlign: 'left' }}>
