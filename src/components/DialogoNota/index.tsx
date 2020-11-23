@@ -33,6 +33,7 @@ const DialogoNota: RefForwardingComponent<
   const [open, setOpen] = React.useState(false);
   const componentRef = React.useRef(null);
   const [venda, setVenda] = useState({});
+  const [boletos, setBoletos] = useState([]);
 
   const handlePrint = useReactToPrint({
     content: () => {
@@ -50,6 +51,7 @@ const DialogoNota: RefForwardingComponent<
       console.log('vendaObj');
 
       console.log(vendaObj);
+      setBoletos(vendaObj.boletos);
       const vendaObjNew = createObjVenda(vendaObj, config, isNota);
       console.log(vendaObjNew);
       setVenda(vendaObjNew);
@@ -69,6 +71,20 @@ const DialogoNota: RefForwardingComponent<
         <DialogContent>
           <div style={{ width: '100vw', height: '100vh' }}>
             <NotaFC ref={componentRef} {...venda} />
+          </div>
+          <div>
+            <div>Boletos:</div>
+            <ul>
+              {boletos.map((item, index) => (
+                <li>
+                  <a
+                    href={item}
+                    target="_blank"
+                    style={{ textDecoration: 'none' }}
+                  >{`Boleto ${index + 1}`}</a>
+                </li>
+              ))}
+            </ul>
           </div>
         </DialogContent>
         <DialogActions>

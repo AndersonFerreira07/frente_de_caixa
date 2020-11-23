@@ -465,17 +465,26 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     valorRecebido: number,
     troco: number,
   ) {
-    setItens([
-      ...itens,
-      {
-        dataPagamento,
-        tipoPgamento: tipoPagamento,
-        valor,
-        uidd: `${tipoPagamento.nome}${itens.length}`,
-        valorRecebido,
-        troco,
-      },
-    ]);
+    if (cliente.nome && cliente.cpf && cliente.telefone) {
+      setItens([
+        ...itens,
+        {
+          dataPagamento,
+          tipoPgamento: tipoPagamento,
+          valor,
+          uidd: `${tipoPagamento.nome}${itens.length}`,
+          valorRecebido,
+          troco,
+        },
+      ]);
+    } else {
+      enqueueSnackbar(
+        'Este cliente não possui dados sufucientes para o cadastro de boletos na plataforma Gerencianet!',
+        {
+          variant: 'warning',
+        },
+      );
+    }
   }
 
   function renameItensUIDD(itens: Array<Row2>) {
