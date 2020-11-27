@@ -5,13 +5,20 @@ import { Box } from '@material-ui/core';
 
 import { isAuthenticated } from '../../services/alth';
 
-export type BackgroundProps = {};
+export type BackgroundProps = {
+  redirect: string;
+  isRedirect: boolean;
+};
 
-const Background: FC<BackgroundProps> = ({ children }) => {
+const Background: FC<BackgroundProps> = ({
+  children,
+  isRedirect,
+  redirect,
+}) => {
   return (
     <Box
       bgcolor="#FFCFF9"
-      padding="10px"
+      padding="0px"
       height="100%"
       display="grid"
       gridTemplateColumns="1fr"
@@ -22,7 +29,7 @@ const Background: FC<BackgroundProps> = ({ children }) => {
         backgroundSize: 'cover',
       }}
     >
-      {!isAuthenticated() ? <Redirect to="/login" /> : children}
+      {isRedirect ? <Redirect to={redirect} /> : children}
       <div className="firefly" />
       <div className="firefly" />
       <div className="firefly" />

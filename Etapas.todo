@@ -1,13 +1,10 @@
 
 Funcionalidades:
   ☐ Troco inicial FC 
-  Configurações FC:
-    ☐ Escolha do caixa fisico vinculado
-  ☐ Entradas
-  ☐ Saídas (transferências)
   ☐ Relatório e resumo caixa
+  ☐ pagamento fiado
+  ☐ finalizar venda em outra pagina
   
-
   Melhorias:
     ☐ diminuir alguns paddings e tamanhos
     ☐ ajeitar bug do rotulo de sleção q empurra tabela pra baixo
@@ -17,11 +14,13 @@ Funcionalidades:
     ☐ mudar preco de venda quando chegar outro item (notificação)
     ☐ notificação de quando o preço muda 
     ☐ fazer preço venda nota dependente das taxas cadastradas
-    ☐ Compras FC
     ☐ Responsivel @project(Funcionalidades) 
     ☐ Drive impressão
 
 Archive:
+  ✔ Escolha do caixa fisico vinculado @done(20-11-27 09:39) @project(Funcionalidades.Configurações FC)
+  ✔ Entradas @done(20-11-27 09:39) @project(Funcionalidades)
+  ✔ Saídas (transferências) @done(20-11-27 09:39) @project(Funcionalidades)
   ✔ Nota Nova @project(Funcionalidades) @done(20-10-31 11:26) @project(Funcionalidades)
   ✔ definir na aba produtos @done(20-10-23 10:03) @project(Funcionalidades.Definir preço de venda)
   ✔ calcular lucro e mragem de lucro na tela produtos @done(20-10-23 12:32) @project(Funcionalidades.Definir preço de venda)

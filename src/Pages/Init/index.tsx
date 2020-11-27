@@ -64,11 +64,23 @@ const Init: FC<InitProps> = () => {
       />
       {atendente !== '' && (
         <KeyboardEventHandler
-          handleKeys={['f2', 'f4', 'f7', 'f8', 'f9', 'f10', 'delete', 'insert']}
+          handleKeys={[
+            'f2',
+            'f4',
+            'f5',
+            'f7',
+            'f8',
+            'f9',
+            'f10',
+            'f3',
+            'ctrl+f2',
+            'delete',
+            'insert',
+          ]}
           onKeyEvent={(key, e) => {
             switch (key) {
               case 'f2':
-                history.push('/frentedecaixa');
+                history.push('/vendas/frentedecaixa');
                 break;
               case 'f4':
                 history.push('/entradas');
@@ -79,8 +91,18 @@ const Init: FC<InitProps> = () => {
               case 'f8':
                 history.push('/relatorio');
                 break;
-              case 'f9':
+              /* case 'f9':
                 history.push('/configuracoes');
+                break; */
+              case 'f9':
+                history.push('/saidas');
+                break;
+
+              case 'f10':
+                history.push('/listavendas');
+                break;
+              case 'ctrl+f2':
+                history.push('/pagamentos');
                 break;
               case 'delete':
                 if (dialogoConfirmacaoRef.current)

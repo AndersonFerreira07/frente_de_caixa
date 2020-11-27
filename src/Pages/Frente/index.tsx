@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState, useEffect } from 'react';
+import React, { FC, useRef, useState, useEffect, useContext } from 'react';
 
 import { Box, Button } from '@material-ui/core';
 
@@ -36,6 +36,10 @@ import { logout, getUsername, isAuthenticated } from '../../services/alth';
 
 import { useHistory } from 'react-router-dom';
 
+import { getCaixaId } from '../../services/config'
+
+import { VendaContext } from '../Venda'
+
 export type FrenteProps = {};
 
 const listaPrecos = [
@@ -52,13 +56,21 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px',
     opacity: '0.75',
   },
+  header: {
+    height: '17vh',
+  },
+  body: {
+    height: '83vh',
+  },
 }));
   
 let ws;
 
 const Frente: FC<FrenteProps> = () => {
 
-  const [itens, setItens] = useState<Array<Row>>([]);
+  const { venda: { itens }, dispatch } = useContext(VendaContext);
+
+  //const [itens, setItens] = useState<Array<Row>>([]);
   const [tela, setTela] = useState(0);
   const [search, setSearch] = useState('')
   const [modoSearch, setModoSearch] = useState(true)
@@ -97,6 +109,10 @@ const Frente: FC<FrenteProps> = () => {
     history.push('/');
   }
 
+  function irParaTelaFinalizarVenda() {
+    history.push('/vendas/finalizarvenda');
+  }
+
   function handleSoma(unidades: number, peso: number) {
     if (componentRef4.current)
       componentRef4.current.setValues(unidades, peso)
@@ -133,16 +149,24 @@ const Frente: FC<FrenteProps> = () => {
     console.log('position')
     console.log(position)
     if(position < 0 ) {
-      setItens([...itens, {
+      /* setItens([...itens, {
         produto: produto,
         peso: produto.unidade.modo === 2 ? 0 : peso,
         total: getTotal(peso, quantidade, precoUnitario, produto),
         unidades: quantidade,
         unitario: precoUnitario,
         uidd: `${produto.nome}${precoUnitario}`
-      }])
+      }]) */
+      dispatch({ type: "ADD_ITEM", item: {
+        produto: produto,
+        peso: produto.unidade.modo === 2 ? 0 : peso,
+        total: getTotal(peso, quantidade, precoUnitario, produto),
+        unidades: quantidade,
+        unitario: precoUnitario,
+        uidd: `${produto.nome}${precoUnitario}`
+      } });
     } else {  
-      const itens2 = itens.slice()
+      /* const itens2 = itens.slice()
       itens2[position] = {
         peso: (itens2[position].peso + (produto.unidade.modo === 2 ? 0 : peso)),
         unidades: itens2[position].unidades + quantidade,
@@ -151,7 +175,17 @@ const Frente: FC<FrenteProps> = () => {
         total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
         uidd: `${produto.nome}${precoUnitario}`
       }
-      setItens(itens2)
+      setItens(itens2) */
+      const itens2 = itens.slice()
+      dispatch({ type: "UPDATE_ITEM", item: {
+        peso: (itens2[position].peso + (produto.unidade.modo === 2 ? 0 : peso)),
+        unidades: itens2[position].unidades + quantidade,
+        produto: produto,
+        unitario: precoUnitario,
+        total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
+        uidd: `${produto.nome}${precoUnitario}`
+      }, position: position})
+
     }
     setProduto(null)
     if(refSearch.current) refSearch.current.focus()
@@ -173,13 +207,14 @@ const Frente: FC<FrenteProps> = () => {
   }
 
   function removeItens (indices: string[]) {
-    let arrayNew = itens.slice()
+    /* let arrayNew = itens.slice()
     for (let i = 0; i < indices.length; i++) {
       arrayNew = arrayNew.filter(function( obj ) {
         return obj.uidd !== indices[i];
     });
     setItens(arrayNew)
-    }
+    } */
+    dispatch({ type: "REMOVE_ITEM", indices})
   }
 
   function getDisabled() {
@@ -193,7 +228,7 @@ const Frente: FC<FrenteProps> = () => {
   function handleFinalizaVenda() {
     // setTela(1)
     irParaTelaInit()
-    setItens([])
+    //setItens([])
     setProduto(null)
   }
 
@@ -306,8 +341,14 @@ const Frente: FC<FrenteProps> = () => {
     return () => ws.close();
   }, [])
 
-  function callGerente() {
-    ws.getSubscription('gerente').emit('notificaGerente', {});
+  async function callGerente() {
+    const data = await api.get(`/caixasfisicos/${getCaixaId()}`)
+    ws.getSubscription('gerente').emit('notificaGerente', {
+      nomeCaixa: data.data.nome,
+    });
+    enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!', { 
+      variant: 'info',
+  });
   }
 
   function handleConfirma(codigo: number) {
@@ -326,7 +367,7 @@ const Frente: FC<FrenteProps> = () => {
 
   return (
     <>
-      { tela === 0 && atendente !== '' ? <Box margin="10px">
+      { tela === 0 && atendente !== '' ? <Box padding="10px" className={classes.header}>
         <Box margin="0px 0px 10px">
           <Label label={nomeProduto} />
         </Box>
@@ -342,14 +383,16 @@ const Frente: FC<FrenteProps> = () => {
           handleF4={(code) => {
             switch (code) {
               case 115:
-                if (componentRef2.current)
+                // if (componentRef2.current)
                   if(itens.length > 0) {
-                    componentRef2.current.handleOpen();
+                    // componentRef2.current.handleOpen();
+                    irParaTelaFinalizarVenda()
                   } else {
                     enqueueSnackbar('É necessário ao menos um item na venda!', { 
                       variant: 'warning',
                   });
                   }
+
                 break;
               case 119:
                 if (componentRef.current)
@@ -381,9 +424,9 @@ const Frente: FC<FrenteProps> = () => {
           }}}
         />
       </Box> : <Box margin="10px"/>}
-      <Box display="flex" justifyContent="space-between" padding="10px">
+      <Box display="flex" justifyContent="space-between" padding="10px" className={classes.body}>
         {tela === 0 && atendente !== '' ? <Box flex={1.5} display="flex"
-          flexDirection="column"
+          flexDirection="column" overflow="auto"
           >
           <Actions
             disabled={getDisabled()}
@@ -398,9 +441,10 @@ const Frente: FC<FrenteProps> = () => {
                   setTela(0) 
                   break;
                 case 1:
-                  if (componentRef2.current)
+                  // if (componentRef2.current)
                     if(itens.length > 0) {
-                      componentRef2.current.handleOpen();
+                      // componentRef2.current.handleOpen();
+                      irParaTelaFinalizarVenda()
                     } else {
                       enqueueSnackbar('É necessário ao menos um item na venda!', { 
                         variant: 'warning',
@@ -444,9 +488,9 @@ const Frente: FC<FrenteProps> = () => {
             className={classes.btn}
             onClick={() => {
               callGerente()
-              enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!', { 
+              /* enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!', { 
                 variant: 'info',
-            });
+            }); */
             }}
             style={{ padding: '20px' }}
             ref={refBtCallGerente}
@@ -481,15 +525,16 @@ const Frente: FC<FrenteProps> = () => {
                   componentRef5.current.handleOpen()
             }}
             handleF4={() => {
-              if (componentRef2.current) {
+              // if (componentRef2.current) {
                 if(itens.length > 0) {
-                  componentRef2.current.handleOpen();
+                  irParaTelaFinalizarVenda()
+                  // componentRef2.current.handleOpen();
                 } else {
                   enqueueSnackbar('É necessário ao menos um item na venda!', { 
                     variant: 'warning',
                 });
                 }
-              }
+              // }
             }}
             handleF8={() => {
               if (componentRef.current)
@@ -515,7 +560,7 @@ const Frente: FC<FrenteProps> = () => {
       {(tela === 1) && <Box margin="10px">
         { atendente !== '' && tela === 1 ? <Footer tela={tela} disabledPartes={disablePeso()}/> : tela === 1 ? <LabelSemAtendente/> : null}
       </Box>}
-      <DialogoConfirmacao ref={componentRef} handleConfirma={handleConfirma}/> }
+      <DialogoConfirmacao ref={componentRef} handleConfirma={handleConfirma}/>
       {tela === 0 && <DialogoFinalizarCompra ref={componentRef2} handleConfirma={handleFinalizaVenda} lista={itens} subTotal={getSubTotal()}/>}
       {tela === 0 && <DialogoSenha ref={componentRef5} handleClose={handleSenhaAutorizacao}/>}
       { atendente !== '' && <KeyboardEventHandler
@@ -528,15 +573,16 @@ const Frente: FC<FrenteProps> = () => {
                 if(tela === 1) setTela(0) 
               break;
             case 'f4':
-              if (componentRef2.current) {
+              // if (componentRef2.current) {
                 if(itens.length > 0) {
-                  componentRef2.current.handleOpen();
+                  irParaTelaFinalizarVenda()
+                  // componentRef2.current.handleOpen();
                 } else {
                   enqueueSnackbar('É necessário ao menos um item na venda!', { 
                     variant: 'warning',
                 });
                 }
-              }
+              // }
               break;
             /* case 'f7':
               if (componentRef.current)

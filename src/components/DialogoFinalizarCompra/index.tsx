@@ -36,6 +36,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
+import { getSessionId } from '../../services/alth';
 import api from '../../services/api';
 import AutoCompleteClientes from '../AutoCompleteClientes';
 import DialogoNota from '../DialogoNota';
@@ -402,6 +403,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
       listaParcelas,
       dataVenda: buildObjDate(refDate.current.value),
       cliente: cliente.id,
+      session_id: getSessionId(),
     };
   }
 
@@ -465,7 +467,13 @@ const DialogoFinalizarCompra: RefForwardingComponent<
     valorRecebido: number,
     troco: number,
   ) {
-    if (cliente.nome && cliente.cpf && cliente.telefone) {
+    if (
+      tipoPagamento.modo === 0 ||
+      (tipoPagamento.modo === 1 &&
+        cliente.nome &&
+        cliente.cpf &&
+        cliente.telefone)
+    ) {
       setItens([
         ...itens,
         {
@@ -474,7 +482,7 @@ const DialogoFinalizarCompra: RefForwardingComponent<
           valor,
           uidd: `${tipoPagamento.nome}${itens.length}`,
           valorRecebido,
-          troco,
+          troco: valorRecebido - valor,
         },
       ]);
     } else {

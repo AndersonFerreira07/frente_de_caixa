@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useHistory } from 'react-router-dom';
 
@@ -13,9 +13,11 @@ import {
 import moment from 'moment';
 
 import ActionsEntrada from '../../components/ActionsEntradas';
+import DialogoNota from '../../components/DialogoNota';
 import Label from '../../components/Label';
 import SidebarEntradas from '../../components/SidebarEntradas';
-import TabelaEntradas, { Row } from '../../components/TabelaEntradas';
+// import TabelaEntradas, { Row } from '../../components/TabelaEntradas';
+import TabelaVendas, { Row } from '../../components/TabelaVendas';
 import { getSessionId } from '../../services/alth';
 import api from '../../services/api';
 import { getCaixaId } from '../../services/config';
@@ -31,22 +33,50 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Entradas = (props) => {
+const VendasList = (props) => {
   const [itens, setItens] = useState<Array<Row>>([]);
   const [nomeCaixa, setNomeCaixa] = useState('');
+  const [config, setConfig] = useState<any>({});
   const history = useHistory();
   const classes = useStyles();
 
-  async function getEntradas() {
+  useEffect(() => {
+    async function getConfig() {
+      const dataConfig = await api.get('/config2');
+      setConfig(dataConfig.data);
+    }
+    getConfig();
+  }, []);
+
+  type CountdownHandle = React.ElementRef<typeof DialogoNota>;
+  const refDialogoNota = useRef<CountdownHandle>(null);
+
+  function closeDialogoNota() {}
+
+  async function getVenda(idVenda: number) {
+    const data = await api.get(`/vendas/total/fc/${idVenda}`);
+    return data.data[0];
+  }
+
+  async function handleOpenDialogoNota(idVenda: number) {
+    if (refDialogoNota.current) {
+      const response = await getVenda(idVenda);
+      refDialogoNota.current.handleOpen(response, config, false);
+    }
+  }
+
+  async function getVendas() {
     const newItens: Array<Row> = [];
-    const data = await api.get(`/entradascaixa/todos/${getSessionId()}`);
+    const data = await api.get(`/vendas/fc/${getSessionId()}`);
 
     for (let i = 0; i < data.data.length; i += 1) {
       newItens.push({
-        nome: data.data[i].nome,
         valor: data.data[i].valor,
-        hora: data.data[i].hora,
+        hora: data.data[i].created_at,
         uidd: String(data.data[i].id),
+        cliente: data.data[i].cliente.nome,
+        numero: String(data.data[i].numero),
+        valorDinheiro: data.data[i].valorEmDinheiro,
       });
     }
 
@@ -60,43 +90,19 @@ const Entradas = (props) => {
 
   useEffect(() => {
     getNomeCaixa();
-    getEntradas();
+    getVendas();
   }, []);
 
-  async function newItem(nome: string, valor: number, hora: Date) {
-    await api.post('/entradascaixa', {
-      nome,
-      valor,
-      session_id: getSessionId(),
-      hora,
-    });
-
-    await getEntradas();
-
-    /* setItens([
-      ...itens,
-      {
-        hora,
-        nome,
-        valor,
-        uidd: `${nome}${moment(hora).format('HH:mm:ss')}`,
-      },
-    ]); */
-  }
   async function removeItens(indices: string[]) {
-    const arrayNew = itens.slice();
+    /* const arrayNew = itens.slice();
     for (let i = 0; i < indices.length; i += 1) {
       for (let j = 0; j < arrayNew.length; j += 1) {
         if (arrayNew[j].uidd === indices[i])
           await api.delete(`/entradascaixa/${indices[i]}`);
       }
-      /* arrayNew = arrayNew.filter(function (obj) {
-        return obj.uidd !== indices[i];
-      }); */
-      // setItens(arrayNew);
     }
 
-    await getEntradas();
+    await getVendas(); */
   }
 
   function irParaTelaInit() {
@@ -107,7 +113,7 @@ const Entradas = (props) => {
     <>
       <Box padding="10px" className={classes.header}>
         <Box margin="0px 0px 10px">
-          <Label label={`Entradas no ${nomeCaixa}`} />
+          <Label label={`Lista de vendas no ${nomeCaixa}`} />
         </Box>
       </Box>
       <Box
@@ -132,19 +138,10 @@ const Entradas = (props) => {
           />
         </Box>
         <Box padding="0 10px" flex={4}>
-          <TabelaEntradas removeItens={removeItens} rows={itens} />
-        </Box>
-        <Box
-          flex={2}
-          display="flex"
-          flexDirection="column"
-          /* justifyContent="space-between" */
-        >
-          <SidebarEntradas
-            handleF4={() => {
-              irParaTelaInit();
-            }}
-            handleNewItem={newItem}
+          <TabelaVendas
+            removeItens={removeItens}
+            rows={itens}
+            openNota={handleOpenDialogoNota}
           />
         </Box>
       </Box>
@@ -160,8 +157,13 @@ const Entradas = (props) => {
           }
         }}
       />
+      <DialogoNota
+        ref={refDialogoNota}
+        handleClose={closeDialogoNota}
+        itens={[]}
+      />
     </>
   );
 };
 
-export default Entradas;
+export default VendasList;

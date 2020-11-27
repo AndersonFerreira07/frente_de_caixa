@@ -145,19 +145,14 @@ const Actions: FC<ActionsProps> = ({
           </Button>
         )}
 
-        <Button
+        {/* <Button
           variant="contained"
           color="secondary"
           className={classes.btn}
           onClick={() => onClick(7)}
-          /* onClick={() => {
-            logout();
-            history.push('/login');
-          }} */
-          // disabled={editPrice}
         >
           Logout (DEL)
-        </Button>
+        </Button> */}
       </Box>
     </Paper>
   );

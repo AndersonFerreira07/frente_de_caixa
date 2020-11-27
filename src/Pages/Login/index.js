@@ -7,8 +7,10 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import LockIcon from '@material-ui/icons/Lock';
+import SettingsIcon from '@material-ui/icons/Settings';
 import { useSnackbar } from 'notistack';
 
 import {
@@ -18,8 +20,10 @@ import {
   setCargoObj,
   setUserId,
   isAuthenticated,
+  setSessionId,
 } from '../../services/alth';
 import api from '../../services/api';
+import { getCaixaId } from '../../services/config';
 import InputAdorments2 from './InputPassaword';
 import InputUsername from './InputUsername';
 
@@ -64,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
+  settings: {
+    color: 'red',
+  },
 }));
 
 const { Form } = withTypes();
@@ -80,7 +87,10 @@ const LoginTela = ({}) => {
   async function handleSubmit(auth) {
     setLoading(true);
     try {
-      const dataUsuario = await api.post('/login', auth);
+      const dataUsuario = await api.post('/login2', {
+        caixa_2_id: getCaixaId(),
+        ...auth,
+      });
 
       const {
         token,
@@ -89,6 +99,7 @@ const LoginTela = ({}) => {
         username,
         cargoObj,
         user_id,
+        session_id,
       } = dataUsuario.data;
 
       console.log('USER DATA');
@@ -99,6 +110,7 @@ const LoginTela = ({}) => {
       setUsername(username);
       setCargoObj(cargoObj);
       setUserId(user_id);
+      setSessionId(session_id);
 
       history.push('/');
     } catch (error) {
@@ -136,9 +148,14 @@ const LoginTela = ({}) => {
     return errors;
   };
 
+  console.log('getCaixaId');
+  console.log(getCaixaId());
+
   return (
     <>
-      {isAuthenticated() ? (
+      {getCaixaId() === null ? (
+        <Redirect to="/configuracoes" />
+      ) : isAuthenticated() ? (
         <Redirect to="/" />
       ) : (
         <Form
@@ -147,6 +164,11 @@ const LoginTela = ({}) => {
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit} noValidate>
               <div className={classes.main}>
+                <div style={{ position: 'fixed', top: '10px', right: '20px' }}>
+                  <IconButton onClick={(e) => history.push('/configuracoes')}>
+                    <SettingsIcon className={classes.settings} />
+                  </IconButton>
+                </div>
                 <Card className={classes.card}>
                   <div className={classes.avatar}>
                     <Avatar className={classes.icon}>

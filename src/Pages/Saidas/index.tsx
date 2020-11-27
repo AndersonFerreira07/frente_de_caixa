@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Entradas = (props) => {
+const Saidas = (props) => {
   const [itens, setItens] = useState<Array<Row>>([]);
   const [nomeCaixa, setNomeCaixa] = useState('');
   const history = useHistory();
@@ -39,7 +39,7 @@ const Entradas = (props) => {
 
   async function getEntradas() {
     const newItens: Array<Row> = [];
-    const data = await api.get(`/entradascaixa/todos/${getSessionId()}`);
+    const data = await api.get(`/saidascaixa/todos/${getSessionId()}`);
 
     for (let i = 0; i < data.data.length; i += 1) {
       newItens.push({
@@ -64,7 +64,7 @@ const Entradas = (props) => {
   }, []);
 
   async function newItem(nome: string, valor: number, hora: Date) {
-    await api.post('/entradascaixa', {
+    await api.post('/saidascaixa', {
       nome,
       valor,
       session_id: getSessionId(),
@@ -88,7 +88,7 @@ const Entradas = (props) => {
     for (let i = 0; i < indices.length; i += 1) {
       for (let j = 0; j < arrayNew.length; j += 1) {
         if (arrayNew[j].uidd === indices[i])
-          await api.delete(`/entradascaixa/${indices[i]}`);
+          await api.delete(`/saidascaixa/${indices[i]}`);
       }
       /* arrayNew = arrayNew.filter(function (obj) {
         return obj.uidd !== indices[i];
@@ -107,7 +107,7 @@ const Entradas = (props) => {
     <>
       <Box padding="10px" className={classes.header}>
         <Box margin="0px 0px 10px">
-          <Label label={`Entradas no ${nomeCaixa}`} />
+          <Label label={`Saídas no ${nomeCaixa}`} />
         </Box>
       </Box>
       <Box
@@ -164,4 +164,4 @@ const Entradas = (props) => {
   );
 };
 
-export default Entradas;
+export default Saidas;

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Route } from 'react-router-dom';
 
 import { isAuthenticated } from '../../services/alth';
+import { getCaixaId } from '../../services/config';
 import Background from '../Background';
 
 export type RouteBackgroundProps = {
@@ -25,7 +26,10 @@ const RouteBackground: FC<RouteBackgroundProps> = ({
       path={path}
       exact={exact}
       render={(props) => (
-        <Background redirect="/login" isRedirect={!isAuthenticated()}>
+        <Background
+          redirect="/"
+          isRedirect={getCaixaId() !== null && isAuthenticated()}
+        >
           <Component />
         </Background>
       )}

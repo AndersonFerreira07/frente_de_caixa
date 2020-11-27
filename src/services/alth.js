@@ -1,8 +1,11 @@
+import api from './api';
+
 export const TOKEN_KEY = '@caruaruFriosToken';
 export const REFRESH_TOKEN_KEY = '@caruaruFriosRefreshToken';
 export const CARGO = '@cargo';
 export const CARGOOBJ = '@cargoobj';
 export const USER_ID = '@userId';
+export const SESSION_ID = '@sessionId';
 
 // export const USERNAME = '@username'
 export const USERNAME = 'username';
@@ -23,15 +26,6 @@ export const login = (token, refreshToken) => {
 
 export const setNewToken = (token) => {
   localStorage.setItem(TOKEN_KEY, token);
-};
-
-export const logout = () => {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
-  localStorage.removeItem(CARGO);
-  localStorage.removeItem(USERNAME);
-  localStorage.removeItem(CARGOOBJ);
-  localStorage.removeItem(USER_ID);
 };
 
 export const getCargo = () => {
@@ -60,4 +54,25 @@ export const setUserId = (user_id) =>
 export const getUserId = () => {
   const user_id = String(localStorage.getItem(USER_ID));
   return parseInt(user_id, 10);
+};
+
+export const setSessionId = (sessionId) =>
+  localStorage.setItem(SESSION_ID, String(sessionId));
+
+export const getSessionId = () => {
+  const sessionId = localStorage.getItem(SESSION_ID);
+  return parseInt(sessionId, 10);
+};
+
+export const logout = async () => {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+  localStorage.removeItem(CARGO);
+  localStorage.removeItem(USERNAME);
+  localStorage.removeItem(CARGOOBJ);
+  localStorage.removeItem(USER_ID);
+
+  await api.delete(`/logot/${getSessionId()}`);
+
+  localStorage.removeItem(SESSION_ID);
 };
