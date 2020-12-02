@@ -223,7 +223,9 @@ const FinalizarVenda = () => {
       (tipoPagamento.modo === 1 &&
         cliente.nome &&
         cliente.cpf &&
-        cliente.telefone)
+        cliente.telefone &&
+        tipoPagamento.gerencianet === true) ||
+      (tipoPagamento.modo === 1 && tipoPagamento.gerencianet === false)
     ) {
       /* setItens([
         ...itens,
