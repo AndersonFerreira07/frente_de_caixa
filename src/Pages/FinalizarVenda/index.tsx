@@ -202,6 +202,8 @@ const FinalizarVenda = () => {
     });
     console.log('RETORNO VENDA TOTAL FC API');
     console.log(data.data);
+    console.log('venda');
+    console.log(venda);
     return data.data[0];
   }
 
