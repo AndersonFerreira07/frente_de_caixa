@@ -101,7 +101,7 @@ const Init: FC<InitProps> = () => {
               case 'f10':
                 history.push('/listavendas');
                 break;
-              case 'ctrl+f2':
+              case 'ctrl+f22':
                 history.push('/pagamentos');
                 break;
               case 'delete':

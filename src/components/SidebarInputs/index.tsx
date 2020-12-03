@@ -74,7 +74,7 @@ const SidebarInputs: RefForwardingComponent<
   }, [editPrice]);
 
   useEffect(() => {
-    if (produto) setPresoUnitario(produto.valorVenda);
+    if (produto) setPresoUnitario(produto.precoVenda);
     else setPresoUnitario(0);
   }, [cont]);
 
@@ -177,7 +177,7 @@ const SidebarInputs: RefForwardingComponent<
   }, [cont]);
 
   function getPrecoMinimo() {
-    if (produto) return produto.precoMedio;
+    if (produto) return produto.precoCompraMedio;
     return 0;
   }
 

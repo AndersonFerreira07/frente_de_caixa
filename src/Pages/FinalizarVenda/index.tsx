@@ -136,9 +136,9 @@ const FinalizarVenda = () => {
       listaItens.push({
         peso: venda.itens[i].peso,
         unidades: venda.itens[i].unidades,
-        precoVenda: venda.itens[i].produto.valorVenda,
+        precoVenda: venda.itens[i].unitario,
         lucro:
-          venda.itens[i].produto.valorVenda - venda.itens[i].produto.precoMedio,
+          venda.itens[i].unitario - venda.itens[i].produto.precoCompraMedio,
         produto_id: venda.itens[i].produto.id,
       });
     }
@@ -200,7 +200,7 @@ const FinalizarVenda = () => {
     const data = await api.post('/vendastotalfc', {
       ...dados,
     });
-    console.log('RETORNO VENDA TOTAL FC API');
+    console.log('RETORNO VENDA TOTAL FC API 22222');
     console.log(data.data);
     console.log('venda');
     console.log(venda);
