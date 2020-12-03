@@ -128,6 +128,10 @@ const FinalizarVenda = () => {
     const listaItens: Array<any> = [];
     const listaParcelas: Array<any> = [];
 
+    console.log('getTodosDados');
+    console.log('venda');
+    console.log(venda);
+
     for (let i = 0; i < venda.itens.length; i += 1) {
       listaItens.push({
         peso: venda.itens[i].peso,
