@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 
 import DialogoConfirmacao from '../../components/DialogoConfirmacao';
+import DialogoTroco from '../../components/DialogoTrocoInicial';
 import EmptyBackground from '../../components/EmptyBackground';
 import Footer from '../../components/Footer';
 import LabelSemAtendente from '../../components/LabelSemAtendente';
@@ -18,6 +19,9 @@ const Init: FC<InitProps> = () => {
 
   type CountdownHandle = React.ElementRef<typeof DialogoConfirmacao>;
   const dialogoConfirmacaoRef = useRef<CountdownHandle>(null);
+
+  type CountdownHandle2 = React.ElementRef<typeof DialogoTroco>;
+  const dialogoTrocoRef = useRef<CountdownHandle2>(null);
 
   function handleConfirma(codigo: number) {
     switch (codigo) {
@@ -37,6 +41,12 @@ const Init: FC<InitProps> = () => {
 
   useEffect(() => {
     getAtendente();
+  }, []);
+
+  useEffect(() => {
+    if (dialogoTrocoRef.current) {
+      dialogoTrocoRef.current.handleOpen();
+    }
   }, []);
 
   return (
@@ -62,6 +72,7 @@ const Init: FC<InitProps> = () => {
         ref={dialogoConfirmacaoRef}
         handleConfirma={handleConfirma}
       />
+      <DialogoTroco ref={dialogoTrocoRef} />
       {atendente !== '' && (
         <KeyboardEventHandler
           handleKeys={[

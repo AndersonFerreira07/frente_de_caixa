@@ -12,6 +12,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 import { createObjVenda } from '../../utils/createObjVenda';
 import NotaFC from '../NotaFC2';
@@ -26,6 +27,14 @@ export type DialogoNotaHandle = {
   handleOpen: (vendaObj: any, config: any, isNota: boolean) => void;
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    action: {
+      backgroundColor: theme.palette.secondary.main,
+    },
+  }),
+);
+
 const DialogoNota: RefForwardingComponent<
   DialogoNotaHandle,
   DialogoNotaProps
@@ -34,6 +43,7 @@ const DialogoNota: RefForwardingComponent<
   const componentRef = React.useRef(null);
   const [venda, setVenda] = useState({});
   const [boletos, setBoletos] = useState([]);
+  const classes = useStyles();
 
   const handlePrint = useReactToPrint({
     content: () => {
@@ -67,12 +77,11 @@ const DialogoNota: RefForwardingComponent<
         aria-labelledby="form-dialog-title"
         fullScreen
       >
-        <DialogTitle id="form-dialog-title">Nota</DialogTitle>
-        <DialogContent>
-          <div style={{ width: '100vw', height: '100vh' }}>
+        <DialogContent style={{ padding: '0' }}>
+          <div style={{ width: '100%', height: '100%' }}>
             <NotaFC ref={componentRef} {...venda} />
           </div>
-          <div>
+          {/* <div>
             <div>Boletos:</div>
             <ul>
               {boletos.map((item, index) => (
@@ -85,13 +94,21 @@ const DialogoNota: RefForwardingComponent<
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
+        <DialogActions className={classes.action}>
+          <Button
+            onClick={handleClose}
+            color="primary"
+            style={{ color: 'white' }}
+          >
             Fechar
           </Button>
-          <Button onClick={handlePrint} color="primary">
+          <Button
+            onClick={handlePrint}
+            color="primary"
+            style={{ color: 'white' }}
+          >
             Imprimir
           </Button>
           {/* <ButtonDownloads itens={props.itens} /> */}

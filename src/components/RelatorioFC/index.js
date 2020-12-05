@@ -128,12 +128,14 @@ const vendas2 = [
     numero: '#89',
     horario: '12/12/2020 12:23',
     cliente: 'Matheus',
+    valorTotal: 34,
     valor: 34,
   },
   {
     numero: '#90',
     horario: '12/12/2020 12:23',
     cliente: 'Mary',
+    valorTotal: 34,
     valor: 26,
   },
 ];
@@ -166,6 +168,8 @@ const MyDocument = ({
   trocoInicial = 230,
   atendente = 'Anderson',
   caixa = 'Caixa Exemplo',
+  abertura = '12/03/2020 13:45',
+  fechamento = '12/03/2020 17:45',
 }) => {
   function formatMoeda(valor) {
     return valor.toLocaleString('pt-BR', {
@@ -206,16 +210,17 @@ const MyDocument = ({
           </View>
 
           <View style={[styles.title3, { margin: '10 0', fontSize: '12' }]}>
+            <Text>Atendente: </Text>
+            <Text style={{ color: 'red' }}>{`${atendente}`}</Text>
+          </View>
+
+          <View style={[styles.title3, { margin: '10 0', fontSize: '12' }]}>
             <Text>Abertura: </Text>
-            <Text style={{ color: 'red' }}>{`${' 12/03/2020 13:45'}`}</Text>
+            <Text style={{ color: 'red' }}>{` ${abertura}`}</Text>
           </View>
           <View style={[styles.title3, { margin: '10 0', fontSize: '12' }]}>
             <Text>Fechamento: </Text>
-            <Text style={{ color: 'red' }}>{`${' 12/03/2020 19:45'}`}</Text>
-          </View>
-          <View style={[styles.title3, { margin: '10 0', fontSize: '12' }]}>
-            <Text>Atendente: </Text>
-            <Text style={{ color: 'red' }}>{`${atendente}`}</Text>
+            <Text style={{ color: 'red' }}>{` ${fechamento}`}</Text>
           </View>
 
           <View style={[styles.title3, { margin: '10 0', fontSize: '12' }]}>
@@ -251,6 +256,9 @@ const MyDocument = ({
                   <Text>Horário</Text>
                 </View>
                 <View style={styles.item}>
+                  <Text>Valor Total</Text>
+                </View>
+                <View style={styles.item}>
                   <Text>Valor em dinheiro</Text>
                 </View>
               </View>
@@ -264,6 +272,9 @@ const MyDocument = ({
                   </View>
                   <View style={styles.item}>
                     <Text>{item.horario}</Text>
+                  </View>
+                  <View style={styles.item}>
+                    <Text>{formatMoeda(item.valorTotal)}</Text>
                   </View>
                   <View style={styles.item}>
                     <Text>{formatMoeda(item.valor)}</Text>

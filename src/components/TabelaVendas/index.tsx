@@ -49,7 +49,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 export type Row = {
-  numero: string;
+  numero: number;
   cliente: string;
   hora: Date;
   uidd: string;
@@ -58,7 +58,7 @@ export type Row = {
 };
 
 type RowFormated = {
-  numero: string;
+  numero: number;
   cliente: string;
   hora: string;
   uidd: string;
@@ -382,7 +382,7 @@ const Table2: FC<Table2Props> = ({ rows, removeItens, openNota }) => {
     const listFormated: Array<RowFormated> = [];
     for (let i = 0; i < list.length; i += 1) {
       listFormated.push({
-        numero: `#${list[i].numero}`,
+        numero: list[i].numero,
         uidd: String(list[i].uidd),
         hora: moment(list[i].hora).format('DD/MM/YYYY HH:mm'),
         cliente: list[i].cliente,

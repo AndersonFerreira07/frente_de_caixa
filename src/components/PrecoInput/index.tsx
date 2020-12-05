@@ -40,6 +40,7 @@ export type PrecoInputProps = {
   handleF4?: () => void;
   handleF8?: () => void;
   handleDirection?: (direction: number) => void;
+  autoFocus?: boolean;
 };
 
 const PrecoInput = forwardRef<any, PrecoInputProps>(
@@ -56,6 +57,7 @@ const PrecoInput = forwardRef<any, PrecoInputProps>(
       handleF4 = () => {},
       handleF8 = () => {},
       handleDirection = (direction: number) => {},
+      autoFocus = false,
     },
     forwardedRef,
   ) => {
@@ -86,6 +88,9 @@ const PrecoInput = forwardRef<any, PrecoInputProps>(
           if (e.keyCode === 115) handleF4();
           if (e.keyCode === 119) handleF8();
         }}
+        // autoFocus={autoFocus}
+        // select={autoFocus}
+
         // size="small"
       />
     );

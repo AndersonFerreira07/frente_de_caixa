@@ -75,7 +75,7 @@ const VendasList = (props) => {
         hora: data.data[i].created_at,
         uidd: String(data.data[i].id),
         cliente: data.data[i].cliente.nome,
-        numero: String(data.data[i].numero),
+        numero: data.data[i].numero,
         valorDinheiro: data.data[i].valorEmDinheiro,
       });
     }

@@ -3,7 +3,6 @@ Funcionalidades:
   ☐ Troco inicial FC 
   ☐ Relatório e resumo caixa
   ☐ pagamento fiado
-  ☐ finalizar venda em outra pagina
   
   Melhorias:
     ☐ diminuir alguns paddings e tamanhos
@@ -18,6 +17,7 @@ Funcionalidades:
     ☐ Drive impressão
 
 Archive:
+  ✔ finalizar venda em outra pagina @done(20-12-05 09:56) @project(Funcionalidades)
   ✔ Escolha do caixa fisico vinculado @done(20-11-27 09:39) @project(Funcionalidades.Configurações FC)
   ✔ Entradas @done(20-11-27 09:39) @project(Funcionalidades)
   ✔ Saídas (transferências) @done(20-11-27 09:39) @project(Funcionalidades)

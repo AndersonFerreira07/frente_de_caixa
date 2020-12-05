@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useHistory } from 'react-router-dom';
 
-import { Box } from '@material-ui/core';
+import { Box, Paper, Button } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Switch from '@material-ui/core/Switch';
 import moment from 'moment';
 
 import ActionsEntrada from '../../components/ActionsEntradas';
+import AutoCompleteClientes from '../../components/AutoCompleteClientes';
 import Label from '../../components/Label';
 import TabelaPagamentos, { Row } from '../../components/TabelaPagamentos';
 import { getSessionId } from '../../services/alth';
@@ -20,13 +22,25 @@ const useStyles = makeStyles((theme: Theme) =>
     body: {
       height: '90vh',
     },
+    btn: {
+      marginBottom: '10px',
+    },
+    container: {
+      opacity: '0.75',
+      marginTop: '20px',
+    },
   }),
 );
 
 const Pagamentos = (props) => {
   const [itens, setItens] = useState<Array<Row>>([]);
+  const [pago, setPago] = useState(false);
+  const [cliente, setCliente] = useState<any>(null);
   const history = useHistory();
   const classes = useStyles();
+
+  console.log('Cliente');
+  console.log(cliente);
 
   async function pagaParcela(idParcela: number) {
     await api.put(`/parcelasvenda/${idParcela}`, {
@@ -38,7 +52,31 @@ const Pagamentos = (props) => {
 
   async function getParcelasFiado() {
     const newItens: Array<Row> = [];
-    const data = await api.get(`/parcelas/fiado/fc`);
+    const idCliente = cliente ? cliente.id : 0;
+    const data = await api.get(`/parcelas/fiado/fc/${idCliente}`);
+    console.log('parcelas fiado');
+    console.log(data.data);
+
+    for (let i = 0; i < data.data.length; i += 1) {
+      newItens.push({
+        valor: data.data[i].valor,
+        dataPagamento: data.data[i].datapagamento,
+        uidd: String(data.data[i].id),
+        cliente: data.data[i].venda.cliente.nome,
+        numeroVenda: String(data.data[i].venda.numero),
+        meioPagamento: data.data[i].tipoPagamento.nome,
+      });
+    }
+
+    setItens(newItens);
+  }
+
+  async function getParcelasFiadoPagas() {
+    const newItens: Array<Row> = [];
+    const idCliente = cliente ? cliente.id : 0;
+    const data = await api.get(
+      `/pagamentoscaixa/todos/${getSessionId()}/${idCliente}`,
+    );
     console.log('parcelas fiado');
     console.log(data.data);
 
@@ -57,19 +95,30 @@ const Pagamentos = (props) => {
   }
 
   async function handlePagarParcela(idParcela: number) {
-    await pagaParcela(idParcela);
-    await getParcelasFiado();
+    if (!pago) {
+      await pagaParcela(idParcela);
+      await getParcelasFiado();
+    }
   }
 
   useEffect(() => {
     getParcelasFiado();
   }, []);
 
+  useEffect(() => {
+    if (pago) getParcelasFiadoPagas();
+    else getParcelasFiado();
+  }, [pago, cliente]);
+
   async function removeItens(indices: string[]) {}
 
   function irParaTelaInit() {
     history.push('/');
   }
+
+  const handleChange = (event) => {
+    setPago(event.target.checked);
+  };
 
   return (
     <>
@@ -98,6 +147,38 @@ const Pagamentos = (props) => {
               }
             }}
           />
+          <Paper elevation={3} className={classes.container}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              padding="15px"
+              height="100%"
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: '10px',
+                }}
+              >
+                FILTROS
+              </div>
+
+              <Switch
+                checked={pago}
+                onChange={handleChange}
+                inputProps={{ 'aria-label': 'secondary checkbox' }}
+              />
+
+              {!pago && (
+                <AutoCompleteClientes
+                  value={cliente}
+                  onChange={(value) => setCliente(value)}
+                />
+              )}
+            </Box>
+          </Paper>
         </Box>
         <Box padding="0 10px" flex={4}>
           <TabelaPagamentos
