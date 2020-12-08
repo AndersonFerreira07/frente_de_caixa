@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import FrentePage from './Pages/Frente';
-import { SnackbarProvider } from 'notistack';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { SnackbarProvider, useSnackbar } from 'notistack';
+import { BrowserRouter as Router, Route, useHistory } from "react-router-dom";
 import Login from './Pages/Login'
 
 import Entradas from './Pages/Entradas'
@@ -17,27 +17,84 @@ import Pagamentos from './Pages/Pagamentos'
 
 import RouteBackground from './components/RouteBackground'
 import RouteBackground2 from './components/RouteBackground2'
+import ConfigSessao from './Pages/ConfigSessao'
+
+import DialogoLogout from './components/DialogoLogout'
+import { logout } from './services/alth';
+import api from './services/api'
+import { getCaixaId } from './services/config'
+
+import Ws from '@adonisjs/websocket-client'
+
+let ws;
 
 function App() {
+
+  /* const history = useHistory();
+
+  type CountdownHandle = React.ElementRef<typeof DialogoLogout>;
+  const dialogoLogoutRef = useRef<CountdownHandle>(null);
+
+  function handleLogout() {
+    console.log('clicou ')
+    if (dialogoLogoutRef.current) dialogoLogoutRef.current.handleOpen()
+  }
+
+  function handleTransferenciaFinal() {
+    logout();
+  }
+
+  function handleFechouImpressão() {
+    history.push('/login');
+  } */
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    ws = Ws(process.env.REACT_APP_HOST_WS)
+    ws.connect()
+    ws.on('open', () => {
+      ws.subscribe('gerente')
+    })
+    return () => ws.close();
+  }, [])
+
+  async function callGerente() {
+    const data = await api.get(`/caixasfisicos/${getCaixaId()}`)
+    ws.getSubscription('gerente').emit('notificaGerente', {
+      nomeCaixa: data.data.nome,
+    });
+    enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!', { 
+      variant: 'info',
+    });
+  }
+
   return (
-    <div className="App" style={{ height: '100vh' }}>
-      <SnackbarProvider maxSnack={6}>
-          <Router>
-            <RouteBackground exact path="/" component={Init}/>
-            <RouteBackground path="/entradas" component={Entradas}/>
-            <RouteBackground path="/saidas" component={Saidas}/>
-            <RouteBackground path="/transferencias" component={Tranferencias}/>
-            <RouteBackground path="/relatorio" component={Relatorio}/>
-            <RouteBackground2 path="/configuracoes" component={Config}/>
-            {/* <RouteBackground path="/frentedecaixa" component={FrentePage}/> */}
-            <RouteBackground path="/vendas" component={Vendas}/>
-            <RouteBackground path="/listavendas" component={VendasList}/>
-            <RouteBackground path="/pagamentos" component={Pagamentos}/>
-            <Route path="/login" component={Login} />
-          </Router>
-      </SnackbarProvider>
-    </div>
+    <Router>
+      <RouteBackground exact path="/" component={Init} callGerente={callGerente}/>
+      <RouteBackground path="/entradas" component={Entradas} callGerente={callGerente}/>
+      <RouteBackground path="/saidas" component={Saidas} callGerente={callGerente}/>
+      <RouteBackground path="/transferencias" component={Tranferencias} callGerente={callGerente}/>
+      <RouteBackground path="/relatorio" component={Relatorio} callGerente={callGerente}/>
+      <RouteBackground2 path="/configuracoes" component={Config}/>
+      {/* <RouteBackground path="/frentedecaixa" component={FrentePage}/> */}
+      <RouteBackground path="/vendas" component={Vendas} callGerente={callGerente}/>
+      <RouteBackground path="/configuracoesessao" component={ConfigSessao} callGerente={callGerente}/>
+      <RouteBackground path="/listavendas" component={VendasList} callGerente={callGerente}/>
+      <RouteBackground path="/pagamentos" component={Pagamentos} callGerente={callGerente}/>
+      <Route path="/login" component={Login} />
+    </Router>
   );
 }
 
-export default App;
+function WapperApp() {
+  return (
+    <div className="App" style={{ height: '100vh' }}>
+      <SnackbarProvider maxSnack={6}>
+        <App/>
+      </SnackbarProvider>
+    </div>
+  )
+}
+
+export default WapperApp;

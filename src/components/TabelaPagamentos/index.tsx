@@ -324,9 +324,10 @@ export type Table2Props = {
   rows: Row[];
   removeItens: (indices: string[]) => void;
   pagarParcela: (idParcela: number) => void;
+  pago: boolean;
 };
 
-const Table2: FC<Table2Props> = ({ rows, removeItens, pagarParcela }) => {
+const Table2: FC<Table2Props> = ({ rows, removeItens, pagarParcela, pago }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Row>('valor');
@@ -483,7 +484,7 @@ const Table2: FC<Table2Props> = ({ rows, removeItens, pagarParcela }) => {
                           color="secondary"
                           onClick={(e) => pagarParcela(parseInt(row.uidd, 10))}
                         >
-                          Pagar
+                          {pago ? 'Despagar' : 'Pagar'}
                         </Button>
                       </TableCell>
                     </StyledTableRow>

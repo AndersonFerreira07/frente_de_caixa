@@ -30,7 +30,7 @@ import { useSnackbar } from 'notistack';
 
 import DialogoSenha from '../../components/DialogoSenha'
 
-import Ws from '@adonisjs/websocket-client'
+//import Ws from '@adonisjs/websocket-client'
 
 import { logout, getUsername, isAuthenticated } from '../../services/alth';
 
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
   
-let ws;
+//let ws;
 
 const Frente: FC<FrenteProps> = () => {
 
@@ -334,7 +334,7 @@ const Frente: FC<FrenteProps> = () => {
     }
   }
 
-  useEffect(() => {
+ /*  useEffect(() => {
     ws = Ws(process.env.REACT_APP_HOST_WS)
     ws.connect()
     ws.on('open', () => {
@@ -351,7 +351,7 @@ const Frente: FC<FrenteProps> = () => {
     enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!', { 
       variant: 'info',
   });
-  }
+  } */
 
   function handleConfirma(codigo: number) {
     switch (codigo) {
@@ -484,22 +484,18 @@ const Frente: FC<FrenteProps> = () => {
           />
           <LabelAtendente atendente={atendente}/>
           {(produto !== null && atendente !== '') && <LabelEstoque produto={produto}/>}
-          <Button
+          {/* <Button
             variant="contained"
             color="secondary"
             className={classes.btn}
             onClick={() => {
               callGerente()
-              /* enqueueSnackbar('O gerente foi notificado, e já deve estar a caminho!', { 
-                variant: 'info',
-            }); */
             }}
             style={{ padding: '20px' }}
             ref={refBtCallGerente}
-            //disabled={disabled[2]}
           >
             Chamar Gerente (Ins)
-          </Button>
+          </Button> */}
         </Box> : null}
         {(tela === 0 && atendente !== '') && <Box padding="0 10px" flex={4}>
           <Table2 rows={itens} removeItens={removeItens} produto={produto}/>
@@ -611,10 +607,10 @@ const Frente: FC<FrenteProps> = () => {
               if (componentRef.current)
                 componentRef.current.handleOpen('Logout', 'Tem certeza que deseja deslogar!', 2)
               break;
-            case 'insert':
+            /* case 'insert':
               if (refBtCallGerente.current)
                 refBtCallGerente.current.click()
-              break;
+              break; */
             default:
               break;
           }

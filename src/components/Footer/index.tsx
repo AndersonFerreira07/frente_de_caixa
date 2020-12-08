@@ -70,7 +70,8 @@ const Footer: FC<FooterProps> = ({ tela, disabledPartes }) => {
 
         <Box display="flex" flexDirection="column" alignItems="flex-start">
           <div>CTRL+F2 - Pagamentos</div>
-          <div>DEL - Sair</div>
+          <div>CTRL+F3 - Compras</div>
+          {/* <div>DEL - Sair</div> */}
         </Box>
 
         <Box display="flex" flexDirection="column" alignItems="flex-start">

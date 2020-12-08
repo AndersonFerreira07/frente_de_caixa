@@ -68,11 +68,11 @@ export const logout = async () => {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
   localStorage.removeItem(CARGO);
-  localStorage.removeItem(USERNAME);
+  // localStorage.removeItem(USERNAME);
   localStorage.removeItem(CARGOOBJ);
   localStorage.removeItem(USER_ID);
 
   await api.delete(`/logot/${getSessionId()}`);
 
-  localStorage.removeItem(SESSION_ID);
+  // localStorage.removeItem(SESSION_ID);
 };

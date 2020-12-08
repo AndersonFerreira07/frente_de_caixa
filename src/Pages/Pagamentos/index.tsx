@@ -50,6 +50,14 @@ const Pagamentos = (props) => {
     });
   }
 
+  async function despagaParcela(idParcela: number) {
+    await api.put(`/parcelasvenda/${idParcela}`, {
+      status: false,
+      datapagamentoreal: null,
+      session_id: null,
+    });
+  }
+
   async function getParcelasFiado() {
     const newItens: Array<Row> = [];
     const idCliente = cliente ? cliente.id : 0;
@@ -98,6 +106,9 @@ const Pagamentos = (props) => {
     if (!pago) {
       await pagaParcela(idParcela);
       await getParcelasFiado();
+    } else {
+      await despagaParcela(idParcela);
+      await getParcelasFiadoPagas();
     }
   }
 
@@ -165,17 +176,28 @@ const Pagamentos = (props) => {
                 FILTROS
               </div>
 
-              <Switch
-                checked={pago}
-                onChange={handleChange}
-                inputProps={{ 'aria-label': 'secondary checkbox' }}
-              />
-
-              {!pago && (
-                <AutoCompleteClientes
-                  value={cliente}
-                  onChange={(value) => setCliente(value)}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginTop: '10px',
+                }}
+              >
+                <Switch
+                  checked={pago}
+                  onChange={handleChange}
+                  inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
+                <div>Pago nessa sessão</div>
+              </div>
+
+              {true && (
+                <div style={{ marginTop: '25px' }}>
+                  <AutoCompleteClientes
+                    value={cliente}
+                    onChange={(value) => setCliente(value)}
+                  />
+                </div>
               )}
             </Box>
           </Paper>
@@ -185,6 +207,7 @@ const Pagamentos = (props) => {
             removeItens={removeItens}
             rows={itens}
             pagarParcela={handlePagarParcela}
+            pago={pago}
           />
         </Box>
       </Box>

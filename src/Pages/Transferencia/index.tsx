@@ -105,7 +105,7 @@ const Transferencias = (props) => {
     <>
       <Box padding="10px" className={classes.header}>
         <Box margin="0px 0px 10px">
-          <Label label={`Saídas no ${nomeCaixa}`} />
+          <Label label={`Trabsferências no ${nomeCaixa}`} />
         </Box>
       </Box>
       <Box

@@ -17,13 +17,13 @@ const Init: FC<InitProps> = () => {
   const [atendente, setAtendente] = useState('');
   const history = useHistory();
 
-  type CountdownHandle = React.ElementRef<typeof DialogoConfirmacao>;
-  const dialogoConfirmacaoRef = useRef<CountdownHandle>(null);
+  /* type CountdownHandle = React.ElementRef<typeof DialogoConfirmacao>;
+  const dialogoConfirmacaoRef = useRef<CountdownHandle>(null); */
 
   type CountdownHandle2 = React.ElementRef<typeof DialogoTroco>;
   const dialogoTrocoRef = useRef<CountdownHandle2>(null);
 
-  function handleConfirma(codigo: number) {
+  /* function handleConfirma(codigo: number) {
     switch (codigo) {
       case 2:
         logout();
@@ -32,7 +32,7 @@ const Init: FC<InitProps> = () => {
       default:
         break;
     }
-  }
+  } */
 
   async function getAtendente() {
     const username = getUsername();
@@ -68,10 +68,10 @@ const Init: FC<InitProps> = () => {
           <LabelSemAtendente />
         )}
       </Box>
-      <DialogoConfirmacao
+      {/* <DialogoConfirmacao
         ref={dialogoConfirmacaoRef}
         handleConfirma={handleConfirma}
-      />
+      /> */}
       <DialogoTroco ref={dialogoTrocoRef} />
       {atendente !== '' && (
         <KeyboardEventHandler
@@ -85,7 +85,8 @@ const Init: FC<InitProps> = () => {
             'f10',
             'f3',
             'ctrl+f2',
-            'delete',
+            'ctrl+f3',
+            // 'delete',
             'insert',
           ]}
           onKeyEvent={(key, e) => {
@@ -115,14 +116,17 @@ const Init: FC<InitProps> = () => {
               case 'ctrl+f2':
                 history.push('/pagamentos');
                 break;
-              case 'delete':
+              case 'ctrl+f3':
+                history.push('/pagamentos');
+                break;
+              /* case 'delete':
                 if (dialogoConfirmacaoRef.current)
                   dialogoConfirmacaoRef.current.handleOpen(
                     'Logout',
                     'Tem certeza que deseja deslogar!',
                     2,
                   );
-                break;
+                break; */
               default:
                 break;
             }

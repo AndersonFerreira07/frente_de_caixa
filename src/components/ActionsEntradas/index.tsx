@@ -27,15 +27,17 @@ const ActionsEntradas: FC<ActionsEntradasProps> = ({
   return (
     <Paper elevation={3} className={classes.container}>
       <Box display="flex" flexDirection="column" padding="15px" height="100%">
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.btn}
-          onClick={() => onClick(0)}
-          disabled={disabled[0]}
-        >
-          {labels[0]}
-        </Button>
+        {labels.map((item, index) => (
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.btn}
+            onClick={() => onClick(index)}
+            disabled={disabled[index]}
+          >
+            {labels[index]}
+          </Button>
+        ))}
       </Box>
     </Paper>
   );
