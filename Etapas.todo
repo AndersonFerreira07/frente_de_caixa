@@ -1,22 +1,33 @@
 
 Funcionalidades:
-  ☐ Troco inicial FC 
-  ☐ Relatório e resumo caixa
-  ☐ pagamento fiado
+  ☐ compras
+  ☐ colocar atalhos em lugares q faltaram
+  ☐ salvar o valor recebido e nao o troco
+  ☐ mostrar o link dos boletos de forma bonita
+  ☐ autocoomplete cliente igual ao de produtos
+  ☐ autocomplete meio de pagamento igual ao de produto
+  ☐ melhorar eficiencia do autocomplete
+  ☐ autofocus em certos locais q não consegui colocar ainda
+  ☐ movimento mais legal da logo
+  ☐ guardar em tempo real o saldo atual no caixa
+  ☐ validar saidas e transferencias
   
   Melhorias:
     ☐ diminuir alguns paddings e tamanhos
     ☐ ajeitar bug do rotulo de sleção q empurra tabela pra baixo
     ☐ mensagem quando o produto nao tiver unidades
-    ☐ autocoomplete cliente igual ao de produtos
-    ☐ autocomplete meio de pagamento igual ao de produto
     ☐ mudar preco de venda quando chegar outro item (notificação)
     ☐ notificação de quando o preço muda 
     ☐ fazer preço venda nota dependente das taxas cadastradas
-    ☐ Responsivel @project(Funcionalidades) 
+    ☐ Responsivel
     ☐ Drive impressão
+    ☐ colocar mensagem ao chamar gerente
+    ☐ transiçoes
 
 Archive:
+  ✔ Troco inicial FC @done(20-12-09 09:30) @project(Funcionalidades)
+  ✔ Relatório e resumo caixa @done(20-12-09 09:30) @project(Funcionalidades)
+  ✔ pagamento fiado @done(20-12-09 09:30) @project(Funcionalidades)
   ✔ finalizar venda em outra pagina @done(20-12-05 09:56) @project(Funcionalidades)
   ✔ Escolha do caixa fisico vinculado @done(20-11-27 09:39) @project(Funcionalidades.Configurações FC)
   ✔ Entradas @done(20-11-27 09:39) @project(Funcionalidades)

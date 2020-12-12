@@ -17,17 +17,17 @@ import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
 
-import AutoCompleteClientes from '../../components/AutoCompleteClientes';
+import AutoCompleteClientes from '../../components/AutoCompleteFornecedores';
 import DialogoNota from '../../components/DialogoNota';
 import LabelSubTotal from '../../components/LabelSubtotal';
-import SidebarTiposPagamentos from '../../components/SidebarTiposPagamentos';
+import SidebarTiposPagamentos from '../../components/SidebarInputsParcelasCompra';
 import Table, { Row } from '../../components/Table2';
 import TablePacelas, {
   Row as Row2,
-} from '../../components/TableTiposPagamento';
+} from '../../components/TableParcelasCompra';
 import { getSessionId } from '../../services/alth';
 import api from '../../services/api';
-import { VendaContext } from '../Venda';
+import { CompraContext } from '../Compra';
 
 const testeConfig = {
   id: 1,
@@ -90,8 +90,8 @@ const FinalizarVenda = () => {
   const refDate = useRef<any>(null);
   const refClientes = useRef<any>(null);
   const refBtnImprimir = useRef<any>(null);
-  const { venda, dispatch } = useContext(VendaContext);
-  const { cliente, parcelas } = venda;
+  const { compra, dispatch } = useContext(CompraContext);
+  const { fornecedor, parcelas } = compra;
   const history = useHistory();
 
   type SidebarHandle = React.ElementRef<typeof SidebarTiposPagamentos>;
@@ -104,7 +104,7 @@ const FinalizarVenda = () => {
   }
 
   function irParaTelaFrentedeCaixa() {
-    history.push('/vendas/frentedecaixa');
+    history.push('/compras/frentedecaixa');
   }
 
   const handleClose = () => {
@@ -130,20 +130,18 @@ const FinalizarVenda = () => {
 
     console.log('getTodosDados');
     console.log('venda');
-    console.log(venda);
+    console.log(compra);
 
-    for (let i = 0; i < venda.itens.length; i += 1) {
+    for (let i = 0; i < compra.itens.length; i += 1) {
       listaItens.push({
-        peso: venda.itens[i].peso,
-        unidades: venda.itens[i].unidades,
-        precoVenda: venda.itens[i].unitario,
-        lucro:
-          venda.itens[i].unitario - venda.itens[i].produto.precoCompraMedio,
-        produto_id: venda.itens[i].produto.id,
+        peso: compra.itens[i].peso,
+        unidades: compra.itens[i].unidades,
+        precoCompra: compra.itens[i].unitario,
+        produto_id: compra.itens[i].produto.id,
       });
     }
 
-    for (let i = 0; i < parcelas.length; i += 1) {
+    /*  for (let i = 0; i < parcelas.length; i += 1) {
       listaParcelas.push({
         tipo_pagamento_id: parcelas[i].tipoPgamento.id,
         dataPagamento: parcelas[i].dataPagamento,
@@ -151,22 +149,21 @@ const FinalizarVenda = () => {
         dataPagamentoReal:
           parcelas[i].tipoPgamento.modo === 0 ? new Date() : null,
         modo: parcelas[i].tipoPgamento.modo,
-        // troco: parcelas[i].troco ? parcelas[i].troco : 0,
         valorRecebido: parcelas[i].valorRecebido,
       });
-    }
+    } */
 
     return {
       listaItens,
       listaParcelas,
       dataVenda: buildObjDate(refDate.current.value),
-      cliente: cliente.id,
+      fornecedor: fornecedor.id,
       session_id: getSessionId(),
     };
   }
 
   function isDadosValidos() {
-    if (cliente === null) {
+    if (fornecedor === null) {
       return false;
     }
     if (parcelas.length <= 0) {
@@ -176,7 +173,7 @@ const FinalizarVenda = () => {
   }
 
   function messagesError() {
-    if (cliente === null) {
+    if (fornecedor === null) {
       enqueueSnackbar('Campo cliente não foi preenchido!', {
         variant: 'warning',
       });
@@ -204,7 +201,7 @@ const FinalizarVenda = () => {
     console.log('RETORNO VENDA TOTAL FC API 22222');
     console.log(data.data);
     console.log('venda');
-    console.log(venda);
+    console.log(compra);
     return data.data[0];
   }
 
@@ -212,29 +209,20 @@ const FinalizarVenda = () => {
     console.log(getTodosDados());
     if (!isDadosValidos() || getValorRestante() !== 0) {
       messagesError();
-    } else if (refDialogoNota.current) {
-      const response = await submitDadosVenda();
-      refDialogoNota.current.handleOpen(response, testeConfig, false);
+    } else {
+      // if (refDialogoNota.current) {
+      closeDialogoNota();
+      /* const response = await submitDadosVenda();
+      refDialogoNota.current.handleOpen(response, testeConfig, false); */
     }
   }
 
   function handleNewItem(
     valor: number,
-    tipoPagamento: any,
+    conta: any,
     dataPagamento: Date | null,
-    valorRecebido: number,
-    troco: number,
   ) {
-    if (
-      tipoPagamento.modo === 0 ||
-      (tipoPagamento.modo === 1 &&
-        cliente.nome &&
-        cliente.cpf &&
-        cliente.telefone &&
-        tipoPagamento.gerencianet === true) ||
-      (tipoPagamento.modo === 1 && tipoPagamento.gerencianet === false)
-    ) {
-      /* setItens([
+    /* setItens([
         ...itens,
         {
           dataPagamento,
@@ -245,33 +233,23 @@ const FinalizarVenda = () => {
           troco: valorRecebido - valor,
         },
       ]); */
-      dispatch({
-        type: 'ADD_PARCELA',
-        item: {
-          dataPagamento,
-          tipoPgamento: tipoPagamento,
-          valor,
-          uidd: `${tipoPagamento.nome}${parcelas.length}`,
-          valorRecebido,
-          troco: valorRecebido - valor,
-        },
-      });
-    } else {
-      enqueueSnackbar(
-        'Este cliente não possui dados sufucientes para o cadastro de boletos na plataforma Gerencianet!',
-        {
-          variant: 'warning',
-        },
-      );
-    }
+    dispatch({
+      type: 'ADD_PARCELA',
+      item: {
+        dataPagamento,
+        conta,
+        valor,
+        uidd: `${conta.nome}${parcelas.length}`,
+      },
+    });
   }
 
   function renameItensUIDD(itens: Array<Row2>) {
-    const arrayNew = itens.slice();
+    /* const arrayNew = itens.slice();
     for (let i = 0; i < itens.length; i += 1) {
       arrayNew[i].uidd = `${arrayNew[i].tipoPgamento.nome}${i}`;
     }
-    return arrayNew;
+    return arrayNew; */
   }
 
   function removeItens(indices: string[]) {
@@ -291,7 +269,7 @@ const FinalizarVenda = () => {
     for (let i = 0; i < parcelas.length; i += 1) {
       soma += parcelas[i].valor;
     }
-    return venda.subTotal - soma;
+    return compra.subTotal - soma;
   }
 
   function getDataAtual() {
@@ -330,10 +308,10 @@ const FinalizarVenda = () => {
         css={{ backgroundColor: 'white', opacity: '0.75' }}
       >
         <AutoCompleteClientes
-          value={cliente}
+          value={fornecedor}
           // onChange={(value) => setCliente(value)}
           onChange={(value) =>
-            dispatch({ type: 'UPDATE_CLIENTE', cliente: value })
+            dispatch({ type: 'UPDATE_FORNECEDOR', fornecedor: value })
           }
           ref={refClientes}
           handleEnter={() => {
@@ -379,14 +357,14 @@ const FinalizarVenda = () => {
           <Box display="flex" flexDirection="column" marginLeft="20px" flex={3}>
             <SidebarTiposPagamentos
               handleNewItem={handleNewItem}
-              subTotal={venda.subTotal}
+              subTotal={compra.subTotal}
               valorRestante={getValorRestante()}
               ref={refSidebar}
               handleF4={() => handleClose()}
               handleF8={() => handleOpenDialogoNota()}
               focusImprimir={() => {}}
             />
-            <LabelSubTotal valor={venda.subTotal} />
+            <LabelSubTotal valor={compra.subTotal} />
             <Paper
               elevation={3}
               style={{

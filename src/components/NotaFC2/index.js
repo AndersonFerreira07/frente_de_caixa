@@ -948,7 +948,8 @@ const Nota = forwardRef((props, ref) => {
 
             <span className={classes.spanLabel}>
               {index < parcelas.length
-                ? parcelas[index].tipoPagamento.modo === 0
+                ? parcelas[index].tipoPagamento.modo === 0 &&
+                  parcelas[index].tipoPagamento.dinheiro
                   ? `${formataPreco(parcelas[index].troco)}`
                   : '-'
                 : ''}

@@ -49,21 +49,16 @@ const StyledTableRow = withStyles((theme) => ({
 
 export type Row = {
   valor: number;
-  tipoPgamento: any;
+  conta: any;
   dataPagamento: Date | null;
   uidd: string;
-  valorRecebido: number;
-  troco: number;
 };
 
 type RowFormated = {
   valor: string;
-  tipoPgamento: number;
+  conta: string;
   dataPagamento: string;
   uidd: string;
-  valorRecebido: string;
-  troco: string;
-  modo: number;
 };
 
 interface Data {
@@ -117,10 +112,10 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   {
-    id: 'tipoPgamento',
+    id: 'conta',
     numeric: false,
     disablePadding: true,
-    label: 'Meio de Pagamento',
+    label: 'Conta',
   },
   { id: 'valor', numeric: true, disablePadding: false, label: 'Valor' },
   {
@@ -129,13 +124,6 @@ const headCells: HeadCell[] = [
     disablePadding: false,
     label: 'Data de Pagamento',
   },
-  {
-    id: 'valorRecebido',
-    numeric: true,
-    disablePadding: false,
-    label: 'Valor Recebido',
-  },
-  { id: 'troco', numeric: true, disablePadding: false, label: 'Troco' },
 ];
 
 interface EnhancedTableProps {
@@ -371,17 +359,8 @@ const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
       listFormated.push({
         uidd: list[i].uidd,
         valor: formatMoeda(list[i].valor),
-        tipoPgamento: list[i].tipoPgamento.nome,
+        conta: list[i].conta.nome,
         dataPagamento: moment(list[i].dataPagamento).format('DD/MM/YYYY'),
-        valorRecebido:
-          list[i].tipoPgamento.modo === 0 && list[i].tipoPgamento.dinheiro
-            ? formatMoeda(list[i].valorRecebido)
-            : '-',
-        troco:
-          list[i].tipoPgamento.modo === 0 && list[i].tipoPgamento.dinheiro
-            ? formatMoeda(list[i].troco)
-            : '-',
-        modo: list[i].tipoPgamento.modo,
       });
     }
     return listFormated;
@@ -451,17 +430,10 @@ const Table2: FC<Table2Props> = ({ rows, removeItens }) => {
                         scope="row"
                         padding="none"
                       >
-                        {row.tipoPgamento}
+                        {row.conta}
                       </TableCell>
                       <TableCell align="right">{row.valor}</TableCell>
                       <TableCell align="right">{row.dataPagamento}</TableCell>
-
-                      <TableCell align="right">
-                        {row.modo === 0 ? row.valorRecebido : '-'}
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.modo === 0 ? row.troco : '-'}
-                      </TableCell>
                     </StyledTableRow>
                   );
                 },

@@ -117,7 +117,7 @@ const Init: FC<InitProps> = () => {
                 history.push('/pagamentos');
                 break;
               case 'ctrl+f3':
-                history.push('/pagamentos');
+                history.push('/compras/frentedecaixa');
                 break;
               /* case 'delete':
                 if (dialogoConfirmacaoRef.current)

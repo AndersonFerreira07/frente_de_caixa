@@ -23,7 +23,7 @@ import moment from 'moment';
 import { useSnackbar } from 'notistack';
 
 import api from '../../services/api';
-import AutoCompleteTiposPagamento from '../AutoCompleteTiposPagamento';
+import AutoCompleteTiposPagamento from '../AutoCompleteContas';
 import PrecoInput from '../PrecoInput';
 
 const useStyles = makeStyles((theme) => ({
@@ -42,10 +42,8 @@ const useStyles = makeStyles((theme) => ({
 export type SidebarInputsProps = {
   handleNewItem: (
     valor: number,
-    tipoPagamento: any,
+    conta: any,
     dataPagamento: Date | null,
-    valorRecebido: number,
-    troco: number,
   ) => void;
   subTotal: number;
   valorRestante: number;
@@ -256,7 +254,7 @@ const SidebarInputs: RefForwardingComponent<
     async function getTipoPagamentoDefault() {
       const dataConfig = await api.get('/config2');
       const dataTiposPagamento = await api.get(
-        `/tipospagamento/${dataConfig.data.tipo_pagamento_id}`,
+        `/contas/${dataConfig.data.conta_id}`,
       );
       setTipoPagamento(dataTiposPagamento.data);
       setTipoPagamentoDefault(dataTiposPagamento.data);
@@ -273,7 +271,7 @@ const SidebarInputs: RefForwardingComponent<
 
   useEffect(() => {
     if (valorRestante === 0)
-      enqueueSnackbar('Agora você pode finalizar a venda, se assim desejar!', {
+      enqueueSnackbar('Agora você pode finalizar a compra, se assim desejar!', {
         variant: 'success',
       });
   }, [valorRestante]);
@@ -311,17 +309,19 @@ const SidebarInputs: RefForwardingComponent<
         <AutoCompleteTiposPagamento
           value={tipoPagamento}
           onChange={(value) => {
-            updateDataPagamento(value);
+            // updateDataPagamento(value);
             setTipoPagamento(value);
           }}
           ref={refMeioPagamento}
           handleEnter={() => {
-            if (getModoAvista()) {
+            /* if (getModoAvista()) {
               if (refValor.current) {
                 refValor.current.focus();
                 refValor.current.select();
               }
-            } else if (refDate.current) {
+            } else  */ if (
+              refDate.current
+            ) {
               refDate.current.focus();
               refDate.current.select();
             }
@@ -404,13 +404,15 @@ const SidebarInputs: RefForwardingComponent<
             }
             ref={refValor}
             handleEnter={() => {
-              if (getModoAvistaDinheiro()) {
+              /* if (getModoAvistaDinheiro()) {
                 if (refValorRecebido.current) {
                   refValorRecebido.current.focus();
                   refValorRecebido.current.select();
                   // refButton.current.select();
                 }
-              } else if (refButton.current) {
+              } else  */ if (
+                refButton.current
+              ) {
                 refButton.current.click();
                 // refButton.current.select();
               }
@@ -433,51 +435,6 @@ const SidebarInputs: RefForwardingComponent<
           </Button>
         </Box> */}
 
-        <Box width="100%" display={getModoAvistaDinheiro() ? 'flex' : 'none'}>
-          <PrecoInput
-            label="Valor Recebido"
-            value={valorRecebidoAVista}
-            onChange={(value: number) => setValorRecebidoAVista(value)}
-            fullwidth
-            disabled={!getModoAvistaDinheiro()}
-            error={isNaN(valorRecebidoAVista)}
-            helperText={!isNaN(valorRecebidoAVista) ? '' : 'Valor inválido'}
-            ref={refValorRecebido}
-            handleEnter={() => {
-              if (refButton.current) {
-                refButton.current.click();
-                // refButton.current.select();
-              }
-              // if (refPeso.current) refPeso.current.focus();
-            }}
-            handleF4={() => handleF4()}
-            handleF8={() => handleF8()}
-          />
-        </Box>
-
-        {false && (
-          <Box width="100%" display="flex">
-            <PrecoInput
-              label="Troco"
-              value={valorRecebidoAVista - valor}
-              onChange={(value: number) => console.log('kkkkkk Troco')}
-              fullwidth
-              disabled
-              // error={isNaN(valorRecebidoAVista)}
-              // helperText={!isNaN(valorRecebidoAVista) ? '' : 'Valor inválido'}
-              handleEnter={() => {
-                if (refButton.current) {
-                  refButton.current.click();
-                  // refButton.current.select();
-                }
-                // if (refPeso.current) refPeso.current.focus();
-              }}
-              handleF4={() => handleF4()}
-              handleF8={() => handleF8()}
-            />
-          </Box>
-        )}
-
         <Button
           variant="contained"
           color="secondary"
@@ -487,11 +444,7 @@ const SidebarInputs: RefForwardingComponent<
               tipoPagamento,
               refDate === null
                 ? new Date()
-                : tipoPagamento.modo === 0
-                ? new Date()
                 : buildObjDate(refDate.current.value),
-              valorRecebidoAVista,
-              valorRecebidoAVista - valor,
             );
             setValor(0);
             setDataPagamento(new Date());

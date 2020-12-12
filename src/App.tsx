@@ -12,6 +12,7 @@ import Config from './Pages/Config'
 import Init from './Pages/Init'
 import Saidas from './Pages/Saidas'
 import Vendas from './Pages/Venda'
+import Compras from './Pages/Compra'
 import VendasList from './Pages/VendasList'
 import Pagamentos from './Pages/Pagamentos'
 
@@ -79,6 +80,7 @@ function App() {
       <RouteBackground2 path="/configuracoes" component={Config}/>
       {/* <RouteBackground path="/frentedecaixa" component={FrentePage}/> */}
       <RouteBackground path="/vendas" component={Vendas} callGerente={callGerente}/>
+      <RouteBackground path="/compras" component={Compras} callGerente={callGerente}/>
       <RouteBackground path="/configuracoesessao" component={ConfigSessao} callGerente={callGerente}/>
       <RouteBackground path="/listavendas" component={VendasList} callGerente={callGerente}/>
       <RouteBackground path="/pagamentos" component={Pagamentos} callGerente={callGerente}/>
