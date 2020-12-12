@@ -81,7 +81,7 @@ const DialogoNota: RefForwardingComponent<
           <div style={{ width: '100%', height: '100%' }}>
             <NotaFC ref={componentRef} {...venda} />
           </div>
-          {/* <div>
+          <div>
             <div>Boletos:</div>
             <ul>
               {boletos.map((item, index) => (
@@ -94,7 +94,7 @@ const DialogoNota: RefForwardingComponent<
                 </li>
               ))}
             </ul>
-          </div> */}
+          </div>
         </DialogContent>
         <DialogActions className={classes.action}>
           <Button
