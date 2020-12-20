@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useHistory } from 'react-router-dom';
 
@@ -12,9 +12,11 @@ import {
 } from '@material-ui/core/styles';
 import moment from 'moment';
 
+import { AppContext } from '../../App';
 import ActionsEntrada from '../../components/ActionsEntradas';
 import Label from '../../components/Label';
-import SidebarEntradas from '../../components/SidebarEntradas';
+import LabelSubTotal from '../../components/LabelSubtotal';
+import SidebarEntradas from '../../components/SidebarSaidas';
 import TabelaEntradas, { Row } from '../../components/TabelaEntradas';
 import { getSessionId } from '../../services/alth';
 import api from '../../services/api';
@@ -36,6 +38,12 @@ const Saidas = (props) => {
   const [nomeCaixa, setNomeCaixa] = useState('');
   const history = useHistory();
   const classes = useStyles();
+  // const [saldoCaixa, setSaldoCaixa] = useState(0);
+  const [isSave, setIsSave] = useState(false);
+  const {
+    app: { saldoCaixa },
+    dispatch,
+  } = useContext(AppContext);
 
   async function getEntradas() {
     const newItens: Array<Row> = [];
@@ -58,12 +66,28 @@ const Saidas = (props) => {
     setNomeCaixa(data.data.nome);
   }
 
+  async function getSaldoCaixa() {
+    const data = await api.get(`/sessions/saldo/${getSessionId()}`);
+    dispatch({
+      type: 'UPDATE_SALDO_CAIXA',
+      saldoCaixa: data.data.saldoAtual,
+    });
+    // setSaldoCaixa(data.data.saldoAtual);
+  }
+
   useEffect(() => {
-    getNomeCaixa();
-    getEntradas();
+    async function getDatas() {
+      setIsSave(true);
+      await getNomeCaixa();
+      await getEntradas();
+      await getSaldoCaixa();
+      setIsSave(false);
+    }
+    getDatas();
   }, []);
 
   async function newItem(nome: string, valor: number, hora: Date) {
+    setIsSave(true);
     await api.post('/saidascaixa', {
       nome,
       valor,
@@ -72,6 +96,8 @@ const Saidas = (props) => {
     });
 
     await getEntradas();
+    await getSaldoCaixa();
+    setIsSave(false);
 
     /* setItens([
       ...itens,
@@ -84,6 +110,7 @@ const Saidas = (props) => {
     ]); */
   }
   async function removeItens(indices: string[]) {
+    setIsSave(true);
     const arrayNew = itens.slice();
     for (let i = 0; i < indices.length; i += 1) {
       for (let j = 0; j < arrayNew.length; j += 1) {
@@ -97,6 +124,8 @@ const Saidas = (props) => {
     }
 
     await getEntradas();
+    await getSaldoCaixa();
+    setIsSave(false);
   }
 
   function irParaTelaInit() {
@@ -130,6 +159,7 @@ const Saidas = (props) => {
               }
             }}
           />
+          <LabelSubTotal valor={saldoCaixa} label="Saldo:" />
         </Box>
         <Box padding="0 10px" flex={4}>
           <TabelaEntradas removeItens={removeItens} rows={itens} />
@@ -145,6 +175,8 @@ const Saidas = (props) => {
               irParaTelaInit();
             }}
             handleNewItem={newItem}
+            disabled={isSave}
+            saldoCaixa={saldoCaixa}
           />
         </Box>
       </Box>

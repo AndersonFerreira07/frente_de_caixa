@@ -12,7 +12,7 @@ import Label from '../../components/Label';
 import LabelSubTotal from '../../components/LabelSubtotal';
 import Search from '../../components/Search';
 import SidebarInputs from '../../components/SidebarInputsCompra';
-import Table2, { Row } from '../../components/Table2';
+import Table2, { Row } from '../../components/Table2Compra';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 
 import LabelAtendente from '../../components/LabelAtendente'
@@ -120,9 +120,20 @@ const FrenteCompra: FC<FrenteCompraProps> = () => {
       componentRef4.current.setValues(unidades, peso)
   }
 
-  function searchItemInArray(produto, precoUnitario, itens) {
+  function compareDates(date1, date2) {
+    if(date1.getFullYear() === date2.getFullYear()) {
+      if(date1.getMonth() === date2.getMonth()) {
+        if(date1.getDate() === date2.getDate()) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  function searchItemInArray(produto, precoUnitario, itens, validade) {
     for(let i = 0; i < itens.length; i++) {
-      if(produto.id === itens[i].produto.id && precoUnitario === itens[i].unitario) return i
+      if(produto.id === itens[i].produto.id && precoUnitario === itens[i].unitario /* && compareDates(validade, itens[i].validade) */)  return i
     }
     return -1
   }
@@ -146,39 +157,26 @@ const FrenteCompra: FC<FrenteCompraProps> = () => {
     quantidade: number,
     peso: number,
     precoUnitario: number,
+    validade: Date | null,
   ) {
-    const position = searchItemInArray(produto, precoUnitario, itens);
+    const position = searchItemInArray(produto, precoUnitario, itens, validade);
     console.log('position')
     console.log(position)
     if(position < 0 ) {
-      /* setItens([...itens, {
-        produto: produto,
-        peso: produto.unidade.modo === 2 ? 0 : peso,
-        total: getTotal(peso, quantidade, precoUnitario, produto),
-        unidades: quantidade,
-        unitario: precoUnitario,
-        uidd: `${produto.nome}${precoUnitario}`
-      }]) */
+      
       dispatch({ type: "ADD_ITEM", item: {
         produto: produto,
         peso: produto.unidade.modo === 2 ? 0 : peso,
         total: getTotal(peso, quantidade, precoUnitario, produto),
         unidades: quantidade,
         unitario: precoUnitario,
-        uidd: `${produto.nome}${precoUnitario}`
+        //uidd: `${produto.nome}${precoUnitario}`,
+        uidd: `${produto.nome}${itens.length}`,
+        validade
       } });
     } else {  
+      
       /* const itens2 = itens.slice()
-      itens2[position] = {
-        peso: (itens2[position].peso + (produto.unidade.modo === 2 ? 0 : peso)),
-        unidades: itens2[position].unidades + quantidade,
-        produto: produto,
-        unitario: precoUnitario,
-        total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
-        uidd: `${produto.nome}${precoUnitario}`
-      }
-      setItens(itens2) */
-      const itens2 = itens.slice()
       dispatch({ type: "UPDATE_ITEM", item: {
         peso: (itens2[position].peso + (produto.unidade.modo === 2 ? 0 : peso)),
         unidades: itens2[position].unidades + quantidade,
@@ -186,8 +184,18 @@ const FrenteCompra: FC<FrenteCompraProps> = () => {
         unitario: precoUnitario,
         total: getTotal(itens2[position].peso + peso, itens2[position].unidades + quantidade, precoUnitario, produto),
         uidd: `${produto.nome}${precoUnitario}`
-      }, position: position})
+      }, position: position}) */
 
+      dispatch({ type: "ADD_ITEM", item: {
+        produto: produto,
+        peso: produto.unidade.modo === 2 ? 0 : peso,
+        total: getTotal(peso, quantidade, precoUnitario, produto),
+        unidades: quantidade,
+        unitario: precoUnitario,
+        //uidd: `${produto.nome}${precoUnitario}`,
+        uidd: `${produto.nome}${itens.length}`,
+        validade
+      } });
     }
     setProduto(null)
     if(refSearch.current) refSearch.current.focus()

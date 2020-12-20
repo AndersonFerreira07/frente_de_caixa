@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useHistory } from 'react-router-dom';
 
@@ -12,8 +12,10 @@ import {
 } from '@material-ui/core/styles';
 import moment from 'moment';
 
+import { AppContext } from '../../App';
 import ActionsEntrada from '../../components/ActionsEntradas';
 import Label from '../../components/Label';
+import LabelSubTotal from '../../components/LabelSubtotal';
 import SidebarTransferencias from '../../components/SidebarTransferencias';
 import TabelaTransferencia, { Row } from '../../components/TabelaTransferencia';
 import { getSessionId } from '../../services/alth';
@@ -36,6 +38,12 @@ const Transferencias = (props) => {
   const [nomeCaixa, setNomeCaixa] = useState('');
   const history = useHistory();
   const classes = useStyles();
+  // const [saldoCaixa, setSaldoCaixa] = useState(0);
+  const [isSave, setIsSave] = useState(false);
+  const {
+    app: { saldoCaixa },
+    dispatch,
+  } = useContext(AppContext);
 
   async function getEntradas() {
     const newItens: Array<Row> = [];
@@ -57,12 +65,28 @@ const Transferencias = (props) => {
     setNomeCaixa(data.data.nome);
   }
 
+  async function getSaldoCaixa() {
+    const data = await api.get(`/sessions/saldo/${getSessionId()}`);
+    dispatch({
+      type: 'UPDATE_SALDO_CAIXA',
+      saldoCaixa: data.data.saldoAtual,
+    });
+    // setSaldoCaixa(data.data.saldoAtual);
+  }
+
   useEffect(() => {
-    getNomeCaixa();
-    getEntradas();
+    async function getDatas() {
+      setIsSave(true);
+      await getNomeCaixa();
+      await getEntradas();
+      await getSaldoCaixa();
+      setIsSave(false);
+    }
+    getDatas();
   }, []);
 
   async function newItem(valor: number, hora: Date) {
+    setIsSave(true);
     await api.post('/transferenciascaixa', {
       valor,
       session_id: getSessionId(),
@@ -70,6 +94,8 @@ const Transferencias = (props) => {
     });
 
     await getEntradas();
+    await getSaldoCaixa();
+    setIsSave(false);
 
     /* setItens([
       ...itens,
@@ -82,6 +108,7 @@ const Transferencias = (props) => {
     ]); */
   }
   async function removeItens(indices: string[]) {
+    setIsSave(true);
     const arrayNew = itens.slice();
     for (let i = 0; i < indices.length; i += 1) {
       for (let j = 0; j < arrayNew.length; j += 1) {
@@ -95,6 +122,8 @@ const Transferencias = (props) => {
     }
 
     await getEntradas();
+    await getSaldoCaixa();
+    setIsSave(false);
   }
 
   function irParaTelaInit() {
@@ -105,7 +134,7 @@ const Transferencias = (props) => {
     <>
       <Box padding="10px" className={classes.header}>
         <Box margin="0px 0px 10px">
-          <Label label={`Trabsferências no ${nomeCaixa}`} />
+          <Label label={`Retiradas no ${nomeCaixa}`} />
         </Box>
       </Box>
       <Box
@@ -128,6 +157,7 @@ const Transferencias = (props) => {
               }
             }}
           />
+          <LabelSubTotal valor={saldoCaixa} label="Saldo:" />
         </Box>
         <Box padding="0 10px" flex={4}>
           <TabelaTransferencia removeItens={removeItens} rows={itens} />
@@ -143,6 +173,8 @@ const Transferencias = (props) => {
               irParaTelaInit();
             }}
             handleNewItem={newItem}
+            disabled={isSave}
+            saldoCaixa={saldoCaixa}
           />
         </Box>
       </Box>

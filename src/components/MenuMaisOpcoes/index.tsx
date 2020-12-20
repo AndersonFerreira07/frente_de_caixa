@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,10 +10,13 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import SendIcon from '@material-ui/icons/Send';
 import SettingsIcon from '@material-ui/icons/Settings';
+
+import { AppContext } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   settings: {
@@ -62,6 +65,9 @@ export type MenuMaisOpciesProps = {
 const MenuMaisOpcies: FC<MenuMaisOpciesProps> = ({ handleAction }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const classes = useStyles();
+  const {
+    app: { saldoCaixa },
+  } = useContext(AppContext);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,6 +76,13 @@ const MenuMaisOpcies: FC<MenuMaisOpciesProps> = ({ handleAction }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function formatMoeda(valor: number) {
+    return valor.toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  }
 
   const handleClickItem = (code: number) => {
     handleClose();
@@ -90,11 +103,17 @@ const MenuMaisOpcies: FC<MenuMaisOpciesProps> = ({ handleAction }) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem onClick={(e) => handleClickItem(0)}>
+        {/* <StyledMenuItem onClick={(e) => handleClickItem(0)}>
           <ListItemIcon>
             <SettingsIcon fontSize="small" className={classes.icon} />
           </ListItemIcon>
           <ListItemText primary="Configurações" />
+        </StyledMenuItem> */}
+        <StyledMenuItem onClick={(e) => {}}>
+          <ListItemIcon>
+            <MonetizationOnIcon fontSize="small" className={classes.icon} />
+          </ListItemIcon>
+          <ListItemText primary={`Saldo: ${formatMoeda(saldoCaixa)}`} />
         </StyledMenuItem>
         <StyledMenuItem onClick={(e) => handleClickItem(1)}>
           <ListItemIcon>

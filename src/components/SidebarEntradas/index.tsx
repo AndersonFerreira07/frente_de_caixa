@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 export type SidebarInputsProps = {
   handleNewItem: (nome: string, valor: number, hora: Date) => void;
   handleF4: () => void;
+  disabled?: boolean;
 };
 
 export type SidebarInputsHandle = {
@@ -36,7 +37,7 @@ export type SidebarInputsHandle = {
 const SidebarInputs: RefForwardingComponent<
   SidebarInputsHandle,
   SidebarInputsProps
-> = ({ handleNewItem, handleF4 }, ref) => {
+> = ({ handleNewItem, handleF4, disabled = false }, ref) => {
   const [valor, setValor] = useState(0);
   const [nome, setNome] = useState<string | null>(null);
   const classes = useStyles();
@@ -112,7 +113,7 @@ const SidebarInputs: RefForwardingComponent<
           onClick={() => {
             handleNewItem(nome || '', valor, new Date());
             setValor(0);
-            setNome(null);
+            // setNome(null);
 
             if (refNome.current) {
               refNome.current.focus();
@@ -123,12 +124,13 @@ const SidebarInputs: RefForwardingComponent<
             nome === '' ||
             nome === null ||
             nome === undefined ||
-            valor <= 0 ||
-            isNaN(valor)
+            valor < 0 ||
+            isNaN(valor) ||
+            disabled
           }
           ref={refButton}
         >
-          Adicionar
+          {disabled ? 'Salvando...' : 'Adicionar'}
         </Button>
       </Box>
     </Paper>

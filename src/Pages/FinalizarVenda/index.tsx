@@ -17,7 +17,8 @@ import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
 
-import AutoCompleteClientes from '../../components/AutoCompleteClientes';
+// import AutoCompleteClientes from '../../components/AutoCompleteClientes';
+import AutoCompleteClientes from '../../components/AutoCompleteClientesContainer';
 import DialogoNota from '../../components/DialogoNota';
 import LabelSubTotal from '../../components/LabelSubtotal';
 import SidebarTiposPagamentos from '../../components/SidebarTiposPagamentos';
@@ -209,7 +210,7 @@ const FinalizarVenda = () => {
   }
 
   async function handleOpenDialogoNota() {
-    console.log(getTodosDados());
+    // console.log(getTodosDados());
     if (!isDadosValidos() || getValorRestante() !== 0) {
       messagesError();
     } else if (refDialogoNota.current) {
@@ -341,6 +342,8 @@ const FinalizarVenda = () => {
           }}
           handleF4={() => handleClose()}
           handleF8={() => handleOpenDialogoNota()}
+          resource="clientes"
+          label="Cliente"
         />
 
         <Box marginLeft="20px">

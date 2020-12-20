@@ -1,21 +1,24 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, { FC, useState, useEffect, useRef, useContext } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useHistory } from 'react-router-dom';
 
 import { Box } from '@material-ui/core';
 
+import { AppContext } from '../../App';
 import DialogoConfirmacao from '../../components/DialogoConfirmacao';
 import DialogoTroco from '../../components/DialogoTrocoInicial';
 import EmptyBackground from '../../components/EmptyBackground';
 import Footer from '../../components/Footer';
 import LabelSemAtendente from '../../components/LabelSemAtendente';
-import { getUsername, logout } from '../../services/alth';
+import { getUsername, logout, getSessionId } from '../../services/alth';
+import api from '../../services/api';
 
 export type InitProps = {};
 
 const Init: FC<InitProps> = () => {
   const [atendente, setAtendente] = useState('');
   const history = useHistory();
+  const { dispatch } = useContext(AppContext);
 
   /* type CountdownHandle = React.ElementRef<typeof DialogoConfirmacao>;
   const dialogoConfirmacaoRef = useRef<CountdownHandle>(null); */
@@ -34,6 +37,14 @@ const Init: FC<InitProps> = () => {
     }
   } */
 
+  async function getSaldoCaixa() {
+    const data = await api.get(`/sessions/saldo/${getSessionId()}`);
+    dispatch({
+      type: 'UPDATE_SALDO_CAIXA',
+      saldoCaixa: data.data.saldoAtual,
+    });
+  }
+
   async function getAtendente() {
     const username = getUsername();
     setAtendente(username || '');
@@ -41,6 +52,7 @@ const Init: FC<InitProps> = () => {
 
   useEffect(() => {
     getAtendente();
+    getSaldoCaixa();
   }, []);
 
   useEffect(() => {

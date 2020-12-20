@@ -98,7 +98,9 @@ const RouteBackground: FC<RouteBackgroundProps> = ({
       />
       {(location.pathname === path ||
         location.pathname === '/vendas/frentedecaixa' ||
-        location.pathname === '/vendas/finalizarvenda') && (
+        location.pathname === '/vendas/finalizarvenda' ||
+        location.pathname === '/compras/frentedecaixa' ||
+        location.pathname === '/compras/finalizarcompra') && (
         <>
           {/* <div style={{ position: 'fixed', top: '10px', right: '20px' }}>
             <IconButton onClick={(e) => handleLogout()}>

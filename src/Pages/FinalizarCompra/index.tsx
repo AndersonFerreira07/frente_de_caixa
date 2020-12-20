@@ -17,7 +17,8 @@ import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
 
-import AutoCompleteClientes from '../../components/AutoCompleteFornecedores';
+// import AutoCompleteClientes from '../../components/AutoCompleteFornecedores';
+import AutoCompleteClientes from '../../components/AutoCompleteClientesContainer';
 import DialogoNota from '../../components/DialogoNota';
 import LabelSubTotal from '../../components/LabelSubtotal';
 import SidebarTiposPagamentos from '../../components/SidebarInputsParcelasCompra';
@@ -138,25 +139,23 @@ const FinalizarVenda = () => {
         unidades: compra.itens[i].unidades,
         precoCompra: compra.itens[i].unitario,
         produto_id: compra.itens[i].produto.id,
+        validade: compra.itens[i].validade,
       });
     }
 
-    /*  for (let i = 0; i < parcelas.length; i += 1) {
+    for (let i = 0; i < parcelas.length; i += 1) {
       listaParcelas.push({
-        tipo_pagamento_id: parcelas[i].tipoPgamento.id,
+        conta_id: parcelas[i].conta.id,
         dataPagamento: parcelas[i].dataPagamento,
         valor: parcelas[i].valor,
-        dataPagamentoReal:
-          parcelas[i].tipoPgamento.modo === 0 ? new Date() : null,
-        modo: parcelas[i].tipoPgamento.modo,
-        valorRecebido: parcelas[i].valorRecebido,
+        dataPagamentoReal: null,
       });
-    } */
+    }
 
     return {
       listaItens,
       listaParcelas,
-      dataVenda: buildObjDate(refDate.current.value),
+      dataCompra: buildObjDate(refDate.current.value),
       fornecedor: fornecedor.id,
       session_id: getSessionId(),
     };
@@ -195,25 +194,26 @@ const FinalizarVenda = () => {
 
   async function submitDadosVenda() {
     const dados = getTodosDados();
-    const data = await api.post('/vendastotalfc', {
+    const data = await api.post('/comprastotalfc', {
       ...dados,
     });
-    console.log('RETORNO VENDA TOTAL FC API 22222');
+    console.log('RETORNO compra TOTAL FC API 22222');
     console.log(data.data);
-    console.log('venda');
+    console.log('compra');
     console.log(compra);
     return data.data[0];
   }
 
   async function handleOpenDialogoNota() {
-    console.log(getTodosDados());
+    // console.log(getTodosDados());
     if (!isDadosValidos() || getValorRestante() !== 0) {
       messagesError();
     } else {
       // if (refDialogoNota.current) {
-      closeDialogoNota();
       /* const response = await submitDadosVenda();
       refDialogoNota.current.handleOpen(response, testeConfig, false); */
+      const response = await submitDadosVenda();
+      closeDialogoNota();
     }
   }
 
@@ -319,6 +319,8 @@ const FinalizarVenda = () => {
           }}
           handleF4={() => handleClose()}
           handleF8={() => handleOpenDialogoNota()}
+          resource="fornecedores"
+          label="Fornecedor"
         />
 
         <Box marginLeft="20px">

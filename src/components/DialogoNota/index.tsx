@@ -15,7 +15,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 import { createObjVenda } from '../../utils/createObjVenda';
+import DialogoBoletos from '../DialogoBoletos';
 import NotaFC from '../NotaFC2';
+
 // import ButtonDownloads from '../testePdf/ButtonDownloads';
 
 export type DialogoNotaProps = {
@@ -44,6 +46,8 @@ const DialogoNota: RefForwardingComponent<
   const [venda, setVenda] = useState({});
   const [boletos, setBoletos] = useState([]);
   const classes = useStyles();
+  type CountdownHandle = React.ElementRef<typeof DialogoBoletos>;
+  const refDialogoBoletos = useRef<CountdownHandle>(null);
 
   const handlePrint = useReactToPrint({
     content: () => {
@@ -54,6 +58,12 @@ const DialogoNota: RefForwardingComponent<
   const handleClose = () => {
     setOpen(false);
     props.handleClose();
+  };
+
+  const handleBoletos = () => {
+    if (refDialogoBoletos.current) {
+      refDialogoBoletos.current.handleOpen();
+    }
   };
 
   useImperativeHandle(ref, () => ({
@@ -81,22 +91,17 @@ const DialogoNota: RefForwardingComponent<
           <div style={{ width: '100%', height: '100%' }}>
             <NotaFC ref={componentRef} {...venda} />
           </div>
-          <div>
-            <div>Boletos:</div>
-            <ul>
-              {boletos.map((item, index) => (
-                <li>
-                  <a
-                    href={item}
-                    target="_blank"
-                    style={{ textDecoration: 'none' }}
-                  >{`Boleto ${index + 1}`}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
         </DialogContent>
         <DialogActions className={classes.action}>
+          {boletos.length > 0 && (
+            <Button
+              onClick={handleBoletos}
+              color="primary"
+              style={{ color: 'white' }}
+            >
+              Boletos
+            </Button>
+          )}
           <Button
             onClick={handleClose}
             color="primary"
@@ -114,6 +119,7 @@ const DialogoNota: RefForwardingComponent<
           {/* <ButtonDownloads itens={props.itens} /> */}
         </DialogActions>
       </Dialog>
+      <DialogoBoletos ref={refDialogoBoletos} boletos={boletos} />
     </div>
   );
 };

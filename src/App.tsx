@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, createContext, useReducer, } from 'react';
 
 import FrentePage from './Pages/Frente';
 import { SnackbarProvider, useSnackbar } from 'notistack';
@@ -15,6 +15,7 @@ import Vendas from './Pages/Venda'
 import Compras from './Pages/Compra'
 import VendasList from './Pages/VendasList'
 import Pagamentos from './Pages/Pagamentos'
+import Teste from './Pages/Teste'
 
 import RouteBackground from './components/RouteBackground'
 import RouteBackground2 from './components/RouteBackground2'
@@ -24,8 +25,26 @@ import DialogoLogout from './components/DialogoLogout'
 import { logout } from './services/alth';
 import api from './services/api'
 import { getCaixaId } from './services/config'
-
 import Ws from '@adonisjs/websocket-client'
+import reducer from './reducer'
+
+export type AppType = {
+  saldoCaixa: number;
+};
+
+export type AppContextType = {
+  app: AppType;
+  dispatch: (data: any) => void;
+};
+
+export const AppContext = createContext<AppContextType>({
+  app: {
+    saldoCaixa: 0
+  },
+  dispatch: (data: any) => {
+    console.log('dispach velho');
+  },
+});
 
 let ws;
 
@@ -48,6 +67,9 @@ function App() {
   function handleFechouImpressão() {
     history.push('/login');
   } */
+  const [app, dispatch] = useReducer(reducer, {
+    saldoCaixa: 0
+  });
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -71,21 +93,25 @@ function App() {
   }
 
   return (
-    <Router>
-      <RouteBackground exact path="/" component={Init} callGerente={callGerente}/>
-      <RouteBackground path="/entradas" component={Entradas} callGerente={callGerente}/>
-      <RouteBackground path="/saidas" component={Saidas} callGerente={callGerente}/>
-      <RouteBackground path="/transferencias" component={Tranferencias} callGerente={callGerente}/>
-      <RouteBackground path="/relatorio" component={Relatorio} callGerente={callGerente}/>
-      <RouteBackground2 path="/configuracoes" component={Config}/>
-      {/* <RouteBackground path="/frentedecaixa" component={FrentePage}/> */}
-      <RouteBackground path="/vendas" component={Vendas} callGerente={callGerente}/>
-      <RouteBackground path="/compras" component={Compras} callGerente={callGerente}/>
-      <RouteBackground path="/configuracoesessao" component={ConfigSessao} callGerente={callGerente}/>
-      <RouteBackground path="/listavendas" component={VendasList} callGerente={callGerente}/>
-      <RouteBackground path="/pagamentos" component={Pagamentos} callGerente={callGerente}/>
-      <Route path="/login" component={Login} />
-    </Router>
+    <AppContext.Provider value={{ app, dispatch }}>
+      <Router>
+        <RouteBackground exact path="/" component={Init} callGerente={callGerente}/>
+        <RouteBackground path="/entradas" component={Entradas} callGerente={callGerente}/>
+        <RouteBackground path="/saidas" component={Saidas} callGerente={callGerente}/>
+        <RouteBackground path="/transferencias" component={Tranferencias} callGerente={callGerente}/>
+        <RouteBackground path="/relatorio" component={Relatorio} callGerente={callGerente}/>
+        <RouteBackground2 path="/configuracoes" component={Config}/>
+        {/* <RouteBackground path="/frentedecaixa" component={FrentePage}/> */}
+        <RouteBackground path="/vendas" component={Vendas} callGerente={callGerente}/>
+        <RouteBackground path="/compras" component={Compras} callGerente={callGerente}/>
+        {/* <RouteBackground path="/configuracoesessao" component={ConfigSessao} callGerente={callGerente}/> */}
+        <RouteBackground path="/listavendas" component={VendasList} callGerente={callGerente}/>
+        <RouteBackground path="/pagamentos" component={Pagamentos} callGerente={callGerente}/>
+        <Route path="/login" component={Login} />
+        <Route path="/teste" component={Teste} />
+
+      </Router>
+    </AppContext.Provider>
   );
 }
 

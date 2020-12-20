@@ -12,6 +12,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { stringify } from 'query-string';
@@ -52,12 +53,12 @@ function sleep(delay = 0) {
 export type AutoCompleteProdutoProps = {
   value: any;
   onChange: (newValor: any) => void;
-  handleEnter?: () => void;
   inputValue: string;
   valueDebounce: string;
   updateValue: (newValue: string) => void;
   label: string;
-  handleF4: (code: number) => void;
+  handleKey: (code: number) => void;
+  resource: string;
 };
 
 export type AutoCompleteProdutoHandle = {
@@ -71,12 +72,12 @@ const AutoCompleteProdutos: RefForwardingComponent<
   {
     value,
     onChange,
-    handleEnter = () => {},
     inputValue,
     updateValue,
     valueDebounce,
     label,
-    handleF4,
+    handleKey,
+    resource,
   },
   forwardedRef,
 ) => {
@@ -118,7 +119,7 @@ const AutoCompleteProdutos: RefForwardingComponent<
     return `${url}/?${stringify(query2)}`;
   }
 
-  /* React.useEffect(() => {
+  /*  React.useEffect(() => {
     if (!open) {
       setOptions([]);
     }
@@ -127,7 +128,7 @@ const AutoCompleteProdutos: RefForwardingComponent<
   React.useEffect(() => {
     (async () => {
       if (open) {
-        const produtos = await api(query(`${getHost()}/produtos/search`));
+        const produtos = await api(query(`${getHost()}/${resource}/search`));
         await sleep(1e3);
         setOptions(produtos.data.data);
       } else {
@@ -138,7 +139,7 @@ const AutoCompleteProdutos: RefForwardingComponent<
 
   React.useEffect(() => {
     (async () => {
-      const produtos = await api(query(`${getHost()}/produtos/search`));
+      const produtos = await api(query(`${getHost()}/${resource}/search`));
       await sleep(1e3);
       setOptions(produtos.data.data);
     })();
@@ -150,7 +151,7 @@ const AutoCompleteProdutos: RefForwardingComponent<
   return (
     <Autocomplete
       id="asynchronous-demo"
-      style={{ width: '100%' }}
+      style={{ width: 300 }}
       open={open}
       onOpen={() => {
         setOpen(true);
@@ -170,43 +171,29 @@ const AutoCompleteProdutos: RefForwardingComponent<
       getOptionLabel={(option) => option.nome}
       options={options}
       loading={loading}
-      // ref={forwardedRef}
-      className={classes.input}
-      /* onKeyDown={(e) => {
-          if (e.keyCode === 13) handleEnter();
-        }} */
       renderInput={(params) => (
-        <Box display="flex">
-          <InputBase
-            {...params}
-            color="secondary"
-            className={classes.input}
-            placeholder={label}
-            // autoFocus
-            {...params.inputProps}
-            ref={params.InputProps.ref}
-            inputRef={refAutoComplete}
-            onKeyDown={(e) => {
-              if (e.keyCode === 13) handleEnter();
-              if (e.keyCode === 115) {
-                handleF4(115);
-              }
-              if (e.keyCode === 119) {
-                handleF4(119);
-              }
-              if (e.keyCode === 120) {
-                handleF4(120);
-              }
-            }}
-          />
-          <IconButton
-            className={classes.iconButton}
-            aria-label="search"
-            onClick={() => handleEnter()}
-          >
-            <SearchIcon />
-          </IconButton>
-        </Box>
+        <TextField
+          {...params}
+          label={label}
+          variant="outlined"
+          color="secondary"
+          inputRef={forwardedRef}
+          onKeyDown={(e) => {
+            handleKey(e.keyCode);
+          }}
+          autoFocus
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
       )}
     />
   );

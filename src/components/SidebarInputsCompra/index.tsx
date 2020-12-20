@@ -8,17 +8,33 @@ import React, {
 } from 'react';
 
 import { Box, Button, Paper, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
 import IntegerInput from '../IntegerInput';
 import PesoInput from '../PesoInput';
 import PrecoInput from '../PrecoInput';
 import SelectInput from '../Select';
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    /* marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200, */
+    marginTop: '10px',
+  },
+}));
+
 export type SidebarInputsProps = {
   handleNewItem: (
     quantidade: number,
     peso: number,
     precoUnitario: number,
+    validade: Date | null,
     // obs: string,
   ) => void;
   disabled: boolean;
@@ -65,6 +81,8 @@ const SidebarInputs: RefForwardingComponent<
   const refPeso = useRef<any>(null);
   const refPreco = useRef<any>(null);
   const refButton = useRef<any>(null);
+  const refDate = useRef<any>(null);
+  const classes = useStyles();
 
   useEffect(() => {
     if (refPreco.current) {
@@ -193,6 +211,21 @@ const SidebarInputs: RefForwardingComponent<
     return 0;
   }
 
+  function getDataAtual() {
+    return moment().format('YYYY-MM-DD');
+  }
+
+  function buildObjDate(dateText: string) {
+    const ano = parseInt(dateText.substring(0, 4), 10);
+    const mes = parseInt(dateText.substring(5, 7), 10);
+    const dia = parseInt(dateText.substring(8, 10), 10);
+    const dataBuild = new Date();
+    dataBuild.setFullYear(ano);
+    dataBuild.setMonth(mes - 1);
+    dataBuild.setDate(dia);
+    return dataBuild;
+  }
+
   console.log('QUNARIDADE KKKKK');
   console.log(unidades);
 
@@ -226,9 +259,13 @@ const SidebarInputs: RefForwardingComponent<
                 refPeso.current.select();
               }
             } else if (editPrice) {
-              if (refPreco.current) {
+              /* if (refPreco.current) {
                 refPreco.current.focus();
                 refPreco.current.select();
+              } */
+              if (refDate.current) {
+                refDate.current.focus();
+                refDate.current.select();
               }
             } else if (refButton.current) {
               refButton.current.click();
@@ -247,9 +284,13 @@ const SidebarInputs: RefForwardingComponent<
                   refPeso.current.select();
                 }
               } else if (editPrice) {
-                if (refPreco.current) {
+                /* if (refPreco.current) {
                   refPreco.current.focus();
                   refPreco.current.select();
+                } */
+                if (refDate.current) {
+                  refDate.current.focus();
+                  refDate.current.select();
                 }
               }
             } else if (direction === 38) {
@@ -258,6 +299,10 @@ const SidebarInputs: RefForwardingComponent<
                   refPreco.current.focus();
                   refPreco.current.select();
                 }
+                /* if (refDate.current) {
+                  refDate.current.focus();
+                  refDate.current.select();
+                } */
               } else if (conditionShowPeso()) {
                 if (refPeso.current) {
                   refPeso.current.focus();
@@ -277,9 +322,13 @@ const SidebarInputs: RefForwardingComponent<
             ref={refPeso}
             handleEnter={() => {
               if (editPrice) {
-                if (refPreco.current) {
+                /* if (refPreco.current) {
                   refPreco.current.focus();
                   refPreco.current.select();
+                } */
+                if (refDate.current) {
+                  refDate.current.focus();
+                  refDate.current.select();
                 }
               } else if (refButton.current) {
                 refButton.current.click();
@@ -293,9 +342,13 @@ const SidebarInputs: RefForwardingComponent<
             handleDirection={(direction) => {
               if (direction === 40) {
                 if (editPrice) {
-                  if (refPreco.current) {
+                  /* if (refPreco.current) {
                     refPreco.current.focus();
                     refPreco.current.select();
+                  } */
+                  if (refDate.current) {
+                    refDate.current.focus();
+                    refDate.current.select();
                   }
                 } else if (refQtde.current) {
                   refQtde.current.focus();
@@ -310,6 +363,53 @@ const SidebarInputs: RefForwardingComponent<
             }}
           />
         )}
+        <TextField
+          id="date"
+          label="Validade"
+          type="date"
+          defaultValue={getDataAtual()}
+          color="secondary"
+          className={classes.textField}
+          disabled={disabled}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="outlined"
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) {
+              if (editPrice) {
+                if (refPreco.current) {
+                  refPreco.current.focus();
+                  refPreco.current.select();
+                }
+              } else if (refButton.current) {
+                refButton.current.click();
+                // refButton.current.select();
+              }
+            }
+            if (e.keyCode === 115) handleF4();
+            if (e.keyCode === 119) handleF8();
+            if (e.keyCode === 38) {
+              if (conditionShowPeso()) {
+                if (refPeso.current) {
+                  refPeso.current.focus();
+                  refPeso.current.select();
+                }
+              } else if (refQtde.current) {
+                refQtde.current.focus();
+                refQtde.current.select();
+              }
+            }
+
+            if (e.keyCode === 40) {
+              if (refPreco.current) {
+                refPreco.current.focus();
+                refPreco.current.select();
+              }
+            }
+          }}
+          inputRef={refDate}
+        />
         <PrecoInput
           label="Preço Unitário"
           value={precoUnitario}
@@ -328,7 +428,7 @@ const SidebarInputs: RefForwardingComponent<
           }}
           handleDirection={(direction) => {
             if (direction === 38) {
-              if (conditionShowPeso()) {
+              /* if (conditionShowPeso()) {
                 if (refPeso.current) {
                   refPeso.current.focus();
                   refPeso.current.select();
@@ -336,6 +436,10 @@ const SidebarInputs: RefForwardingComponent<
               } else if (refQtde.current) {
                 refQtde.current.focus();
                 refQtde.current.select();
+              } */
+              if (refDate.current) {
+                refDate.current.focus();
+                refDate.current.select();
               }
             } else if (direction === 40) {
               if (refQtde.current) {
@@ -391,11 +495,19 @@ const SidebarInputs: RefForwardingComponent<
           color="secondary"
           disabled={disabled || dadosAusentes()}
           onClick={() => {
-            handleNewItem(unidades, peso, precoUnitario);
+            handleNewItem(
+              unidades,
+              peso,
+              precoUnitario,
+              refDate === null
+                ? new Date()
+                : buildObjDate(refDate.current.value),
+            );
             setPeso(0);
             /* setPrecoTotal(0); */
             setPresoUnitario(0);
             setUnidades(0);
+            refDate.current.value = getDataAtual();
             // setObs('');
           }}
           ref={refButton}

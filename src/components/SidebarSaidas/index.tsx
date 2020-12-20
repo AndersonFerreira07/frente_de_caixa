@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export type SidebarInputsProps = {
-  handleNewItem: (valor: number, hora: Date) => void;
+  handleNewItem: (nome: string, valor: number, hora: Date) => void;
   handleF4: () => void;
   disabled?: boolean;
   saldoCaixa: number;
@@ -40,18 +40,20 @@ const SidebarInputs: RefForwardingComponent<
   SidebarInputsProps
 > = ({ handleNewItem, handleF4, disabled = false, saldoCaixa }, ref) => {
   const [valor, setValor] = useState(0);
+  const [nome, setNome] = useState<string | null>(null);
   const classes = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const refNome = useRef<any>(null);
   const refValor = useRef<any>(null);
   const refButton = useRef<any>(null);
 
   useImperativeHandle(ref, () => ({
     focus() {
-      if (refValor.current) {
-        refValor.current.focus();
-        refValor.current.select();
+      if (refNome.current) {
+        refNome.current.focus();
+        refNome.current.select();
       }
     },
   }));
@@ -64,6 +66,32 @@ const SidebarInputs: RefForwardingComponent<
         justifyContent="space-between"
         padding="15px"
       >
+        <TextField
+          id="entrada kkk"
+          label="Nome"
+          defaultValue=""
+          error={nome === '' || nome === undefined}
+          helperText={nome === '' || nome === undefined ? 'Nome inválido' : ''}
+          color="secondary"
+          className={classes.textField}
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          margin="normal"
+          variant="outlined"
+          // disabled={disabled}
+          disabled={false}
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) {
+              if (refValor.current) {
+                refValor.current.focus();
+                refValor.current.select();
+              }
+            }
+            if (e.keyCode === 115) handleF4();
+          }}
+          inputRef={refNome}
+          autoFocus
+        />
         <Box width="100%" display="flex">
           <PrecoInput
             label="Valor da Parcela"
@@ -93,15 +121,24 @@ const SidebarInputs: RefForwardingComponent<
           variant="contained"
           color="secondary"
           onClick={() => {
-            handleNewItem(valor, new Date());
+            handleNewItem(nome || '', valor, new Date());
             setValor(0);
+            // setNome(null);
 
-            if (refValor.current) {
-              refValor.current.focus();
-              refValor.current.select();
+            if (refNome.current) {
+              refNome.current.focus();
+              refNome.current.select();
             }
           }}
-          disabled={valor < 0 || isNaN(valor) || disabled || valor > saldoCaixa}
+          disabled={
+            nome === '' ||
+            nome === null ||
+            nome === undefined ||
+            valor < 0 ||
+            isNaN(valor) ||
+            // disabled ||
+            valor > saldoCaixa
+          }
           ref={refButton}
         >
           {disabled ? 'Salvando...' : 'Adicionar'}

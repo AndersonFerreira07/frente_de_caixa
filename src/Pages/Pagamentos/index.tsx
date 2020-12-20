@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useHistory } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import moment from 'moment';
 
+import { AppContext } from '../../App';
 import ActionsEntrada from '../../components/ActionsEntradas';
 import AutoCompleteClientes from '../../components/AutoCompleteClientes';
 import Label from '../../components/Label';
@@ -38,6 +39,10 @@ const Pagamentos = (props) => {
   const [cliente, setCliente] = useState<any>(null);
   const history = useHistory();
   const classes = useStyles();
+  const {
+    app: { saldoCaixa },
+    dispatch,
+  } = useContext(AppContext);
 
   console.log('Cliente');
   console.log(cliente);
@@ -102,6 +107,15 @@ const Pagamentos = (props) => {
     setItens(newItens);
   }
 
+  async function getSaldoCaixa() {
+    const data = await api.get(`/sessions/saldo/${getSessionId()}`);
+    dispatch({
+      type: 'UPDATE_SALDO_CAIXA',
+      saldoCaixa: data.data.saldoAtual,
+    });
+    // setSaldoCaixa(data.data.saldoAtual);
+  }
+
   async function handlePagarParcela(idParcela: number) {
     if (!pago) {
       await pagaParcela(idParcela);
@@ -110,6 +124,7 @@ const Pagamentos = (props) => {
       await despagaParcela(idParcela);
       await getParcelasFiadoPagas();
     }
+    getSaldoCaixa();
   }
 
   useEffect(() => {
@@ -130,6 +145,10 @@ const Pagamentos = (props) => {
   const handleChange = (event) => {
     setPago(event.target.checked);
   };
+
+  useEffect(() => {
+    getSaldoCaixa();
+  }, []);
 
   return (
     <>

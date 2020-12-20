@@ -1,7 +1,7 @@
 import React, { FC, createContext, useReducer, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import { Row } from '../../components/Table2';
+import { Row } from '../../components/Table2Compra';
 import { Row as RowParcelas } from '../../components/TableParcelasCompra';
 import api from '../../services/api';
 import FinalizarCompra from '../FinalizarCompra';

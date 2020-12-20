@@ -39,9 +39,14 @@ const useStyles = makeStyles((theme) => ({
 export type LabelSubtotalProps = {
   valor: number;
   isOpaco?: boolean;
+  label?: string;
 };
 
-const LabelSubtotal: FC<LabelSubtotalProps> = ({ valor, isOpaco = false }) => {
+const LabelSubtotal: FC<LabelSubtotalProps> = ({
+  valor,
+  isOpaco = false,
+  label = 'TOTAL:',
+}) => {
   const classes = useStyles();
 
   function formatMoeda(valor: number) {
@@ -63,7 +68,7 @@ const LabelSubtotal: FC<LabelSubtotalProps> = ({ valor, isOpaco = false }) => {
         height="100%"
         color="white"
       >
-        <div>TOTAL:</div>
+        <div>{label}</div>
 
         <Paper className={classes.containerInterno} elevation={3}>
           <Box

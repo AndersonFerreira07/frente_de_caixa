@@ -14,6 +14,14 @@ function renameItensUIDD(itens) {
   return arrayNew;
 }
 
+function renameItensUIDD2(itens) {
+  const arrayNew = itens.slice();
+  for (let i = 0; i < itens.length; i += 1) {
+    arrayNew[i].uidd = `${arrayNew[i].produto.nome}${i}`;
+  }
+  return arrayNew;
+}
+
 const reducer = (state: any, action: any) => {
   let arrayNew = state.itens.slice();
   let arrayNewParcelas = state.parcelas.slice();
@@ -30,7 +38,7 @@ const reducer = (state: any, action: any) => {
       }
       return {
         ...state,
-        itens: [...arrayNew],
+        itens: [...renameItensUIDD2(arrayNew)],
         subTotal: getSubTotal([...arrayNew]),
       };
     case 'UPDATE_ITEM':
