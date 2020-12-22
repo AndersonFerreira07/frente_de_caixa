@@ -1,15 +1,15 @@
 import { getCargo } from '../services/alth';
 
 const getPermission = (values) => {
-    const cargo = getCargo();
-    switch (cargo) {
-        case 0: // gerente
-            return values[0];
-        case 1: // caixa
-            return values[1];
-        default:
-            return false;
-    }
+  const cargo = getCargo();
+  switch (cargo) {
+    case 0: // gerente ola meu amigo
+      return values[0];
+    case 1: // caixa
+      return values[1];
+    default:
+      return false;
+  }
 };
 
 export const getPermissionVendas = () => getPermission([true, true]);
@@ -37,18 +37,18 @@ export const getPermissionAdm = () => getPermission([true, false]);
 export const getPermissionCongif = () => getPermission([true, false]);
 
 export const getVectorPermissions = () => {
-    const vetorPermissions = [];
-    vetorPermissions.push(getPermissionVendas());
-    vetorPermissions.push(getPermissionCompras());
-    vetorPermissions.push(getPermissionEstoque());
-    vetorPermissions.push(getPermissionClientes());
-    vetorPermissions.push(getPermissionFornecedores());
-    vetorPermissions.push(getPermissionCustos());
-    vetorPermissions.push(getPermissionGraficos());
-    vetorPermissions.push(getPermissionResumo());
-    vetorPermissions.push(getPermissionAvarias());
-    vetorPermissions.push(getPermissionProdutos());
-    vetorPermissions.push(getPermissionAdm());
-    vetorPermissions.push(getPermissionCongif());
-    return vetorPermissions;
+  const vetorPermissions = [];
+  vetorPermissions.push(getPermissionVendas());
+  vetorPermissions.push(getPermissionCompras());
+  vetorPermissions.push(getPermissionEstoque());
+  vetorPermissions.push(getPermissionClientes());
+  vetorPermissions.push(getPermissionFornecedores());
+  vetorPermissions.push(getPermissionCustos());
+  vetorPermissions.push(getPermissionGraficos());
+  vetorPermissions.push(getPermissionResumo());
+  vetorPermissions.push(getPermissionAvarias());
+  vetorPermissions.push(getPermissionProdutos());
+  vetorPermissions.push(getPermissionAdm());
+  vetorPermissions.push(getPermissionCongif());
+  return vetorPermissions;
 };
